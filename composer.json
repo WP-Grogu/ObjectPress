@@ -1,0 +1,19 @@
+{
+    "name": "blackrock/object-press",
+    "description": "A OOP Library to communicate with wordpress CMS",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "thomas",
+            "email": "thom.georgel@gmail.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "BlackrockWeb\\ObjectPress\\": "framework/"
+        }
+    }
+}
