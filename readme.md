@@ -64,7 +64,6 @@ This is all you need to use the post model factory, working that way :
 ```
 use OP\Framework\Models\Factory\PostModelFactory;
 
-
 $post = PostModelFactory::model($post_id, 'example-cpt);
 ```
 
@@ -271,6 +270,11 @@ class Example extends PostModel
 
 
 #### Using models
+
+![](https://gitlab.com/tgeorgel/object-press/-/blob/master/docs/img/change_post_properties.png)
+
+![](https://gitlab.com/tgeorgel/object-press/-/blob/master/docs/img/change_post_properties_results.png)
+
 
 Models are a way to treat your custom post types, including `post` and `page` post type.
 
