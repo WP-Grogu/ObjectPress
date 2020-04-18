@@ -34,8 +34,8 @@ abstract class CustomPostType
      * @var string
      * @since 0.1
      */
-    public static $singular = 'custom_p_type';
-    public static $plural   = 'custom_p_types';
+    public static $singular = 'Custom post type';
+    public static $plural   = 'Custom post types';
 
 
     /**

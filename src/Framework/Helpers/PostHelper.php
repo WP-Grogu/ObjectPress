@@ -32,4 +32,45 @@ class PostHelper
             wp_update_post($post);
         }
     }
+
+
+    /**
+     * Check if a post is part of the specified post type.
+     * Return false on failure / post type doesn't exists
+     *
+     * @param string|int|\WP_Post $post      Post to check on
+     * @param string              $post_type Post type to checkup
+     *
+     * @return bool
+     */
+    public static function isA($post, string $post_type): bool
+    {
+        $p_type = get_post_type($post);
+
+        if ($p_type === false) {
+            return false;
+        }
+
+        return $p_type === $post_type;
+    }
+
+
+    /**
+     * Excerpt
+     *
+     * @param $text, $length
+     */
+    public function excerpt($text, $length)
+    {
+        if (mb_strlen($text) <= $length) {
+            return $text;
+        }
+        $text = mb_substr($text, 0, $length);
+        if (mb_substr($text, $length - 1, 1) !== ' ') {
+            $parts = explode(' ', $text);
+            array_pop($parts);
+            $text = implode(' ', $parts);
+        }
+        return trim($text) . '…';
+    }
 }

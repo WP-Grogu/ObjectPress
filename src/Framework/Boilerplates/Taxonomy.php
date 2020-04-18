@@ -105,8 +105,6 @@ abstract class Taxonomy
                 'show_in_graphql'       => true,
                 'graphql_single_name'   => static::graphqlFormatName($singular),
                 'graphql_plural_name'   => static::graphqlFormatName($plural),
-                'graphql_singular_type' => static::graphqlFormatName($singular),
-                'graphql_plural_type'   => static::graphqlFormatName($plural),
             ]);
         }
 

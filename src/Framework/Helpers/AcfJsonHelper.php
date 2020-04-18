@@ -50,7 +50,8 @@ class AcfJsonHelper
 
         if (!empty($files)) {
             foreach ($files as $file) {
-                $fld_groups[] = $this->jsonToFields($file);
+                $group_name = substr($file, 0, strrpos($file, '.'));
+                $fld_groups[$group_name] = $this->jsonToFields($file);
             }
         }
 

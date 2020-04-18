@@ -3,6 +3,7 @@
 namespace OP\Framework\Models;
 
 use \Exception;
+use OP\Framework\Helpers\PostHelper;
 use OP\Framework\Utils\Media;
 use OP\Framework\Models\Traits\PostAttributes;
 use OP\Framework\Models\Traits\PostType;
@@ -91,7 +92,7 @@ abstract class PostModel
      */
     public function __get(string $key)
     {
-        return $this->attributes[$key];
+        return $this->attributes[$key] ?? false;
     }
 
     /**
@@ -186,13 +187,13 @@ abstract class PostModel
     protected function create(array $attr = [])
     {
         $post_id = wp_insert_post(
+            $attr +
             [
                 'post_title'    => 'Draft title',
                 'post_name'     => sanitize_title($attr['post_title'] ?? 'Draft title'),
                 'post_status'   => 'draft',
                 'post_type'     => static::$post_type,
             ]
-                + $attr
         );
 
         return $post_id;
@@ -335,6 +336,22 @@ abstract class PostModel
 
 
     /**
+     * Return thumbnail url
+     *
+     * @param string|array $size (optionnal)
+     * @return string (empty on failure)
+     * @since 0.2
+     *
+     * @reference https://developer.wordpress.org/reference/functions/wp_get_attachment_image_src/
+     */
+    public function getThumbnailUrl($size = 'post-thumbnail')
+    {
+        return $this->getThumbnailInfos($size)[0] ?? '';
+    }
+
+
+
+    /**
      * Set post thumbnail from attachement ID
      *
      * @param int $thumbnail_id ID of the attachement (image)
@@ -426,7 +443,7 @@ abstract class PostModel
     /**
      * Generate a permalink from post post's title
      * Setup this as a fillable
-     * 
+     *
      * @return this
      * @chainable
      * @since 0.1
@@ -586,24 +603,53 @@ abstract class PostModel
     /**
      * Get all the properties IDs from database
      *
-     * @param int $limit Maximum posts to retrive
-     * @return array of ids
+     * @param int   $limit   Maximum posts to retrive
+     * @param array $status  Post status to retreive, default to 'publish' status
+     *
+     * @return array of Model
      * @since 0.1
      */
-    public static function all(?int $limit = null)
+    public static function all(?int $limit = null, array $status = ['publish'])
     {
         global $wpdb;
         $prefix = $wpdb->prefix;
+        $posts = [];
 
-        $query = "SELECT ID FROM {$prefix}posts WHERE post_type = '" . static::$post_type . "";
+        $status = implode("', '", $status);
+
+        $query = "  SELECT ID 
+                    FROM {$prefix}posts 
+                    WHERE post_type = '" . static::$post_type . "' 
+                    AND post_status IN ('$status')
+                    ORDER BY ID DESC
+                ";
 
         if ($limit != null) {
             $query .= " LIMIT {$limit}";
         }
 
-        return array_map(function ($p) {
-            return (int) $p->ID;
-        }, $wpdb->get_results($query));
+        $results = $wpdb->get_results($query);
+
+        foreach ($results as $result) {
+            $posts[] = new static($result->ID);
+        }
+
+        return $posts;
+    }
+
+
+    /**
+     * Get the first n post of current model
+     *
+     * @param int   $limit   Number of posts to retrive (n)
+     * @param array $status  Post status to retreive, default to 'publish' status
+     *
+     * @return array of Model
+     * @since 0.2
+     */
+    public static function first(int $limit = 1, array $status = ['publish'])
+    {
+        return static::all($limit, $status);
     }
 
 
@@ -648,5 +694,18 @@ abstract class PostModel
         }
 
         return false;
+    }
+    
+
+    /**
+     * Check if the given post is part of the model
+     *
+     * @param string|int|WP_Post $post Post to checkup
+     *
+     * @return bool
+     */
+    public static function belongsToModel($post): bool
+    {
+        return PostHelper::isA($post, static::$post_type);
     }
 }

@@ -16,18 +16,18 @@ class Theme
     private function __construct()
     {
         $this->addSupport('title-tag')
-            ->addSupport('custom-logo')
-            ->addSupport('post-thumbnails')
-            ->addSupport('customize-selective-refresh-widgets')
-            ->addSupport('html5', [
-                'search-form',
-                'comment-form',
-                'comment-list',
-                'gallery',
-                'caption'
-            ])
-            ->addStyle('theme-styles', get_stylesheet_uri())
-            ->addCommentScript();
+             ->addSupport('custom-logo')
+             ->addSupport('post-thumbnails')
+             ->addSupport('customize-selective-refresh-widgets')
+             ->addSupport('html5', [
+                 'search-form',
+                 'comment-form',
+                 'comment-list',
+                 'gallery',
+                 'caption'
+             ])
+             ->addStyle('theme-styles', get_stylesheet_uri())
+             ->addCommentScript();
     }
 
 
@@ -234,18 +234,24 @@ class Theme
     /**
      * Add an action call on specified hook on wp stack.
      *
-     * @param string   $action        Hook name to bind function
-     * @param callable $function      Action to be executed
-     * @param int      $priority      Used to specify the order in which the functions associated with a particular action are executed
-     * @param int      $accepted_args The number of arguments the function accepts.
+     * @param string|array  $action        Hook name to bind function
+     * @param callable      $function      Action to be executed
+     * @param int           $priority      Used to specify the order in which the functions associated with a particular action are executed
+     * @param int           $accepted_args The number of arguments the function accepts.
      *
      * @return $this
      * @chainable
      * @reference https://developer.wordpress.org/reference/functions/add_action/
      */
-    public function on(string $action, callable $function, int $priority = 10, int $accepted_args = 1)
+    public function on($actions, callable $function, int $priority = 10, int $accepted_args = 1)
     {
-        add_action($action, $function, $priority, $accepted_args);
+        if (is_array($actions)) {
+            foreach ($actions as $action) {
+                add_action($action, $function, $priority, $accepted_args);
+            }
+        } elseif (is_string($actions)) {
+            add_action($actions, $function, $priority, $accepted_args);
+        }
 
         return $this;
     }

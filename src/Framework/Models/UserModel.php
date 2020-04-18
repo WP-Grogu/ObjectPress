@@ -56,6 +56,11 @@ abstract class UserModel
     {
         if (!isset($this->user) || $refresh === true) {
             $this->user = get_userdata($this->user_id);
+
+            if ($this->user === false) {
+                return false;
+            }
+            
             $this->user_id = $this->user->ID;
         }
 
@@ -139,6 +144,94 @@ abstract class UserModel
     {
         return get_user_meta($this->user_id, $meta_key, $single);
     }
+    
+
+    /**
+     * Set or update a meta identified by a meta_key
+     *
+     * @param string $key       Meta key to update
+     * @param mixed  $value     Meta value to set
+     * @param mixed  $multiple  Tells if meta key is unique or not
+     *
+     * @return mixed
+     * @since 0.2
+     *
+     * @reference https://developer.wordpress.org/reference/functions/update_user_meta/
+     */
+    public function setMeta(string $key, $value, $multiple = false)
+    {
+        if ($multiple === false) {
+            return update_user_meta($this->user_id, $key, $value);
+        } else {
+            return add_user_meta($this->user_id, $key, $value, false);
+        }
+    }
+
+
+    /**
+     * Update user metas
+     *
+     * @param array $metas ['meta_key' => 'meta_value']
+     *
+     * @return void
+     * @since 0.2
+     */
+    public function setMetas(array $metas)
+    {
+        foreach ($metas as $key => $value) {
+            $this->setMeta($key, $value);
+        }
+    }
+
+
+
+    /******************************************/
+    /*                                        */
+    /*           Security & access            */
+    /*                                        */
+    /******************************************/
+
+
+    /**
+     * Get a new password reset token for the user
+     *
+     * @return string
+     * @since 0.2
+     * @reference https://developer.wordpress.org/reference/functions/get_password_reset_key/
+     */
+    public function getPasswordResetKey()
+    {
+        return get_password_reset_key($this->user);
+    }
+    
+    
+    /**
+     * Get a new password reset token for the user
+     *
+     * @return string
+     * @since 0.2
+     * @reference https://developer.wordpress.org/reference/functions/check_password_reset_key/
+     */
+    public function checkPasswordResetKey(string $token)
+    {
+        return check_password_reset_key($token, $this->get()->user_login);
+    }
+    
+    
+    /**
+     * Set a new encrypted password for the user
+     *
+     * @param string $password Plain text password
+     *
+     * @return string
+     * @since 0.2
+     * @reference https://developer.wordpress.org/reference/functions/wp_set_password/
+     */
+    public function setPassword(string $password)
+    {
+        return wp_set_password($password, $this->user_id);
+    }
+
 
 
 
@@ -198,7 +291,7 @@ abstract class UserModel
      */
     public function addRole(string $role)
     {
-        $user = self::getBy('id', $this->user_id);
+        $user = get_user_by('id', $this->user_id);
 
         if (is_a($user, 'WP_User')) {
             $user->add_role($role);
@@ -218,7 +311,7 @@ abstract class UserModel
      */
     public function removeRole($role)
     {
-        $user = self::getBy('id', $this->user_id);
+        $user = get_user_by('id', $this->user_id);
 
         if (is_a($user, 'WP_User')) {
             $user->remove_role($role);
@@ -246,7 +339,13 @@ abstract class UserModel
      */
     public static function current()
     {
-        return new static(get_current_user_id());
+        $current = get_current_user_id();
+
+        if ($current) {
+            return new static($current);
+        }
+
+        return false;
     }
 
 
@@ -279,9 +378,10 @@ abstract class UserModel
      * @param string $password Password of the user to create (optionnal)
      *
      * @return self|false on failure
-     * @since 0.1
+     * @since 0.2
+     * @reference https://developer.wordpress.org/reference/functions/wp_create_user/
      */
-    public static function insert(string $username, string $email, string $password = '')
+    public static function create(string $username, string $email, string $password = '')
     {
         if (!$password) {
             $password = wp_generate_password(25, true);
@@ -291,6 +391,32 @@ abstract class UserModel
 
         if (is_a($user_id, 'WP_Error')) {
             return false;
+        }
+
+        return new static($user_id);
+    }
+    
+    
+    /**
+     * Create a new user using wp_insert_user() and returns new self.
+     * If no password is provided, creates a 25 char lenght secure password
+     *
+     * @param array $userData User data to insert
+     *
+     * @return self|false on failure
+     * @since 0.2
+     * @reference https://developer.wordpress.org/reference/functions/wp_insert_user/
+     */
+    public static function insert(array $userData)
+    {
+        if (!isset($userData['user_pass'])) {
+            $userData['user_pass'] = wp_generate_password(25, true);
+        }
+
+        $user_id = wp_insert_user($userData);
+
+        if (is_a($user_id, 'WP_Error')) {
+            return $user_id;
         }
 
         return new static($user_id);

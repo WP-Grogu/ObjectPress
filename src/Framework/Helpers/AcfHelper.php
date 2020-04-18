@@ -56,8 +56,8 @@ class AcfHelper
         foreach ($fields as $fld_name => $fld_value) {
             if ($fld_name === 'acf_fc_layout') {
                 $name = '__layout';
-                if (strpos($fld_value, 'bloc_') === 0) {
-                    $fld_value = str_replace('bloc_', '', $fld_value);
+                if (strpos($fld_value, 'blocs_') === 0) {
+                    $fld_value = str_replace('blocs_', '', $fld_value);
                 }
             } elseif (!empty($prefix) && strpos($fld_name, $prefix) === 0) {
                 $name = str_replace($prefix . '_', '', $fld_name);
@@ -85,7 +85,9 @@ class AcfHelper
 
 
     /**
-     * Register groups thumbnails
+     * Register flexible content layouts thumbnails reading acf JSON files
+     *
+     * @return void
      * @since 0.1
      */
     public static function setThumbnails()
@@ -106,20 +108,26 @@ class AcfHelper
 
     /**
      * Register a filter for a given layout
+     *
+     * @param string $flexible_name Name of the flexible content field
+     * @param string $layout_name Name of the layout
+     *
+     * @return void
      * @since 0.1
      */
-    private static function registerThumbnail($flexible_name, $layout_name)
+    private static function registerThumbnail(string $flexible_name, string $layout_name): void
     {
         add_filter("acfe/flexible/layout/thumbnail/name={$flexible_name}&layout={$layout_name}", function ($thumbnail, $field, $layout) {
             $theme_dir = str_replace('/resources', '', get_template_directory());
 
-            $thumb_fld = $theme_dir . \App\Helpers\AcfHelper::$thumbnails_relative_folder_path;
+            $thumb_fld = $theme_dir . \OP\Framework\Helpers\AcfHelper::$thumbnails_relative_folder_path;
             $uri       = '/app/themes/' . explode('/themes/', $thumb_fld)[1];
 
             $exts = [
                 '.png',
                 '.jpg',
-                '.gif'
+                '.jpeg',
+                '.gif',
             ];
 
             $furl  = $uri . $layout['name']; // url to get from

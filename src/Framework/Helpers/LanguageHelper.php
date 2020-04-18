@@ -14,6 +14,32 @@ use OP\Framework\Models\PostModel;
 class LanguageHelper
 {
     /**
+     * Return the current language
+     *
+     * @return string
+     */
+    public static function currentLang()
+    {
+        if (function_exists('pll_current_language')) {
+            return pll_current_language('slug');
+        }
+    }
+
+
+    /**
+     * Return the primary language
+     *
+     * @return string
+     */
+    public static function primaryLang()
+    {
+        if (function_exists('pll_default_language')) {
+            return pll_default_language('slug');
+        }
+    }
+
+
+    /**
      * Get a post language
      *
      * @param int    $id
@@ -29,6 +55,7 @@ class LanguageHelper
         }
     }
 
+    
     /**
      * Set a post language
      *
@@ -45,6 +72,7 @@ class LanguageHelper
         }
     }
 
+
     /**
      * Synchronize 2 posts as translation of each other
      *
@@ -57,6 +85,34 @@ class LanguageHelper
     {
         if (function_exists('pll_save_post_translations')) {
             pll_save_post_translations($assoc);
+        }
+    }
+
+
+    /**
+     * Get post in desired $lang
+     *
+     * @param string $lang Language slug to get
+     * @return int
+     */
+    public static function getPostIn(string $lang, string $p_id)
+    {
+        if (function_exists('pll_get_post')) {
+            return pll_get_post($p_id, $lang);
+        }
+    }
+
+
+    /**
+     * Get Taxonomy Term in desired $lang
+     *
+     * @param string $lang Language slug to get
+     * @return int
+     */
+    public static function getTermIn(string $lang, string $t_id)
+    {
+        if (function_exists('pll_get_term')) {
+            return pll_get_term($t_id, $lang);
         }
     }
 }
