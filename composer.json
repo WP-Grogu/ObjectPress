@@ -2,6 +2,7 @@
     "name": "tgeorgel/objectpress",
     "description": "It's time to treat wordpress like an object.",
     "type": "library",
+    "license": "WTFPL",
     "authors": [
         {
             "name": "thomas",
