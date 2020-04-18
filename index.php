@@ -2,6 +2,8 @@
 
 /**
  * Software is like sex: It’s better when it’s free.
+ * 
+ * This file is used if you decide to put the lib in your WP plugins folder.
  */
 
 if (!defined('ABSPATH')) {
