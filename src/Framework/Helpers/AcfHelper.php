@@ -5,7 +5,7 @@ namespace OP\Framework\Helpers;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  1.3
  * @access   public
  * @since    0.1
  */
@@ -30,10 +30,10 @@ class AcfHelper
      * @return array of objects
      * @since 0.1
      */
-    public static function formatBlocks($blocks)
+    public static function formatBlocks($blocks, $blocks_prfx = 'bloc_')
     {
         foreach ($blocks as &$block) {
-            $block = self::formatFields($block, $block['acf_fc_layout']);
+            $block = self::formatFields($block, $block['acf_fc_layout'], $blocks_prfx);
         }
 
         return $blocks;
@@ -49,15 +49,15 @@ class AcfHelper
      * @return object
      * @since 0.1
      */
-    public static function formatFields($fields, $prefix = '')
+    public static function formatFields($fields, $prefix = '', $blocks_prfx = 'bloc_')
     {
         $flds = [];
 
         foreach ($fields as $fld_name => $fld_value) {
             if ($fld_name === 'acf_fc_layout') {
                 $name = '__layout';
-                if (strpos($fld_value, 'blocs_') === 0) {
-                    $fld_value = str_replace('blocs_', '', $fld_value);
+                if (strpos($fld_value, $blocks_prfx) === 0) {
+                    $fld_value = str_replace($blocks_prfx, '', $fld_value);
                 }
             } elseif (!empty($prefix) && strpos($fld_name, $prefix) === 0) {
                 $name = str_replace($prefix . '_', '', $fld_name);

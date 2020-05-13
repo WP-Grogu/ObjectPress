@@ -5,7 +5,7 @@ namespace OP\Framework\Boilerplates;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  0.3
  * @access   public
  * @since    0.1
  */
@@ -17,7 +17,7 @@ abstract class Taxonomy
      * @var string
      * @since 0.1
      */
-    protected static $domain;
+    protected static $domain = 'theme-taxos';
 
 
     /**
@@ -54,6 +54,27 @@ abstract class Taxonomy
      * @since 0.1
      */
     protected static $post_types = [];
+
+
+    /**
+     * Taxonomy argument to overide over boilerplate
+     */
+    public static $args_override = [];
+    
+
+    /**
+     * Taxonomy labels to overide over boilerplate
+     */
+    public static $labels_override = [];
+
+
+    /**
+     * Taxonomy init (registration)
+     */
+    public static function init()
+    {
+        static::register(static::$args_override, static::$labels_override);
+    }
 
 
     /**

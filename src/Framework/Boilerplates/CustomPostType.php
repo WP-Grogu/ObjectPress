@@ -5,21 +5,20 @@ namespace OP\Framework\Boilerplates;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  0.3
  * @access   public
  * @since    0.1
  */
 abstract class CustomPostType
 {
     /**
-     * Domain name for string translation
+     * i18n translation domain
      *
      * @var string
      * @since 0.1
      */
-    protected static $domain;
+    protected static $domain = 'theme-cpt';
 
-    
     /**
      * Custom post type name/key
      * @var string
@@ -55,6 +54,28 @@ abstract class CustomPostType
      * @since 0.1
      */
     public static $graphql_enabled = false;
+
+
+    /**
+     * CPT argument to overide over boilerplate
+     */
+    public static $args_override = [];
+    
+
+    /**
+     * CPT labels to overide over boilerplate
+     */
+    public static $labels_override = [];
+
+
+
+    /**
+     * Custom post type init (registration)
+     */
+    public static function init()
+    {
+        static::register(static::$args_override, static::$labels_override);
+    }
 
 
     /**

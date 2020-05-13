@@ -2,10 +2,20 @@
 
 namespace OP\Framework\GraphQL;
 
-class GqlField
+use OP\Framework\GraphQL\Interfaces\IGqlField;
+
+/**
+ * @package  ObjectPress
+ * @author   tgeorgel
+ * @version  1.3
+ * @access   public
+ * @since    1.3
+ */
+abstract class GqlField implements IGqlField
 {
     /**
-     * Register a graphQL field on a given target
+     * Register a GraphQL field on given target(s)
+     *
      * @return void
      */
     public static function register()

@@ -4,7 +4,7 @@ namespace OP\Framework\Models;
 
 // require_once __DIR__ . '/../../../../../../wp/wp-includes/pluggable.php';
 
-use WP_User;
+use \WP_User;
 
 // TODO: Set up attributes system as posts
 
@@ -12,7 +12,7 @@ use WP_User;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  1.3
  * @access   public
  * @since    7.0
  */

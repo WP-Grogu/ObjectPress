@@ -2,7 +2,16 @@
 
 namespace OP\Framework\GraphQL;
 
-class GqlType
+use OP\Framework\GraphQL\Interfaces\IGqlType;
+
+/**
+ * @package  ObjectPress
+ * @author   tgeorgel
+ * @version  1.3
+ * @access   public
+ * @since    1.3
+ */
+class GqlType implements IGqlType
 {
     /**
      * Register a graphQL type on a given target

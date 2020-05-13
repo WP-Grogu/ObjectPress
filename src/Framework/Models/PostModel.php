@@ -13,7 +13,7 @@ use OP\Framework\Models\Traits\PostAcf;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  1.2
  * @access   public
  * @since    0.1
  */

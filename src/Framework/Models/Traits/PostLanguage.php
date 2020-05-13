@@ -7,7 +7,7 @@ use OP\Framework\Helpers\LanguageHelper;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  1.3
  * @access   public
  * @since    0.1
  */
@@ -40,7 +40,7 @@ trait PostLanguage
     /**
      * Set post current language
      *
-     * @param string $lang As slug (eg: 'en' or 'fr')
+     * @param string $lang Set the post lang from it's slug (eg: 'en' or 'fr')
      *
      * @return self
      * @chainable
