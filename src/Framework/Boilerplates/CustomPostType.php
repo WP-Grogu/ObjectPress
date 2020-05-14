@@ -5,7 +5,7 @@ namespace OP\Framework\Boilerplates;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.3
+ * @version  1.3
  * @access   public
  * @since    0.1
  */
@@ -48,6 +48,15 @@ abstract class CustomPostType
 
 
     /**
+     * Menu icon to display in back-office (dash-icon)
+     *
+     * @var string
+     * @since 1.3
+     */
+    public static $menu_icon = 'dashicons-book';
+
+
+    /**
      * Enable graphql on this CPT
      *
      * @var bool
@@ -58,12 +67,18 @@ abstract class CustomPostType
 
     /**
      * CPT argument to overide over boilerplate
+     *
+     * @var array
+     * @since 1.3
      */
     public static $args_override = [];
     
 
     /**
      * CPT labels to overide over boilerplate
+     *
+     * @var array
+     * @since 1.3
      */
     public static $labels_override = [];
 
@@ -71,6 +86,9 @@ abstract class CustomPostType
 
     /**
      * Custom post type init (registration)
+     *
+     * @return void
+     * @since 1.3
      */
     public static function init()
     {
@@ -142,7 +160,7 @@ abstract class CustomPostType
             'show_ui'               => true,
             'show_in_menu'          => true,
             'menu_position'         => 20,
-            'menu_icon'             => 'dashicons-book',
+            'menu_icon'             => static::$menu_icon,
             'show_in_admin_bar'     => false,
             'show_in_nav_menus'     => true,
             'can_export'            => true,
@@ -195,5 +213,16 @@ abstract class CustomPostType
     private static function graphqlFormatName(string $type)
     {
         return lcfirst(preg_replace('/\s/', '', ucwords(str_replace('-', ' ', sanitize_title($type)))));
+    }
+    
+
+    /**
+     * Prevent class initialisation thru 'new Class'
+     *
+     * @access private
+     * @since 1.3
+     */
+    private function __construct()
+    {
     }
 }

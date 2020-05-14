@@ -5,7 +5,7 @@ namespace OP\Framework\Boilerplates;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.3
+ * @version  1.3
  * @access   public
  * @since    0.1
  */
@@ -58,18 +58,27 @@ abstract class Taxonomy
 
     /**
      * Taxonomy argument to overide over boilerplate
+     *
+     * @var array
+     * @since 1.3
      */
     public static $args_override = [];
     
 
     /**
      * Taxonomy labels to overide over boilerplate
+     *
+     * @var array
+     * @since 1.3
      */
     public static $labels_override = [];
 
 
     /**
      * Taxonomy init (registration)
+     *
+     * @return void
+     * @since 1.3
      */
     public static function init()
     {
@@ -159,5 +168,16 @@ abstract class Taxonomy
     protected static function graphqlFormatName(string $type)
     {
         return lcfirst(preg_replace('/\s/', '', ucwords(str_replace('-', ' ', sanitize_title($type)))));
+    }
+
+
+    /**
+     * Prevent class initialisation thru 'new Class'
+     *
+     * @access private
+     * @since 1.3
+     */
+    private function __construct()
+    {
     }
 }
