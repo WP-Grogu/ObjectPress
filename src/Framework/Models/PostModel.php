@@ -695,17 +695,76 @@ abstract class PostModel
 
         return false;
     }
+
+
+    /**
+     * Find the resource, given it's ID. Return false if post_id is not a member of model
+     *
+     * @param int $post_id Post_id
+     *
+     * @return This|false
+     * @since 1.2.1
+     */
+    public static function find(string $post_id)
+    {
+        if (! static::belongsToModel($post_id)) {
+            return false;
+        }
+
+        return new static($post_id);
+    }
+
+
+    /**
+     * Find the ressource(s)
+     *
+     * @param array $post_ids Post ids to get
+     *
+     * @return array
+     * @since 1.2.1
+     */
+    public static function collection(array $post_ids)
+    {
+        $collection = [];
+
+        foreach ($post_ids as $post_id) {
+            $item = static::find($post_id);
+
+            if (is_bool($item) && $item === false) {
+                continue;
+            }
+
+            $collection[] = $item;
+        }
+
+        return $collection;
+    }
     
 
     /**
-     * Check if the given post is part of the model
+     * Check if the given post(s) are member of the current model
+     * If you're giving an array of posts, reuturns true if ALL of them are members
      *
-     * @param string|int|WP_Post $post Post to checkup
+     * @param array|string|int|WP_Post $post Post(s) to checkup.
      *
      * @return bool
      */
-    public static function belongsToModel($post): bool
+    public static function belongsToModel($posts): bool
     {
-        return PostHelper::isA($post, static::$post_type);
+        if (!$posts || (is_array($posts) && empty($posts))) {
+            return false;
+        }
+
+        if (!is_array($posts)) {
+            $posts = [$posts];
+        }
+
+        foreach ($posts as $post) {
+            if (! PostHelper::isA($post, static::$post_type)) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

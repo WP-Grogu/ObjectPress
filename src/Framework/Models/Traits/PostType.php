@@ -26,7 +26,9 @@ trait PostType
             && static::$post_type !== 'post'
             && static::$post_type !== 'page'
         ) {
-            throw new \Exception((static::$post_type ?? 'undefined') . " is not a registred post_type");
+            throw new \Exception(
+                "ObjectPress: Could not initiate `". static::class ."` because `" . (static::$post_type ?? 'undefined') . "` is not a registred wordpress post_type."
+            );
         }
     }
 

@@ -2,8 +2,6 @@
 
 namespace OP\Framework\Helpers;
 
-use OP\Framework\Models\PostModel;
-
 /**
  * @package  ObjectPress
  * @author   tgeorgel
@@ -72,5 +70,62 @@ class PostHelper
             $text = implode(' ', $parts);
         }
         return trim($text) . '…';
+    }
+
+
+    /**
+     * Transform post_id to WP_Post Object; from string, int or ARRAY_A
+     *
+     * @param string|int|array|WP_Post $post
+     *
+     * @return WP_Post|false
+     */
+    public static function getPostFromUndefined($post)
+    {
+        if (!$post) {
+            return false;
+        }
+
+        if (is_string($post)) {
+            $post = intval($post);
+        }
+        
+        if (is_int($post)) {
+            $post = get_post($post);
+        }
+
+        if (is_array($post) && isset($post['ID'])) {
+            $post = get_post($post['ID']);
+        }
+
+        if (!is_a($post, 'WP_Post')) {
+            return false;
+        }
+
+        return $post;
+    }
+
+
+    /**
+     * Grab IDs from arrays, based on 'ID' array key (works for stdClass/WP_Post objects)
+     *
+     * eg: [0 => WP_Post[ 'ID' => 1 ], 1 => WP_Post[ 'ID' => 2 ]]
+     *
+     * @return array Array of IDs
+     */
+    public static function grabIDS(array $items)
+    {
+        $items = array_map(function ($e) {
+            if (is_array($e) && array_key_exists('ID', $e)) {
+                return $e['ID'];
+            }
+            return $e->ID ?? null;
+        }, $items);
+
+        if ($items && is_array($items)) {
+            $items = array_filter($items);
+        }
+
+        return $items;
     }
 }

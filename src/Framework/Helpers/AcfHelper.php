@@ -32,6 +32,10 @@ class AcfHelper
      */
     public static function formatBlocks($blocks, $blocks_prfx = 'bloc_')
     {
+        if (!$blocks || !is_array($blocks)) {
+            return [];
+        }
+
         foreach ($blocks as &$block) {
             $block = self::formatFields($block, $block['acf_fc_layout'], $blocks_prfx);
         }
@@ -154,6 +158,10 @@ class AcfHelper
      */
     public static function fieldsToBlocks($fields, $prefix = 'bloc_')
     {
+        if (!$fields || !is_array($fields)) {
+            return [];
+        }
+
         $blocks = [];
 
         if (is_array($fields)) {
@@ -197,7 +205,7 @@ class AcfHelper
      * @return array
      * @since 0.1
      */
-    public static function sortBlocks($blocks, $sort)
+    public static function sortBlocks($blocks, $sort = [])
     {
         $sorted = [];
 
