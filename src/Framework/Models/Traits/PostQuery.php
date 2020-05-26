@@ -2,6 +2,8 @@
 
 namespace OP\Framework\Models\Traits;
 
+use OP\Framework\Helpers\PostHelper;
+
 /**
  * @package  ObjectPress
  * @author   tgeorgel
@@ -11,6 +13,76 @@ namespace OP\Framework\Models\Traits;
  */
 trait PostQuery
 {
+    /**
+     * Get current post using wordpress magic function
+     *
+     * @return Model null on failure
+     * @since 0.1
+     */
+    public static function current()
+    {
+        $id = get_the_id();
+
+        if (!$id) {
+            global $post;
+            $id = $post->ID ?? false;
+        }
+
+        if (!$id) {
+            return null;
+        }
+
+        return new static($id);
+    }
+
+
+    /**
+     * Create a new Post. Returns self, false on failure
+     *
+     * @param array_a Post attributes (optionnal)
+     *
+     * @return this|false on failure
+     * @since 0.1
+     */
+    public static function insert(array $attributes = [])
+    {
+        $post = new static();
+
+        if ($post && $post->id) {
+            $post->setPostProperties($attributes);
+            return $post;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Find the ressource(s)
+     *
+     * @param array $post_ids Post ids to get
+     *
+     * @return array
+     * @since 1.2.1
+     */
+    public static function collection(array $post_ids)
+    {
+        $collection = [];
+
+        foreach ($post_ids as $post_id) {
+            $item = static::find($post_id);
+
+            if (is_bool($item) && $item === false) {
+                continue;
+            }
+
+            $collection[] = $item;
+        }
+
+        return $collection;
+    }
+
+
     /**
      * Get all the properties IDs from database
      *
@@ -76,5 +148,33 @@ trait PostQuery
         }
 
         return new static($post_id);
+    }
+
+
+    /**
+     * Check if the given post(s) are member of the current model
+     * If you're giving an array of posts, reuturns true if ALL of them are members
+     *
+     * @param array|string|int|WP_Post $post Post(s) to checkup.
+     *
+     * @return bool
+     */
+    public static function belongsToModel($posts): bool
+    {
+        if (!$posts || (is_array($posts) && empty($posts))) {
+            return false;
+        }
+
+        if (!is_array($posts)) {
+            $posts = [$posts];
+        }
+
+        foreach ($posts as $post) {
+            if (!PostHelper::isA($post, static::$post_type)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
