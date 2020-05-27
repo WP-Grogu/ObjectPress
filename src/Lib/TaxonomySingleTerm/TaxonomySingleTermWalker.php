@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes;
+namespace OP\Lib\TaxonomySingleTerm;
 
 use \Walker;
 
@@ -15,7 +15,7 @@ use \Walker;
 class TaxonomySingleTermWalker extends Walker
 {
     public $tree_type = 'category';
-    public $db_fields = array( 'parent' => 'parent', 'id' => 'term_id' ); //TODO: decouple this
+    public $db_fields = array('parent' => 'parent', 'id' => 'term_id'); //TODO: decouple this
 
     public function __construct($hierarchical, $input_element)
     {
@@ -77,9 +77,9 @@ class TaxonomySingleTermWalker extends Walker
     public function start_el(&$output, $term, $depth = 0, $args = array(), $id = 0)
     {
         $taxonomy = empty($args['taxonomy']) ? 'category' : $args['taxonomy'];
-        $name = $taxonomy == 'category' ? 'post_category' : 'tax_input['.$taxonomy.']';
+        $name = $taxonomy == 'category' ? 'post_category' : 'tax_input[' . $taxonomy . ']';
         // input name
-        $name = $this->hierarchical ? $name .'[]' : $name;
+        $name = $this->hierarchical ? $name . '[]' : $name;
         // input value
         $value = $this->hierarchical ? $term->term_id : $term->slug;
 
@@ -87,7 +87,7 @@ class TaxonomySingleTermWalker extends Walker
         $in_selected   = in_array($term->term_id, $selected_cats);
 
         $args = array(
-            'id'            => esc_attr($taxonomy .'-'. $term->term_id),
+            'id'            => esc_attr($taxonomy . '-' . $term->term_id),
             'name'          => esc_attr($name),
             'value'         => esc_attr($value),
             'checked'       => checked($in_selected, true, false),
@@ -113,7 +113,7 @@ class TaxonomySingleTermWalker extends Walker
      */
     public function start_el_radio($args)
     {
-        return "\n".sprintf(
+        return "\n" . sprintf(
             '<li id="%s"><label class="selectit"><input value="%s" type="radio" name="%s" id="in-%s" %s %s/>%s</label>',
             $args['id'],
             $args['value'],
@@ -138,7 +138,7 @@ class TaxonomySingleTermWalker extends Walker
     {
         $pad = str_repeat('&nbsp;', $args['depth'] * 3);
 
-        return "\n".sprintf(
+        return "\n" . sprintf(
             '<option %s %s id="%s" value="%s" class="class-single-term">%s',
             $args['selected'],
             $args['disabled'],

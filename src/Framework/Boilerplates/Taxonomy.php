@@ -2,6 +2,8 @@
 
 namespace OP\Framework\Boilerplates;
 
+use OP\Lib\TaxonomySingleTerm\TaxonomySingleTerm;
+
 /**
  * @package  ObjectPress
  * @author   tgeorgel
@@ -11,6 +13,13 @@ namespace OP\Framework\Boilerplates;
  */
 abstract class Taxonomy
 {
+    /********************************/
+    /*                              */
+    /*        Default params        */
+    /*                              */
+    /********************************/
+
+
     /**
      * Domain name for string translation
      *
@@ -34,8 +43,8 @@ abstract class Taxonomy
      * @var string
      * @since 0.1
      */
-    public static $singular = 'custom-taxonomy';
-    public static $plural   = 'custom-taxonomies';
+    public static $singular = 'Custom Taxonomy';
+    public static $plural   = 'Custom Taxonomies';
 
 
     /**
@@ -63,7 +72,7 @@ abstract class Taxonomy
      * @since 1.3
      */
     public static $args_override = [];
-    
+
 
     /**
      * Taxonomy labels to overide over boilerplate
@@ -72,6 +81,59 @@ abstract class Taxonomy
      * @since 1.3
      */
     public static $labels_override = [];
+
+
+
+    /**
+     * Activate 'single term' mode on this taxonomy 
+     * 
+     * @var bool
+     * @since 1.3
+     */
+    public static $single_term = false;
+
+
+    /**
+     * 'single term' mode params 
+     * 
+     * @var array
+     * @since 1.3
+     */
+    public static $single_term_params = [];
+
+
+    /**
+     * Default 'single term' mode params 
+     * 
+     * @var array
+     * @since 1.3
+     */
+    private static $_default_single_term_params = [
+        'default_term'          => null,      // Term name, slug or id
+        'priority'              => 'low',     // 'high', 'core', 'default' or 'low'
+        'context'               => 'normal',  // 'normal', 'advanced', or 'side'
+        'force_selection'       => true,      // Set to true to hide "None" option & force a term selection
+        'children_indented'     => false,
+        'allow_new_terms'       => false,
+    ];
+
+    /********************************/
+    /*                              */
+    /*           Methods            */
+    /*                              */
+    /********************************/
+
+
+
+    /**
+     * Prevent class initialisation thru 'new Class'
+     *
+     * @access private
+     * @since 1.3
+     */
+    private function __construct()
+    {
+    }
 
 
     /**
@@ -83,6 +145,10 @@ abstract class Taxonomy
     public static function init()
     {
         static::register(static::$args_override, static::$labels_override);
+
+        if (static::$single_term) {
+            static::setupSingleTerm();
+        }
     }
 
 
@@ -163,21 +229,46 @@ abstract class Taxonomy
      *
      * @param string
      * @return string
-     * @since 0.1
+     * 
+     * @since 1.2
      */
-    protected static function graphqlFormatName(string $type)
+    protected static function graphqlFormatName(string $type): string
     {
         return lcfirst(preg_replace('/\s/', '', ucwords(str_replace('-', ' ', sanitize_title($type)))));
     }
 
 
     /**
-     * Prevent class initialisation thru 'new Class'
-     *
-     * @access private
+     * Set this Taxonomy as as Single Term taxonomy
+     * 
+     * @return void
      * @since 1.3
      */
-    private function __construct()
+    public static function setupSingleTerm(): void
     {
+        $available_properties = [
+            'default' => 'default_term',
+            'priority',
+            'context',
+            'force_selection',
+            'indented' => 'children_indented',
+            'allow_new_terms',
+        ];
+
+        $params = static::$single_term_params + static::$_default_single_term_params;
+
+        $taxonomy_box = new TaxonomySingleTerm(static::$taxonomy);
+
+        $taxonomy_box->set('metabox_title', __(static::$singular, static::$domain));
+
+        foreach ($available_properties as $tst_property => $op_property) {
+            if (!isset($params[$op_property]) || $params[$op_property] == null) {
+                continue;
+            }
+
+            $key = is_string($tst_property) ? $tst_property : $op_property;
+
+            $taxonomy_box->set($key, static::$single_term_params[$op_property]);
+        }
     }
 }
