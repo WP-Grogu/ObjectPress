@@ -11,7 +11,7 @@ use OP\Framework\GraphQL\Interfaces\IGqlType;
  * @access   public
  * @since    1.3
  */
-class GqlType implements IGqlType
+abstract class GqlType implements IGqlType
 {
     /**
      * Register a graphQL type on a given target

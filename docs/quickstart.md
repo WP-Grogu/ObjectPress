@@ -1,9 +1,11 @@
-# Object Press 
-## Getting started
+# Quick start
+
+## Introduction
 
 Thus this framework was built on top of [bedrock/sage](https://roots.io) stack, it is completely possible to use it out of the box. You'll simply need to setup a `composer.json` file with an autoload logic.
 
-#### Installing via composer
+## Installing
+### Installing via composer
 
 To setup your app, you should use [composer](https://getcomposer.org).
 
@@ -17,7 +19,7 @@ You could specify a version tag in your composer file to avoid any breaking chan
 composer require "tgeorgel/objectpress ~1.0.1"
 ```
 
-#### Installing manually
+### Installing manually
 
 Download or clone the repository, and put the folder wherever you wish, in your wordpress theme folder.
 Don't forget to run a `composer install` inside the ObjectPress folder, otherwise it won't find dependant classes.
@@ -27,6 +29,8 @@ Don't forget to run a `composer install` inside the ObjectPress folder, otherwis
 
 
 ## Setup your app folder
+
+### Setup autoload
 
 You can use composer to setup a psr-4 autoloading logic. Create a `composer.json` file in your theme directory, using  the command
 
@@ -112,7 +116,7 @@ $post = PostModelFactory::model($post_id, 'example-cpt');
 To learn more about the powerfull use of models, consult the [wiki page](Models).
 
 
-### The theme class
+## The theme class
 
 The theme class allows a fluent way of configuring your project settings.
 

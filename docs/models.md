@@ -1,11 +1,21 @@
-Models are really usefull, they are the link between your app and your database. A model represent a piece of data, it generally contains all the methods used to manage it.  
+# Models
 
-Because wordpress relies on post types, you need to link your models to a post type. A model extends the base ObjectPress `PostModel` (`UserModel` for users) containing global methods to manage wordpress posts.  
+Models are really usefull, they are the link between your app and your database. A model represents a piece of data; It generally contains all the usefull methods for it's management.  
+
+Because wordpress relies on post types, ObjectPress models are "binded" to thoses post types. A model extends the base ObjectPress `PostModel` class for general post/pages, and the `UserModel` for users.
+
+Thoses models already include a lot of methods to manage wordpress posts.
 
 
 ## Defining models
 
-You can define your models in the `App\Models` namespace (`app/Models` folder) :
+Define your models inside the `app/Models` folder. To be able to easily grab Models from ObjectPress Factories, you should respect the naming convention : kebab-case wordpress custom post types should be converted to camel-case in you models. For example, a `case-study` CPT should have `CaseStudy` as model class name.
+
+> If you are not following the naming convention for any reason, you can specify you cpt-model binding inside the `app/Interfaces/ICpts.php` interface. [read more](README.md)
+
+<!-- tabs:start -->
+
+#### ** Minimal **
 
 ```php
 <?php
@@ -17,20 +27,40 @@ use OP\Framework\Models\PostModel;
 class Example extends PostModel
 {
     /**
-     * Wordpress post_type associated to the current model
+     * Wordpress post type identifier, associated to the current model
+     */
+    public static $post_type = 'example';
+}
+```
+
+#### ** With example method **
+
+```php
+<?php
+
+namespace App\Models;
+
+use OP\Framework\Models\PostModel;
+
+class Example extends PostModel
+{
+    /**
+     * Wordpress post type identifier, associated to the current model
      */
     public static $post_type = 'example';
 
 
     /**
-     * // Example method on your model
-     *
+     * 🤟This is an Example method on your model 😙
+     * 
      * Get example locations (taxonomy) as name (string)
      *
-     * @param int $limit Maximum terms to get
+     * @param  int    $limit       Maximum number of terms to get
+     * @param  bool   $only_names  Set true to get only terms names, returns full term oject otherwise
+     * 
      * @return array
      */
-    public function locations(int $limit = 5)
+    public function locations(int $limit = 5, $only_names = true)
     {
         $values = $this->getTaxonomyTerms('locations');
 
@@ -38,13 +68,19 @@ class Example extends PostModel
             $values = array_slice($values, 0, $limit);
         }
 
+        if (! $only_names) {
+            return $values;
+        }
+
         return array_map(function ($e) {
             return $e->name ?? '';
         }, $values);
     }
 }
-
 ```
+
+<!-- tabs:end -->
+
 
 
 ## Using models

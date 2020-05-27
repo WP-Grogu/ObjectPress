@@ -4,7 +4,7 @@
 
 - Features
 
-  - [Custom post types](cpts.md)
+  - [Custom post types](custom-post-types.md)
   - [Taxonomies](taxonomies.md)
   - [Theme class](theme-class.md)
   - [Models](models.md)

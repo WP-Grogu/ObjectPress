@@ -1,6 +1,18 @@
-To create a taxonomy, you first declare your taxonomy properties in the `app/Taxonomies` folder, then initiate it thru the wordpress `function.php` file.  
+# Custom post types
+
+Taxonomies are Wordpesss posts categories.
+With ObjectPress, you want to optimise this taxonomy creation, to gain time and easily enable/disable taxonomies in your theme.
+
+This class is inspired by [generate wordpress](https://generatewp.com/taxonomy/) style, you can checkup `labels` and `args` overwritable on their website. 
  
-## 1. Declare your Taxonomy properties :
+## Defining your taxonomy properties
+
+Define your taxonomies inside the `app/Taxonomies` folder. You can start with the `Minimal` template, and add needed properties displayed in the `Full` tab (displayed values are defaults).
+
+
+<!-- tabs:start -->
+
+#### ** Minimal **
 
 ```php
 namespace App\Taxonomies;
@@ -9,22 +21,81 @@ use OP\Framework\Boilerplates\Taxonomy;
 
 class ExampleTaxonomy extends Taxonomy
 {
-    protected static $domain;
-
-    protected static $taxonomy = 'example-taxonomy';
-
-
     /**
-     * Singular and plural names of CPT
+     * i18n string translation domain
      *
      * @var string
      */
-    public static $singular = 'Example Taxonomy';
-    public static $plural   = 'Example Taxonomies';
+    protected static $domain = 'theme-taxos';
+
+    /**
+     * Taxonomy identifier
+     *
+     * @var string
+     */
+    protected static $taxonomy = 'custom-taxonomy';
+
+    /**
+     * Singular and plural names of Taxonomy
+     *
+     * @var string
+     */
+    public static $singular = 'Custom Taxonomy';
+    public static $plural   = 'Custom Taxonomies';
+
+    /**
+     * Register this taxonomy on thoses post types
+     *
+     * @var array
+     */
+    protected static $post_types = [
+        'Post',
+    ];
+}
+```
+
+
+#### ** Full **
+
+```php
+namespace App\Taxonomies;
+
+use OP\Framework\Boilerplates\Taxonomy;
+
+class ExampleTaxonomy extends Taxonomy
+{
+    /**
+     * i18n string translation domain
+     *
+     * @var string
+     */
+    protected static $domain = 'theme-taxos';
+
+    /**
+     * Taxonomy identifier
+     *
+     * @var string
+     */
+    protected static $taxonomy = 'custom-taxonomy';
+
+    /**
+     * Singular and plural names of Taxonomy
+     *
+     * @var string
+     */
+    public static $singular = 'Custom Taxonomy';
+    public static $plural   = 'Custom Taxonomies';
+
+    /**
+     * Register this taxonomy on thoses post types
+     *
+     * @var array
+     */
+    protected static $post_types = [];
 
 
     /**
-     * Enable graphql
+     * Enable graphql on this taxonomy
      *
      * @var bool
      */
@@ -32,35 +103,32 @@ class ExampleTaxonomy extends Taxonomy
 
 
     /**
-     * Post types that will have the taxonomy
+     * Taxonomy argument to overide over boilerplate
      *
      * @var array
      */
-    protected static $post_types = [
-        'post',
-        'example',
-    ];
-
-
-    /**
-     * Taxonomy argument to override over boilerplate
-     */
     public static $args_override = [];
-
+    
 
     /**
-     * Taxonomy labels to override over boilerplate
+     * Taxonomy labels to overide over boilerplate
+     *
+     * @var array
      */
     public static $labels_override = [];
 }
-
 ```
 
-You can override post type `$args` or `$labels` as you please inside the `$args_override`/`$labels_override` vars. Please refer to the [wordpress documentation](https://developer.wordpress.org/reference/functions/register_taxonomy/) to have the listing of available arguments.  
+<!-- tabs:end -->
+
+You can override post type `args` or `labels` as you please inside their dedicated vars `$args_override/$labels_override`.  
+
+> Please refer to the [wordpress documentation](https://developer.wordpress.org/reference/functions/register_taxonomy/) or the [generate WP website](https://generatewp.com/taxonomy/) to have a listing of available arguments. 
 
 
 
-## 2. Initiate your Taxonomy : 
+
+## Initiate your Taxonomy 
 
 Inside your `function.php` file :  
 
@@ -81,6 +149,6 @@ $theme->on('init', function () {
     ...
 
     // Register Taxonomies
-    new App\Taxonomies\ExampleTaxonomy('148-cpts');
+    App\Taxonomies\ExampleTaxonomy::init()
 });
 ```

@@ -12,5 +12,4 @@ namespace OP\Framework\GraphQL\Interfaces;
 interface IGqlType
 {
     public static function register();
-    public static function resolve($post);
 }

@@ -138,7 +138,7 @@ trait PostQuery
 
     /**
      * Find the ressource, or return false
-     * 
+     *
      * @since 1.2.1
      */
     public static function find($post_id)
