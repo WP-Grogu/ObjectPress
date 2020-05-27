@@ -116,6 +116,26 @@ class ExampleTaxonomy extends Taxonomy
      * @var array
      */
     public static $labels_override = [];
+
+
+    /**
+     * Activate 'single term' mode on this taxonomy 
+     * 
+     * @var bool
+     * @since 1.3
+     */
+    public static $single_term = false;
+
+
+    /**
+     * 'single term' mode params 
+     * 
+     * @var array
+     * @since 1.3
+     */
+    public static $single_term_params = [
+        'default_term' => 'my-category',
+    ];
 }
 ```
 
@@ -152,3 +172,41 @@ $theme->on('init', function () {
     App\Taxonomies\ExampleTaxonomy::init()
 });
 ```
+
+
+## Single Term Taxonomy
+
+Sometimes you may wish to allow only one term selection on a taxonomy. Thanks to WebDevStudios's [Taxonomy_Single_Term](https://github.com/WebDevStudios/Taxonomy_Single_Term/blob/master/README.md) class, we've integreated an easy way to force a single Term selection on your taxonomies.
+
+> Activate the single term mode and setup some params
+
+```php
+    /**
+     * Activate 'single term' mode on this taxonomy 
+     * 
+     * @var bool
+     * @since 1.3
+     */
+    public static $single_term = true;
+
+    /**
+     * 'single term' mode params 
+     * 
+     * @var array
+     * @since 1.3
+     */
+    public static $single_term_params = [
+        'default_term' => 'my-default-value',
+        'priority' => 'high',
+    ];
+```
+##### Available params
+
+| Key  | Type |  Description | Default |
+|---|---|---|---|
+| `default_term`  |  `string`, `int` |  Default term to auto-select |  (none) |
+| `priority`  | `string`  | Metabox priority. (vertical placement). 'high', 'core', 'default' or 'low'   | `'low'`  |
+| `context`  | `string`  | Metabox position. (column placement). 'normal', 'advanced', or 'side'  | `'side'`  |
+| `force_selection`  | `bool`  |  Set to true to hide "None" option & force a term selection |  `true` |
+| `children_indented`  | `bool`  | Whether hierarchical taxonomy inputs should be indented to represent hierarchy  | `false`  |
+| `allow_new_terms`  |  `bool` | Whether adding new terms via the metabox is permitted  |   `false` |
