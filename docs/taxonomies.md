@@ -15,6 +15,7 @@ Define your taxonomies inside the `app/Taxonomies` folder. You can start with th
 #### ** Minimal **
 
 ```php
+<?php
 namespace App\Taxonomies;
 
 use OP\Framework\Boilerplates\Taxonomy;
@@ -58,6 +59,7 @@ class ExampleTaxonomy extends Taxonomy
 #### ** Full **
 
 ```php
+<?php
 namespace App\Taxonomies;
 
 use OP\Framework\Boilerplates\Taxonomy;
@@ -178,7 +180,7 @@ $theme->on('init', function () {
 
 Sometimes you may wish to allow only one term selection on a taxonomy. Thanks to WebDevStudios's [Taxonomy_Single_Term](https://github.com/WebDevStudios/Taxonomy_Single_Term/blob/master/README.md) class, we've integreated an easy way to force a single Term selection on your taxonomies.
 
-> Activate the single term mode and setup some params
+> Activate the single term mode and setup some optionnal params
 
 ```php
     /**
@@ -190,7 +192,7 @@ Sometimes you may wish to allow only one term selection on a taxonomy. Thanks to
     public static $single_term = true;
 
     /**
-     * 'single term' mode params 
+     * 'single term' mode params (optionnal)
      * 
      * @var array
      * @since 1.3

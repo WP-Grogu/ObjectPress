@@ -85,8 +85,8 @@ abstract class Taxonomy
 
 
     /**
-     * Activate 'single term' mode on this taxonomy 
-     * 
+     * Activate 'single term' mode on this taxonomy
+     *
      * @var bool
      * @since 1.3
      */
@@ -94,8 +94,8 @@ abstract class Taxonomy
 
 
     /**
-     * 'single term' mode params 
-     * 
+     * 'single term' mode params
+     *
      * @var array
      * @since 1.3
      */
@@ -103,15 +103,15 @@ abstract class Taxonomy
 
 
     /**
-     * Default 'single term' mode params 
-     * 
+     * Default 'single term' mode params
+     *
      * @var array
      * @since 1.3
      */
     private static $_default_single_term_params = [
         'default_term'          => null,      // Term name, slug or id
-        'priority'              => 'low',     // 'high', 'core', 'default' or 'low'
-        'context'               => 'normal',  // 'normal', 'advanced', or 'side'
+        'priority'              => 'default',     // 'high', 'core', 'default' or 'low'
+        'context'               => 'side',  // 'normal', 'advanced', or 'side'
         'force_selection'       => true,      // Set to true to hide "None" option & force a term selection
         'children_indented'     => false,
         'allow_new_terms'       => false,
@@ -229,7 +229,7 @@ abstract class Taxonomy
      *
      * @param string
      * @return string
-     * 
+     *
      * @since 1.2
      */
     protected static function graphqlFormatName(string $type): string
@@ -240,7 +240,7 @@ abstract class Taxonomy
 
     /**
      * Set this Taxonomy as as Single Term taxonomy
-     * 
+     *
      * @return void
      * @since 1.3
      */
@@ -255,7 +255,7 @@ abstract class Taxonomy
             'allow_new_terms',
         ];
 
-        $params = static::$single_term_params + static::$_default_single_term_params;
+        $params = static::$single_term_params + self::$_default_single_term_params;
 
         $taxonomy_box = new TaxonomySingleTerm(static::$taxonomy);
 
@@ -268,7 +268,7 @@ abstract class Taxonomy
 
             $key = is_string($tst_property) ? $tst_property : $op_property;
 
-            $taxonomy_box->set($key, static::$single_term_params[$op_property]);
+            $taxonomy_box->set($key, $params[$op_property]);
         }
     }
 }
