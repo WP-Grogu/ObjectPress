@@ -137,17 +137,43 @@ trait PostQuery
 
 
     /**
-     * Find the ressource, or return false
+     * Find the ressource and returns and instance of self, or return false
      *
+     * @param int|string|WP_Post|ARRAY_A $post
+     *
+     * @return self
      * @since 1.2.1
      */
-    public static function find($post_id)
+    public static function find($post)
     {
-        if (!static::belongsToModel($post_id)) {
+        $post = PostHelper::getPostFromUndefined($post);
+
+        if (!$post || !static::belongsToModel($post->ID)) {
             return false;
         }
 
-        return new static($post_id);
+        return new static($post->ID);
+    }
+
+
+    /**
+     * Find the ressource, or return false
+     *
+     * @param string  $identifier Identifier to get by
+     * @param *       $value
+     *
+     * @return self
+     * @since 1.2.1
+     */
+    public static function findBy($identifier, $value)
+    {
+        $post = PostHelper::getPostBy($identifier, $value);
+
+        if (!$post || !static::belongsToModel($post->ID)) {
+            return false;
+        }
+
+        return new static($post->ID);
     }
 
 

@@ -19,7 +19,7 @@ trait PostLanguage
      * @return string
      * @since 0.1
      */
-    public function lang(): string
+    public function lang()
     {
         return $this->getLang();
     }
@@ -31,9 +31,29 @@ trait PostLanguage
      * @return string Lang slug (eg: 'en')
      * @since 0.1
      */
-    public function getLang(): string
+    public function getLang()
     {
         return LanguageHelper::getPostLang($this->id);
+    }
+
+
+    /**
+     * Get post current language
+     *
+     * @param string $language_slug Lang slug (eg: 'en')
+     *
+     * @return static
+     * @since 0.1
+     */
+    public function getTranslation(string $language_slug)
+    {
+        $translation = LanguageHelper::getPostIn($this->id, $language_slug);
+
+        if (!$translation || !is_int($translation)) {
+            return false;
+        }
+
+        return static::find($translation);
     }
 
 

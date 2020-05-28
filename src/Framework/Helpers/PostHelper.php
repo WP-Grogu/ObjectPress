@@ -128,4 +128,27 @@ class PostHelper
 
         return $items;
     }
+
+
+
+    /**
+     * Find the post, or return false
+     *
+     * @param string  $identifier Post identifier (av. : 'id', 'url')
+     * @param *       $value
+     *
+     * @return WP_Post
+     * @since 1.2.1
+     */
+    public static function getPostBy($identifier, $value)
+    {
+        if ($identifier === 'id') {
+            return static::getPostFromUndefined($value);
+        }
+
+        if ($identifier === 'url') {
+            $p_id = url_to_postid($value);
+            return static::getPostFromUndefined($p_id);
+        }
+    }
 }

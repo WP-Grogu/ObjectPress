@@ -2,8 +2,6 @@
 
 namespace OP\Framework\Helpers;
 
-use OP\Framework\Models\PostModel;
-
 /**
  * @package  ObjectPress
  * @author   tgeorgel
@@ -20,8 +18,15 @@ class LanguageHelper
      */
     public static function currentLang()
     {
+        // PolyLang
         if (function_exists('pll_current_language')) {
             return pll_current_language('slug');
+        }
+
+
+        // WPML
+        if (defined('ICL_LANGUAGE_CODE')) {
+            return ICL_LANGUAGE_CODE;
         }
     }
 
@@ -33,8 +38,16 @@ class LanguageHelper
      */
     public static function primaryLang()
     {
+        // PolyLang
         if (function_exists('pll_default_language')) {
-            return pll_default_language('slug');
+            return (string) pll_default_language('slug');
+        }
+
+
+        // WPML
+        if (function_exists('wpml_get_language_information')) {
+            $wpml_options = get_option('icl_sitepress_settings');
+            return (string) $wpml_options['default_language'] ?: '';
         }
     }
 
@@ -48,10 +61,21 @@ class LanguageHelper
      * @return string|void
      * @since 0.1
      */
-    public static function getPostLang(int $id): string
+    public static function getPostLang(int $id)
     {
+        // PolyLang
         if (function_exists('pll_get_post_language')) {
             return (string) pll_get_post_language($id, 'slug');
+        }
+
+        
+        // WPML
+        if (function_exists('wpml_get_language_information')) {
+            $infos = wpml_get_language_information(null, $id);
+            if (is_array($infos) && array_key_exists('language_code', $infos)) {
+                return $infos['language_code'];
+            }
+            return '';
         }
     }
 
@@ -67,9 +91,23 @@ class LanguageHelper
      */
     public static function setPostLang(int $id, string $lang)
     {
+        // PolyLang
         if (function_exists('pll_set_post_language')) {
             pll_set_post_language($id, $lang);
+            return true;
         }
+        
+        // WPML
+        if (function_exists('wpml_get_language_information')) {
+            $infos = wpml_get_language_information(null, $id);
+            if (is_array($infos) && array_key_exists('language_code', $infos)) {
+                $infos['language_code'] = $lang;
+                do_action('wpml_set_element_language_details', $set_language_args);
+            }
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -83,6 +121,7 @@ class LanguageHelper
      */
     public static function syncPosts(array $assoc): void
     {
+        // PolyLang
         if (function_exists('pll_save_post_translations')) {
             pll_save_post_translations($assoc);
         }
@@ -92,13 +131,27 @@ class LanguageHelper
     /**
      * Get post in desired $lang
      *
+     * @param string $post Post
      * @param string $lang Language slug to get
+     *
      * @return int
      */
-    public static function getPostIn(string $lang, string $p_id)
+    public static function getPostIn($post, string $lang)
     {
+        $post = PostHelper::getPostFromUndefined($post);
+
+        if (!$post) {
+            return false;
+        }
+        
+        // PolyLang
         if (function_exists('pll_get_post')) {
-            return pll_get_post($p_id, $lang);
+            return pll_get_post($post->ID, $lang);
+        }
+
+        // WPML
+        if (array_key_exists('wpml_object_id', $GLOBALS['wp_filter'])) {
+            return apply_filters('wpml_object_id', $post->ID, $post->post_type, false, $lang);
         }
     }
 
@@ -111,6 +164,7 @@ class LanguageHelper
      */
     public static function getTermIn(string $lang, string $t_id)
     {
+        // PolyLang
         if (function_exists('pll_get_term')) {
             return pll_get_term($t_id, $lang);
         }
