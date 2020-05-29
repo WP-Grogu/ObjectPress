@@ -88,33 +88,6 @@ You can find an example theme folder structure [here](https://gitlab.com/tgeorge
 
 Please read the dedicated pages for [Custom Post Types](Custom-Post-Types), [Taxonomies](Taxonomies), [Models](Models/Introduction) and so on.  
 
-ℹ️ The `app/Interfaces/ICpts.php` file contains an association of your postype-models :
-
-```php
-<?php
-
-namespace App\Interfaces;
-
-interface ICpts
-{
-    const MODELS = [
-        'page' => 'App\Models\Page',
-        'post' => 'App\Models\Post',
-        'example-cpt' => 'App\Models\Example',
-    ];
-}
-```
-
-This is all you need to use the post model factory, working that way :
-
-```php
-use OP\Framework\Models\Factory\PostModelFactory;
-
-$post = PostModelFactory::model($post_id, 'example-cpt');
-```
-
-To learn more about the powerfull use of models, consult the [wiki page](Models).
-
 
 ## The theme class
 
