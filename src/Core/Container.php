@@ -19,6 +19,11 @@ final class Container
     }
 
 
+    /**
+     * Define OP constants in case they are not defined yet
+     * 
+     * @return void
+     */
     private function setupConstants()
     {
         if (!defined('OP_DEFAULT_I18N_DOMAIN_CPTS')) {

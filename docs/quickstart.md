@@ -9,14 +9,15 @@ Thus this framework was built on top of [bedrock/sage](https://roots.io) stack, 
 
 To setup your app, you should use [composer](https://getcomposer.org).
 
-```
+```sh
+composer init                           # If you don't already have a composer.json file in you theme folder 
 composer require tgeorgel/objectpress
 ```
 
 You could specify a version tag in your composer file to avoid any breaking changes. To install a specific version :  
 
 ```
-composer require "tgeorgel/objectpress ~1.0.1"
+composer require "tgeorgel/objectpress ~v1.0.3"
 ```
 
 ### Installing manually
@@ -24,7 +25,9 @@ composer require "tgeorgel/objectpress ~1.0.1"
 Download or clone the repository, and put the folder wherever you wish, in your wordpress theme folder.
 Don't forget to run a `composer install` inside the ObjectPress folder, otherwise it won't find dependant classes.
 
-> If you're using bedrock/sage stack, you could also decide to put ObjectPress as a mu-plugin, althought you would loose the magic of composer :)
+You should then include ObjectPress's `index.php` file within your app, inside you `functions.php` file for example.
+
+> If you're using bedrock/sage stack, you could also decide to put ObjectPress as a mu-plugin, althrought you would loose the magic of composer :)
 
 
 
@@ -34,16 +37,12 @@ Don't forget to run a `composer install` inside the ObjectPress folder, otherwis
 
 You can use composer to setup a psr-4 autoloading logic. Create a `composer.json` file in your theme directory, using  the command
 
-```
-composer init
-```
 
 Then add the autoload config :  
 
 ```json
 {
-    ...
-     "autoload": {
+    "autoload": {
         "psr-4": {
             "App\\": "app/"
         }
@@ -51,13 +50,12 @@ Then add the autoload config :
     "require": {
         "tgeorgel/objectpress": "~1.0.1"
     }
-    ...
 }
 ```
 
-> ⚠ ObjectPress assume your theme is using the `App` namespace, if it's not the case you should manually override the `OP\Framework\Models\Factory\PostModelFactory` class by extending it. 
+!> ObjectPress assume your theme is using the `App` namespace, if it's not the case you should manually override the `OP\Framework\Models\Factory\PostModelFactory` class by extending it. 
 
-Alternatively, you can use a custom autoload logic.   
+> Alternatively, you can use a custom autoload logic.   
 
 You can now put your app files inside the `app` folder in the theme directory. This is the place where you put your Custom post types, Taxonomies, Models and so on.  
 
@@ -88,6 +86,32 @@ You can find an example theme folder structure [here](https://gitlab.com/tgeorge
 
 Please read the dedicated pages for [Custom Post Types](Custom-Post-Types), [Taxonomies](Taxonomies), [Models](Models/Introduction) and so on.  
 
+
+## Function.php
+
+In your `function.php`, you should have at least a call to `OP\Core\Container::getInstance();`, it will define necessary constants.
+
+```php
+<?php
+
+$theme = OP\Framework\Theme::getInstance();
+
+
+/**
+ * Init OP and theme CPTs & Taxonomies
+ */
+$theme->on('init', function () {
+    // Init ObjectPress
+    OP\Core\Container::getInstance();
+
+    // Init CPTs
+    // App\CustomPostTypes\Example::init();
+
+    // Init Taxonomies
+    // App\Taxonomies\ExampleTaxonomy::init();
+});
+
+```
 
 ## The theme class
 
@@ -125,4 +149,4 @@ $theme->addStyle('path/to/style.ccs')
 ```
 
 
-Read more about the Theme class on the dedicated [wiki page](Theme-class).  
+Read more about the Theme class on the dedicated [wiki page](theme-class.md).  

@@ -50,8 +50,9 @@ trait Common
 
 
     /**
-     * i18n cpt default lang (format: 'en', 'fr'..)
-     * Leave empty string to use the app default lang
+     * i18n cpt default lang (format: 'en', 'fr'..).
+     * Leave empty string to use the app default lang instead.
+     * App default lang is defined by it's dedicated constant, default WPML/PolyLang lang, or wordpress locale.
      *
      * @var string
      * @since 1.0.3

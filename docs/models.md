@@ -87,79 +87,98 @@ class Example extends PostModel
 
 #### Basic usage
 
-Models are a way to treat your custom post types, including `post` and `page` post type.
+Models are a way to treat your custom post types, including default `post` & `page` post types.
 
-`PostModel` contains various methods allowing you to treat your posts :
+`PostModel` contains various methods allowing you to treat your post the right way :
+
+<!-- tabs:start -->
+
+#### ** Page **
 
 ```php
-use App\Models\Example;
+use App\Models\Page;
 
-$example = new Example($example_id);
+$page = Page::find($page_id); // Or Page::current(); for current page
 
-$example->locations(2);  // We just created this function together !
-
-// You can also use the PostModel functions, of course :
-
-$permalink   = $example->permalink();
-$metas       = $example->metas();
-$taxonomies  = $example->getTaxonomies();
-
-$post_date = $example->postDate('d-m-Y');
-
-$example->setTaxonomyTerms('taxonomy-name', [
+$page->setTaxonomyTerms('taxonomy-name', [
 	100,
 	101,
 ]);
 
 // Manage thumbnails 
+$page->getThumbnailUrl();
+$page->getThumbnailID();
 
-$example->getThumbnailUrl();
-$example->getThumbnailID();
+$page->setThumbailFromUrl("https://images.com/my-post-image.png");
 
-$example->setThumbailFromUrl("https://images.com/my-post-image.png");
 
-$example->setMeta('meta_key', $meta_value);
+// Manage ACF fields
+$page->getField('field_key');
+$page->setField('field_key', 'new_value');
 
-// Change post status 
+$page->getFields(); // all of them !
+```
 
+#### ** Example **
+
+```php
+use App\Models\Example;
+
+$example = new Example(); // This creates a new Example in database
+$example->locations(2);   // We just created this function together !
+
+// Change example status
 $example->publish();
 $example->trash();
 
-// Manage ACF fields
+// Manage metas 
+$example->setMeta('meta_key', 'Hell yeah');
+$example->getMeta('meta_key');                 // 'Hell yeah'
 
-$example->getField('field_key');
-$example->setField('field_key', 'new_value');
 
-$example->getFields(); // all of them !
+$permalink   = $example->permalink();
+$metas       = $example->getMetas();              // or $example->metas();
+$taxonomies  = $example->getTaxonomies();
+
+$post_date = $example->postDate('d-m-Y');
 ```
+
+<!-- tabs:end -->
 
 #### Affecting WP_Post properties
 
 The WP_Post properties (post_title, post_name, ...) can be changed directly on your models. Be carefull, the `post_`prefix is removed on models, to avoid excessive length.
 
 
-![docs_img_change_post_properties](uploads/a233084caf1e121ca25f3a4ac4191d5b/docs_img_change_post_properties.png)
+![docs_img_change_post_properties](img/docs_img_change_post_properties.png)
 
-![docs_img_change_post_properties_results](uploads/037b89ffc45db24dcb250b54d92b2f8e/docs_img_change_post_properties_results.png)
+![docs_img_change_post_properties_results](img/docs_img_change_post_properties_results.png)
 
+
+<!-- tabs:start -->
+
+#### ** Retreiving **
 
 ```php
-// retreiving
-
 echo $post->date;
 
 if (isset($post->parent) {
     echo Post::find($post->parent)->title;
 }
+```
 
-// affecting
+#### ** Affecting **
 
+```php
 $post->title    = 'Awesome !';
 $post->parent   = $parent_id;
 $post->password = 'secret :o';
 
 $post->save();
 ```
+
+<!-- tabs:end -->
+
 
 ⚠️ Note the use of `->save()` method. Until you `save()` the post, properties *will not* be updated into you database !  
 

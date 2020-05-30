@@ -3,7 +3,7 @@
 Taxonomies are Wordpesss posts categories.
 With ObjectPress, you want to optimise this taxonomy creation, to gain time and easily enable/disable taxonomies in your theme.
 
-This class is inspired by [generate wordpress](https://generatewp.com/taxonomy/) style, you can checkup `labels` and `args` overwritable on their website. 
+This class is inspired by [generate wordpress](https://generatewp.com/taxonomy/) style, you can checkup overwritable `labels` and `args` on their website. 
  
 ## Defining your taxonomy properties
 
@@ -143,8 +143,10 @@ class ExampleTaxonomy extends Taxonomy
 
 
     /**
-     * i18n cpt default lang (format: 'en', 'fr'..)
-     * Leave empty string to use the app default lang
+     * i18n cpt default lang (format: 'en', 'fr'..).
+     * Leave empty string to use the app default lang instead.
+     * App default lang is defined by it's dedicated constant, default WPML/PolyLang lang, or wordpress locale.
+     *
      *
      * @var string
      * @since 1.3
