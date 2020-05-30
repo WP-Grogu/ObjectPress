@@ -453,7 +453,7 @@ class TaxonomySingleTerm
 
             /**
              * Add some JS to the post listing page to transform the quickedit inputs
-             * @since  0.1.3
+             * @since  0.1.0.3
              */
             public function js_checkbox_transform()
             {

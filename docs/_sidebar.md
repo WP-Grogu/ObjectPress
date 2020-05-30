@@ -1,6 +1,7 @@
 - Getting started
 
   - [Quick start](quickstart.md)
+  - [Configuration](configuration.md)
 
 - Features
 

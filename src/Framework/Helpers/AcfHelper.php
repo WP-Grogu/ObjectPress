@@ -5,7 +5,7 @@ namespace OP\Framework\Helpers;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.3
+ * @version  1.0.3
  * @access   public
  * @since    0.1
  */

@@ -23,13 +23,6 @@ use OP\Framework\Boilerplates\Taxonomy;
 class ExampleTaxonomy extends Taxonomy
 {
     /**
-     * i18n string translation domain
-     *
-     * @var string
-     */
-    protected static $domain = 'theme-taxos';
-
-    /**
      * Taxonomy identifier
      *
      * @var string
@@ -67,62 +60,36 @@ use OP\Framework\Boilerplates\Taxonomy;
 class ExampleTaxonomy extends Taxonomy
 {
     /**
-     * i18n string translation domain
+     * Taxonomy name
      *
      * @var string
-     */
-    protected static $domain = 'theme-taxos';
-
-    /**
-     * Taxonomy identifier
-     *
-     * @var string
+     * @since 0.1
      */
     protected static $taxonomy = 'custom-taxonomy';
+
 
     /**
      * Singular and plural names of Taxonomy
      *
      * @var string
+     * @since 0.1
      */
     public static $singular = 'Custom Taxonomy';
     public static $plural   = 'Custom Taxonomies';
+
 
     /**
      * Register this taxonomy on thoses post types
      *
      * @var array
+     * @since 0.1
      */
     protected static $post_types = [];
 
 
     /**
-     * Enable graphql on this taxonomy
+     * Activate 'single term' mode on this taxonomy
      *
-     * @var bool
-     */
-    public static $graphql_enabled = false;
-
-
-    /**
-     * Taxonomy argument to overide over boilerplate
-     *
-     * @var array
-     */
-    public static $args_override = [];
-    
-
-    /**
-     * Taxonomy labels to overide over boilerplate
-     *
-     * @var array
-     */
-    public static $labels_override = [];
-
-
-    /**
-     * Activate 'single term' mode on this taxonomy 
-     * 
      * @var bool
      * @since 1.3
      */
@@ -138,6 +105,61 @@ class ExampleTaxonomy extends Taxonomy
     public static $single_term_params = [
         'default_term' => 'my-category',
     ];
+
+    /**
+     * CPT/Taxonomy argument to overide over boilerplate
+     *
+     * @var array
+     * @since 1.3
+     */
+    public static $args_override = [];
+
+
+    /**
+     * CPT/Taxonomy labels to overide over boilerplate
+     *
+     * @var array
+     * @since 1.3
+     */
+    public static $labels_override = [];
+
+
+    /**
+     * Enable graphql on this CPT/Taxonomy
+     *
+     * @var bool
+     * @since 0.1
+     */
+    public static $graphql_enabled = false;
+
+
+    /**
+     * i18n translation domain
+     *
+     * @var string
+     * @since 0.1
+     */
+    protected static $i18n_domain = 'theme-cpts';
+
+
+    /**
+     * i18n cpt default lang (format: 'en', 'fr'..)
+     * Leave empty string to use the app default lang
+     *
+     * @var string
+     * @since 1.3
+     */
+    protected static $i18n_base_lang = '';
+
+
+    /**
+     * Used to display male/female pronoun on concerned languages
+     * Set true if should use female pronoun for this cpt
+     *
+     * @var bool
+     * @since 1.0
+     */
+    public static $i18n_is_female = false;
 }
 ```
 

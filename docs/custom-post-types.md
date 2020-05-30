@@ -23,13 +23,6 @@ use OP\Framework\Boilerplates\CustomPostType;
 class Example extends CustomPostType
 {
     /**
-     * i18n string translation domain
-     * 
-     * @var string
-     */
-    public static $domain = 'theme-cpt';
-
-    /**
      * Custom post type identifier
      * 
      * @var string
@@ -58,52 +51,82 @@ use OP\Framework\Boilerplates\CustomPostType;
 class Example extends CustomPostType
 {
     /**
-     * i18n translation domain
-     * 
+     * Custom post type name/key
      * @var string
+     * @since 0.1
      */
-    public static $domain = 'theme-cpt';
+    protected static $cpt = 'example';
 
-    /**
-     * Custom post type identifier
-     * 
-     * @var string
-     */
-    public static $cpt = 'example';
 
     /**
      * Singular and plural names of CPT
-     * 
+     *
      * @var string
+     * @since 0.1
      */
     public static $singular = 'Example';
     public static $plural   = 'Examples';
 
-    /**
-     * Menu icon to display in back-office
-     * 
-     * @var string
-     */
-    public static $menu_icon = 'dashicons-admin-site-alt';
 
     /**
-     * Enable graphql
-     * 
-     * @var bool
+     * Menu icon to display in back-office (dash-icon)
+     *
+     * @var string
+     * @since 1.3
      */
-    public static $graphql_enabled = true;
+    public static $menu_icon = 'dashicons-book';
+
+
+    /**
+     * i18n translation domain
+     *
+     * @var string
+     * @since 0.1
+     */
+    protected static $i18n_domain = 'theme-cpts';
+
+    /**
+     * i18n cpt default lang (format: 'en', 'fr'..)
+     * Leave empty string to use the app default lang
+     *
+     * @var string
+     * @since 1.3
+     */
+    protected static $i18n_base_lang = '';
+
+    /**
+     * Used to display male/female pronoun on concerned languages
+     * Set true if should use female pronoun for this cpt
+     *
+     * @var bool
+     * @since 1.0
+     */
+    public static $i18n_is_female = false;
+
+
+    /**
+     * Enable graphql on this CPT
+     *
+     * @var bool
+     * @since 0.1
+     */
+    public static $graphql_enabled = false;
+
 
     /**
      * CPT argument to overide over boilerplate
      *
      * @var array
+     * @since 1.3
      */
     public static $args_override = [];
+
 
     /**
      * CPT labels to overide over boilerplate
      *
      * @var array
+     * @since 1.3
      */
     public static $labels_override = [];
 }

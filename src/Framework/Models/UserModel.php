@@ -12,7 +12,7 @@ use \WP_User;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.3
+ * @version  1.0.3
  * @access   public
  * @since    7.0
  */
@@ -60,7 +60,7 @@ abstract class UserModel
             if ($this->user === false) {
                 return false;
             }
-            
+
             $this->user_id = $this->user->ID;
         }
 
@@ -144,7 +144,7 @@ abstract class UserModel
     {
         return get_user_meta($this->user_id, $meta_key, $single);
     }
-    
+
 
     /**
      * Set or update a meta identified by a meta_key
@@ -161,10 +161,19 @@ abstract class UserModel
     public function setMeta(string $key, $value, $multiple = false)
     {
         if ($multiple === false) {
-            return update_user_meta($this->user_id, $key, $value);
+            $result = update_user_meta($this->user_id, $key, $value);
+
+            if (is_a($result, 'WP_Error')) {
+                throw new \Exception("ObjectPress: update_user_meta() returned a \WP_Error");
+            }
         } else {
-            return add_user_meta($this->user_id, $key, $value, false);
+            $result = add_user_meta($this->user_id, $key, $value, false);
+            if (is_a($result, 'WP_Error')) {
+                throw new \Exception("ObjectPress: add_user_meta() returned a \WP_Error");
+            }
         }
+
+        return $result;
     }
 
 
@@ -203,8 +212,8 @@ abstract class UserModel
     {
         return get_password_reset_key($this->user);
     }
-    
-    
+
+
     /**
      * Get a new password reset token for the user
      *
@@ -216,8 +225,8 @@ abstract class UserModel
     {
         return check_password_reset_key($token, $this->get()->user_login);
     }
-    
-    
+
+
     /**
      * Set a new encrypted password for the user
      *
@@ -395,8 +404,8 @@ abstract class UserModel
 
         return new static($user_id);
     }
-    
-    
+
+
     /**
      * Create a new user using wp_insert_user() and returns new self.
      * If no password is provided, creates a 25 char lenght secure password

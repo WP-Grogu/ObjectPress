@@ -2,31 +2,26 @@
 
 namespace OP\Framework\Boilerplates;
 
+use OP\Core\Locale;
+use OP\Framework\Boilerplates\Traits\Common;
 use OP\Lib\TaxonomySingleTerm\TaxonomySingleTerm;
 
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.3
+ * @version  1.0.3
  * @access   public
  * @since    0.1
  */
 abstract class Taxonomy
 {
+    use Common;
+
     /********************************/
     /*                              */
     /*        Default params        */
     /*                              */
     /********************************/
-
-
-    /**
-     * Domain name for string translation
-     *
-     * @var string
-     * @since 0.1
-     */
-    protected static $domain = 'theme-taxos';
 
 
     /**
@@ -36,6 +31,7 @@ abstract class Taxonomy
      * @since 0.1
      */
     protected static $taxonomy = 'custom-taxonomy';
+
 
     /**
      * Singular and plural names of Taxonomy
@@ -48,15 +44,6 @@ abstract class Taxonomy
 
 
     /**
-     * Enable graphql on this taxonomy
-     *
-     * @var bool
-     * @since 0.1
-     */
-    public static $graphql_enabled = false;
-
-
-    /**
      * Register this taxonomy on thoses post types
      *
      * @var array
@@ -65,30 +52,12 @@ abstract class Taxonomy
     protected static $post_types = [];
 
 
-    /**
-     * Taxonomy argument to overide over boilerplate
-     *
-     * @var array
-     * @since 1.3
-     */
-    public static $args_override = [];
-
-
-    /**
-     * Taxonomy labels to overide over boilerplate
-     *
-     * @var array
-     * @since 1.3
-     */
-    public static $labels_override = [];
-
-
 
     /**
      * Activate 'single term' mode on this taxonomy
      *
      * @var bool
-     * @since 1.3
+     * @since 1.0.3
      */
     public static $single_term = false;
 
@@ -97,7 +66,7 @@ abstract class Taxonomy
      * 'single term' mode params
      *
      * @var array
-     * @since 1.3
+     * @since 1.0.3
      */
     public static $single_term_params = [];
 
@@ -106,7 +75,7 @@ abstract class Taxonomy
      * Default 'single term' mode params
      *
      * @var array
-     * @since 1.3
+     * @since 1.0.3
      */
     private static $_default_single_term_params = [
         'default_term'          => null,      // Term name, slug or id
@@ -129,7 +98,7 @@ abstract class Taxonomy
      * Prevent class initialisation thru 'new Class'
      *
      * @access private
-     * @since 1.3
+     * @since 1.0.3
      */
     private function __construct()
     {
@@ -140,11 +109,15 @@ abstract class Taxonomy
      * Taxonomy init (registration)
      *
      * @return void
-     * @since 1.3
+     * @since 1.0.3
      */
     public static function init()
     {
-        static::register(static::$args_override, static::$labels_override);
+        if (!static::$i18n_domain) {
+            static::$i18n_domain = defined('OP_DEFAULT_I18N_DOMAIN_TAXOS') ? OP_DEFAULT_I18N_DOMAIN_TAXOS : 'op-theme-taxos';
+        }
+
+        static::register();
 
         if (static::$single_term) {
             static::setupSingleTerm();
@@ -161,33 +134,66 @@ abstract class Taxonomy
      * @return void
      * @since 0.1
      */
-    public static function register(array $args = [], array $labels = [])
+    public static function register()
     {
         if (taxonomy_exists(static::$taxonomy)) {
             return;
         }
 
+        $base_labels = self::generateLabels();
+        $labels      = array_replace($base_labels, static::$labels_override);
+
+        $base_args   = self::generateArgs($labels);
+        $args        = array_replace($base_args, static::$args_override);
+
+        var_dump(static::$taxonomy, static::$post_types, $args);
+        die;
+
+        register_taxonomy(static::$taxonomy, static::$post_types, $args);
+    }
+
+    /**
+     * Generate the labels based on i18n default lang
+     * 
+     * @return array
+     */
+    private static function generateLabels()
+    {
         $singular   = static::$singular;
         $plural     = static::$plural;
 
-        $base_labels = [
-            'name'              => _x("$plural", 'taxonomy general name', '148-taxonomies'),
-            'singular_name'     => _x("$singular", 'taxonomy singular name', '148-taxonomies'),
-            'search_items'      =>  __("Search $plural", '148-taxonomies'),
-            'all_items'         => __("All $plural", '148-taxonomies'),
-            'parent_item'       => __("Parent $singular", '148-taxonomies'),
-            'parent_item_colon' => __("Parent $singular:", '148-taxonomies'),
-            'edit_item'         => __("Edit $singular", '148-taxonomies'),
-            'update_item'       => __("Update $singular", '148-taxonomies'),
-            'add_new_item'      => __("Add New $singular", '148-taxonomies'),
-            'new_item_name'     => __("New $singular Name", '148-taxonomies'),
-            'menu_name'         => __("$plural", '148-taxonomies'),
+        $locale      = Locale::getInstance();
+        $i18n_labels = $locale->getDomain('labels.taxo', static::$i18n_base_lang);
+
+        return [
+            'name'              => _x(sprintf($i18n_labels['name'], $plural), 'taxonomy general name', static::$i18n_domain),
+            'singular_name'     => _x(sprintf($i18n_labels['singular_name'], $singular), 'taxonomy singular name', static::$i18n_domain),
+            'search_items'      => __(sprintf($i18n_labels['search_items'], $plural), static::$i18n_domain),
+            'all_items'         => __(sprintf($i18n_labels['all_items'], $plural), static::$i18n_domain),
+            'parent_item'       => __(sprintf($i18n_labels['parent_item'], $singular), static::$i18n_domain),
+            'parent_item_colon' => __(sprintf($i18n_labels['parent_item_colon'], $singular), static::$i18n_domain),
+            'edit_item'         => __(sprintf($i18n_labels['edit_item'], $singular), static::$i18n_domain),
+            'update_item'       => __(sprintf($i18n_labels['update_item'], $singular), static::$i18n_domain),
+            'add_new_item'      => __(sprintf($i18n_labels['add_new_item'], $singular), static::$i18n_domain),
+            'new_item_name'     => __(sprintf($i18n_labels['new_item_name'], $singular), static::$i18n_domain),
+            'menu_name'         => __(sprintf($i18n_labels['menu_name'], $plural), static::$i18n_domain),
         ];
+    }
 
-        // Override default labels with the specified custom ones
-        $labels = array_replace($base_labels, $labels);
 
-        $base_args = [
+    /**
+     * Generate the args based on i18n default lang
+     * 
+     * @param array $labels
+     * 
+     * @return array
+     */
+    private static function generateArgs(array $labels)
+    {
+        $singular   = static::$singular;
+        $plural     = static::$plural;
+
+        $args = [
             'hierarchical'      => true,
             'labels'            => $labels,
             'show_ui'           => true,
@@ -197,17 +203,14 @@ abstract class Taxonomy
 
         // If graphql is enabled, we need to setup some more params
         if (static::$graphql_enabled) {
-            $base_args = array_replace($base_args, [
+            $args = array_replace($args, [
                 'show_in_graphql'       => true,
                 'graphql_single_name'   => static::graphqlFormatName($singular),
                 'graphql_plural_name'   => static::graphqlFormatName($plural),
             ]);
         }
 
-        // Override default args with the specified custom ones
-        $args = array_replace($base_args, $args);
-
-        register_taxonomy(static::$taxonomy, static::$post_types, $args);
+        return $args;
     }
 
 
@@ -242,7 +245,7 @@ abstract class Taxonomy
      * Set this Taxonomy as as Single Term taxonomy
      *
      * @return void
-     * @since 1.3
+     * @since 1.0.3
      */
     public static function setupSingleTerm(): void
     {

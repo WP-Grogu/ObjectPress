@@ -5,9 +5,9 @@ namespace OP\Framework\GraphQL\Interfaces;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.3
+ * @version  1.0.3
  * @access   public
- * @since    1.3
+ * @since    1.0.3
  */
 interface IGqlField
 {

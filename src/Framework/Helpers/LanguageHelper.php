@@ -5,9 +5,9 @@ namespace OP\Framework\Helpers;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  1.0.3
  * @access   public
- * @since    0.1
+ * @since    1.0
  */
 class LanguageHelper
 {
@@ -34,7 +34,7 @@ class LanguageHelper
     /**
      * Return the primary language
      *
-     * @return string
+     * @return string|null
      */
     public static function primaryLang()
     {
@@ -68,7 +68,7 @@ class LanguageHelper
             return (string) pll_get_post_language($id, 'slug');
         }
 
-        
+
         // WPML
         if (function_exists('wpml_get_language_information')) {
             $infos = wpml_get_language_information(null, $id);
@@ -79,7 +79,7 @@ class LanguageHelper
         }
     }
 
-    
+
     /**
      * Set a post language
      *
@@ -96,7 +96,7 @@ class LanguageHelper
             pll_set_post_language($id, $lang);
             return true;
         }
-        
+
         // WPML
         if (function_exists('wpml_get_language_information')) {
             $infos = wpml_get_language_information(null, $id);
@@ -143,7 +143,7 @@ class LanguageHelper
         if (!$post) {
             return false;
         }
-        
+
         // PolyLang
         if (function_exists('pll_get_post')) {
             return pll_get_post($post->ID, $lang);

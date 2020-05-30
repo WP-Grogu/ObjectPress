@@ -7,9 +7,9 @@ use OP\Framework\GraphQL\Interfaces\IGqlType;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.3
+ * @version  1.0.3
  * @access   public
- * @since    1.3
+ * @since    1.0.3
  */
 abstract class GqlType implements IGqlType
 {
