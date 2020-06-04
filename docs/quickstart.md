@@ -53,8 +53,7 @@ Then add the autoload config :
 }
 ```
 
-!> ObjectPress assume your theme is using the `App` namespace, if it's not the case you should manually override the `OP\Framework\Models\Factory\PostModelFactory` class by extending it. 
-
+!> ObjectPress assume your theme is using the `App` namespace. 
 > Alternatively, you can use a custom autoload logic.   
 
 You can now put your app files inside the `app` folder in the theme directory. This is the place where you put your Custom post types, Taxonomies, Models and so on.  

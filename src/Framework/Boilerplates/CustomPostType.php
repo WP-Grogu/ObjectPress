@@ -2,7 +2,8 @@
 
 namespace OP\Framework\Boilerplates;
 
-use OP\Core\Locale;
+use OP\Support\Facades\Locale;
+use OP\Support\Facades\Config;
 use OP\Framework\Boilerplates\Traits\Common;
 
 /**
@@ -120,38 +121,38 @@ abstract class CustomPostType
     {
         $singular   = static::$singular;
         $plural     = static::$plural;
+        $domain     = static::getDomain();
 
-        $locale      = Locale::getInstance();
-        $i18n_labels = $locale->getDomain('labels.cpt', static::$i18n_base_lang);
+        $i18n_labels = Locale::getDomain('labels.cpt', static::$i18n_base_lang);
 
         return [
-            'name'                  => _x(sprintf($i18n_labels['name'], $plural), 'Post Type General Name', static::$i18n_domain),
-            'singular_name'         => _x(sprintf($i18n_labels['singular_name'], $singular), 'Post Type Singular Name', static::$i18n_domain),
-            'menu_name'             => __(sprintf($i18n_labels['menu_name'], $plural), static::$i18n_domain),
-            'name_admin_bar'        => __(sprintf($i18n_labels['name_admin_bar'], $singular), static::$i18n_domain),
-            'archives'              => __(sprintf($i18n_labels['archives'], $singular), static::$i18n_domain),
-            'attributes'            => __(sprintf($i18n_labels['attributes'], $singular), static::$i18n_domain),
-            'parent_item_colon'     => __(sprintf($i18n_labels['parent_item_colon'], $singular), static::$i18n_domain),
-            'all_items'             => __(sprintf($i18n_labels['all_items'], $plural), static::$i18n_domain),
-            'add_new_item'          => __(sprintf($i18n_labels['add_new_item'], $singular), static::$i18n_domain),
-            'add_new'               => __($i18n_labels['add_new'], static::$i18n_domain),
-            'new_item'              => __(sprintf($i18n_labels['new_item'], $singular), static::$i18n_domain),
-            'edit_item'             => __(sprintf($i18n_labels['edit_item'], $singular), static::$i18n_domain),
-            'update_item'           => __(sprintf($i18n_labels['update_item'], $singular), static::$i18n_domain),
-            'view_item'             => __(sprintf($i18n_labels['view_item'], $singular), static::$i18n_domain),
-            'view_items'            => __(sprintf($i18n_labels['view_items'], $plural), static::$i18n_domain),
-            'search_items'          => __(sprintf($i18n_labels['search_items'], $singular), static::$i18n_domain),
-            'not_found'             => __($i18n_labels['not_found'], static::$i18n_domain),
-            'not_found_in_trash'    => __($i18n_labels['not_found_in_trash'], static::$i18n_domain),
-            'featured_image'        => __($i18n_labels['featured_image'], static::$i18n_domain),
-            'set_featured_image'    => __($i18n_labels['set_featured_image'], static::$i18n_domain),
-            'remove_featured_image' => __($i18n_labels['remove_featured_image'], static::$i18n_domain),
-            'use_featured_image'    => __($i18n_labels['use_featured_image'], static::$i18n_domain),
-            'insert_into_item'      => __(sprintf($i18n_labels['insert_into_item'], $singular), static::$i18n_domain),
-            'uploaded_to_this_item' => __(sprintf($i18n_labels['uploaded_to_this_item'], $singular), static::$i18n_domain),
-            'items_list'            => __(sprintf($i18n_labels['items_list'], $plural), static::$i18n_domain),
-            'items_list_navigation' => __(sprintf($i18n_labels['items_list_navigation'], $plural), static::$i18n_domain),
-            'filter_items_list'     => __(sprintf($i18n_labels['filter_items_list'], $plural), static::$i18n_domain),
+            'name'                  => _x(sprintf($i18n_labels['name'], $plural), 'Post Type General Name', $domain),
+            'singular_name'         => _x(sprintf($i18n_labels['singular_name'], $singular), 'Post Type Singular Name', $domain),
+            'menu_name'             => __(sprintf($i18n_labels['menu_name'], $plural), $domain),
+            'name_admin_bar'        => __(sprintf($i18n_labels['name_admin_bar'], $singular), $domain),
+            'archives'              => __(sprintf($i18n_labels['archives'], $singular), $domain),
+            'attributes'            => __(sprintf($i18n_labels['attributes'], $singular), $domain),
+            'parent_item_colon'     => __(sprintf($i18n_labels['parent_item_colon'], $singular), $domain),
+            'all_items'             => __(sprintf($i18n_labels['all_items'], $plural), $domain),
+            'add_new_item'          => __(sprintf($i18n_labels['add_new_item'], $singular), $domain),
+            'add_new'               => __($i18n_labels['add_new'], $domain),
+            'new_item'              => __(sprintf($i18n_labels['new_item'], $singular), $domain),
+            'edit_item'             => __(sprintf($i18n_labels['edit_item'], $singular), $domain),
+            'update_item'           => __(sprintf($i18n_labels['update_item'], $singular), $domain),
+            'view_item'             => __(sprintf($i18n_labels['view_item'], $singular), $domain),
+            'view_items'            => __(sprintf($i18n_labels['view_items'], $plural), $domain),
+            'search_items'          => __(sprintf($i18n_labels['search_items'], $singular), $domain),
+            'not_found'             => __($i18n_labels['not_found'], $domain),
+            'not_found_in_trash'    => __($i18n_labels['not_found_in_trash'], $domain),
+            'featured_image'        => __($i18n_labels['featured_image'], $domain),
+            'set_featured_image'    => __($i18n_labels['set_featured_image'], $domain),
+            'remove_featured_image' => __($i18n_labels['remove_featured_image'], $domain),
+            'use_featured_image'    => __($i18n_labels['use_featured_image'], $domain),
+            'insert_into_item'      => __(sprintf($i18n_labels['insert_into_item'], $singular), $domain),
+            'uploaded_to_this_item' => __(sprintf($i18n_labels['uploaded_to_this_item'], $singular), $domain),
+            'items_list'            => __(sprintf($i18n_labels['items_list'], $plural), $domain),
+            'items_list_navigation' => __(sprintf($i18n_labels['items_list_navigation'], $plural), $domain),
+            'filter_items_list'     => __(sprintf($i18n_labels['filter_items_list'], $plural), $domain),
         ];
     }
 
@@ -167,20 +168,20 @@ abstract class CustomPostType
     {
         $singular   = static::$singular;
         $plural     = static::$plural;
+        $domain     = static::getDomain();
 
-        $locale      = Locale::getInstance();
-        $i18n_labels = $locale->getDomain('labels.cpt', static::$i18n_base_lang);
+        $i18n_labels = Locale::getDomain('labels.cpt', static::$i18n_base_lang);
 
         $pronouns = [
-            'male'   => $locale->get('words.male_pronoun', static::$i18n_base_lang),
-            'female' => $locale->get('words.female_pronoun', static::$i18n_base_lang),
+            'male'   => Locale::get('words.male_pronoun', static::$i18n_base_lang),
+            'female' => Locale::get('words.female_pronoun', static::$i18n_base_lang),
         ];
 
         $genre = static::$i18n_is_female ? 'female' : 'male';
 
         $args = [
-            'label'                 => __(sprintf($i18n_labels['label'], $singular), static::$i18n_domain),
-            'description'           => __(sprintf($i18n_labels['description'], $pronouns[$genre], $singular), static::$i18n_domain),
+            'label'                 => __(sprintf($i18n_labels['label'], $singular), $domain),
+            'description'           => __(sprintf($i18n_labels['description'], $pronouns[$genre], $singular), $domain),
             'labels'                => $labels,
             'supports'              => ['title', 'thumbnail'],
             'taxonomies'            => [],
@@ -222,9 +223,15 @@ abstract class CustomPostType
      * @return string
      * @since 0.1
      */
-    public function getDomain()
+    public static function getDomain()
     {
-        return static::$i18n_domain;
+        $domain = static::$i18n_domain;
+
+        if (Config::get('i18n.suffix_domains_current_lang') === true) {
+            $domain .= '__' . (static::$i18n_base_lang ?: Locale::defaultLang());
+        }
+
+        return $domain;
     }
 
 

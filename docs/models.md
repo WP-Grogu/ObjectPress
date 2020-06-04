@@ -150,9 +150,9 @@ $post_date = $example->postDate('d-m-Y');
 The WP_Post properties (post_title, post_name, ...) can be changed directly on your models. Be carefull, the `post_`prefix is removed on models, to avoid excessive length.
 
 
-![docs_img_change_post_properties](img/docs_img_change_post_properties.png)
+![docs_img_change_post_properties](_images/docs_img_change_post_properties.png)
 
-![docs_img_change_post_properties_results](img/docs_img_change_post_properties_results.png)
+![docs_img_change_post_properties_results](_images/docs_img_change_post_properties_results.png)
 
 
 <!-- tabs:start -->

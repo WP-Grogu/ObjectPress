@@ -27,7 +27,7 @@ return [
     'remove_featured_image' => "Retirer l'image mise en avant",
     'use_featured_image'    => "Utiliser comme image mise en avant",
     'insert_into_item'      => "Insérer dans %s",
-    'uploaded_to_this_item' => "Uploaded to this %s",
+    'uploaded_to_this_item' => "Uploadé dans ce(tte) %s",
     'items_list'            => "liste de %s",
     'items_list_navigation' => "liste de navigation de %s",
     'filter_items_list'     => "Filter la liste de %s",

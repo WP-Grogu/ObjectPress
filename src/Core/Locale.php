@@ -3,23 +3,13 @@
 namespace OP\Core;
 
 use OP\Framework\Helpers\LanguageHelper;
+use OP\Core\Patterns\Singleton;
 
 final class Locale
 {
-    private static $_instance = null;
+    use Singleton;
+
     private static $paths = [];
-
-    /**
-     * Gets the instance via lazy initialization (created on first usage)
-     */
-    public static function getInstance(): Locale
-    {
-        if (static::$_instance === null) {
-            static::$_instance = new static();
-        }
-
-        return static::$_instance;
-    }
 
 
     /**
@@ -71,6 +61,12 @@ final class Locale
         $relative_path = $this->domainToRelPath($domain, $lang);
         $full_path     = $this->relativeToFullPath($relative_path);
 
+        // Fall back to english if lang not found
+        if (!$full_path) {
+            $relative_path = $this->domainToRelPath($domain, 'en');
+            $full_path     = $this->relativeToFullPath($relative_path);
+        }
+
         if (!$full_path) {
             return false;
         }
@@ -112,9 +108,9 @@ final class Locale
     private function domainToRelPath(string $domain, string $lang): string
     {
         return implode('', [
-            str_replace('.', '/', strtolower($domain)),
-            '/',
             strtolower($lang),
+            '/',
+            str_replace('.', '/', strtolower($domain)),
             '.php'
         ]);
     }
@@ -156,20 +152,5 @@ final class Locale
     private function __construct()
     {
         static::$paths[] = realpath(__DIR__ . '/../Lang/');
-    }
-
-
-    /**
-     * prevent the instance from being cloned (which would create a second instance of it)
-     */
-    private function __clone()
-    {
-    }
-
-    /**
-     * prevent from being unserialized (which would create a second instance of it)
-     */
-    private function __wakeup()
-    {
     }
 }

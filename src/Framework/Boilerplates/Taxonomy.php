@@ -2,8 +2,9 @@
 
 namespace OP\Framework\Boilerplates;
 
-use OP\Core\Locale;
 use OP\Framework\Boilerplates\Traits\Common;
+use OP\Support\Facades\Locale;
+use OP\Support\Facades\Config;
 use OP\Lib\TaxonomySingleTerm\TaxonomySingleTerm;
 
 /**
@@ -146,9 +147,6 @@ abstract class Taxonomy
         $base_args   = self::generateArgs($labels);
         $args        = array_replace($base_args, static::$args_override);
 
-        var_dump(static::$taxonomy, static::$post_types, $args);
-        die;
-
         register_taxonomy(static::$taxonomy, static::$post_types, $args);
     }
 
@@ -161,22 +159,22 @@ abstract class Taxonomy
     {
         $singular   = static::$singular;
         $plural     = static::$plural;
+        $domain     = static::getDomain();
 
-        $locale      = Locale::getInstance();
-        $i18n_labels = $locale->getDomain('labels.taxo', static::$i18n_base_lang);
+        $i18n_labels = Locale::getDomain('labels.taxo', static::$i18n_base_lang);
 
         return [
-            'name'              => _x(sprintf($i18n_labels['name'], $plural), 'taxonomy general name', static::$i18n_domain),
-            'singular_name'     => _x(sprintf($i18n_labels['singular_name'], $singular), 'taxonomy singular name', static::$i18n_domain),
-            'search_items'      => __(sprintf($i18n_labels['search_items'], $plural), static::$i18n_domain),
-            'all_items'         => __(sprintf($i18n_labels['all_items'], $plural), static::$i18n_domain),
-            'parent_item'       => __(sprintf($i18n_labels['parent_item'], $singular), static::$i18n_domain),
-            'parent_item_colon' => __(sprintf($i18n_labels['parent_item_colon'], $singular), static::$i18n_domain),
-            'edit_item'         => __(sprintf($i18n_labels['edit_item'], $singular), static::$i18n_domain),
-            'update_item'       => __(sprintf($i18n_labels['update_item'], $singular), static::$i18n_domain),
-            'add_new_item'      => __(sprintf($i18n_labels['add_new_item'], $singular), static::$i18n_domain),
-            'new_item_name'     => __(sprintf($i18n_labels['new_item_name'], $singular), static::$i18n_domain),
-            'menu_name'         => __(sprintf($i18n_labels['menu_name'], $plural), static::$i18n_domain),
+            'name'              => _x(sprintf($i18n_labels['name'], $plural), 'taxonomy general name', $domain),
+            'singular_name'     => _x(sprintf($i18n_labels['singular_name'], $singular), 'taxonomy singular name', $domain),
+            'search_items'      => __(sprintf($i18n_labels['search_items'], $plural), $domain),
+            'all_items'         => __(sprintf($i18n_labels['all_items'], $plural), $domain),
+            'parent_item'       => __(sprintf($i18n_labels['parent_item'], $singular), $domain),
+            'parent_item_colon' => __(sprintf($i18n_labels['parent_item_colon'], $singular), $domain),
+            'edit_item'         => __(sprintf($i18n_labels['edit_item'], $singular), $domain),
+            'update_item'       => __(sprintf($i18n_labels['update_item'], $singular), $domain),
+            'add_new_item'      => __(sprintf($i18n_labels['add_new_item'], $singular), $domain),
+            'new_item_name'     => __(sprintf($i18n_labels['new_item_name'], $singular), $domain),
+            'menu_name'         => __(sprintf($i18n_labels['menu_name'], $plural), $domain),
         ];
     }
 
@@ -220,9 +218,15 @@ abstract class Taxonomy
      * @return string
      * @since 0.1
      */
-    public function getDomain()
+    public static function getDomain()
     {
-        return static::$domain;
+        $domain = static::$i18n_domain;
+
+        if (Config::get('i18n.suffix_domains_current_lang') === true) {
+            $domain .= '__' . (static::$i18n_base_lang ?: Locale::defaultLang());
+        }
+
+        return $domain;
     }
 
 
@@ -262,7 +266,7 @@ abstract class Taxonomy
 
         $taxonomy_box = new TaxonomySingleTerm(static::$taxonomy);
 
-        $taxonomy_box->set('metabox_title', __(static::$singular, static::$domain));
+        $taxonomy_box->set('metabox_title', __(static::$singular, static::getDomain()));
 
         foreach ($available_properties as $tst_property => $op_property) {
             if (!isset($params[$op_property]) || $params[$op_property] == null) {
