@@ -37,13 +37,14 @@ trait PostAttributes
         $this->attributes['content_filtered']       = $post->post_content_filtered;
         $this->attributes['parent']                 = $post->post_parent;
         $this->attributes['guid']                   = $post->guid;
-        $this->attributes['post_mime_type']         = $post->post_mime_type;
+        $this->attributes['type']                   = $post->post_type;
+        $this->attributes['mime_type']              = $post->post_mime_type;
         $this->attributes['comment_count']          = $post->comment_count;
         $this->attributes['filter']                 = $post->filter;
 
         $fillable = $this->attributes;
 
-        unset($fillable['id']);
+        unset($fillable['id'], $fillable['type']);
 
         $this->fillable = $fillable;
     }
@@ -75,7 +76,7 @@ trait PostAttributes
         $post['post_content_filtered']    = $this->attributes['content_filtered'];
         $post['post_parent']              = $this->attributes['parent'];
         $post['guid']                     = $this->attributes['guid'];
-        $post['post_mime_type']           = $this->attributes['post_mime_type'];
+        $post['post_mime_type']           = $this->attributes['mime_type'];
         $post['comment_count']            = $this->attributes['comment_count'];
         $post['filter']                   = $this->attributes['filter'];
 
