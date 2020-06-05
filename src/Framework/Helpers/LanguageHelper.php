@@ -169,4 +169,27 @@ class LanguageHelper
             return pll_get_term($t_id, $lang);
         }
     }
+
+
+    /**
+     * Get a translated string in desired lang (created with __('str', 'domain'))
+     *
+     * @param
+     * @return string
+     */
+    public static function getStringIn(string $string, string $domain, string $lang)
+    {
+        // WPML
+        if (function_exists('wpml_get_language_information')) {
+            $base_lang = static::currentLang();
+
+            if ($lang !== $base_lang) {
+                do_action('wpml_switch_language', $lang);
+                $string = __($string, $domain);
+                do_action('wpml_switch_language', $base_lang);
+            }
+
+            return $string;
+        }
+    }
 }
