@@ -2,7 +2,13 @@
 
 Models are really usefull, they are the link between your app and your database. A model represents a piece of data; It generally contains all the usefull methods for it's management.  
 
-Because wordpress relies on post types, ObjectPress models are "binded" to thoses post types. A model extends the base ObjectPress `PostModel` class for general post/pages, and the `UserModel` for users.
+Because wordpress relies on post types, ObjectPress models are "binded" to thoses post types.  
+
+A custom post type model extends the base ObjectPress `OP\Framework\Models\Post` class.  For default post types, you can use or respectively extend `Page` or `Post` classes, or  `User` class for user management.
+
+> A typical app would have a `User`, a `Page` and a `Post` model.  
+ 
+!> Methods from `OP\Models\User` class differs from typical posts classes, as `user` *isn't a post type*. Please read more about User model below.
 
 Thoses models already include a lot of methods to manage wordpress posts.
 
@@ -11,20 +17,21 @@ Thoses models already include a lot of methods to manage wordpress posts.
 
 Define your models inside the `app/Models` folder. To be able to easily grab Models from ObjectPress Factories, you should respect the naming convention : kebab-case wordpress custom post types should be converted to camel-case in you models. For example, a `case-study` CPT should have `CaseStudy` as model class name.
 
-> If you are not following the naming convention for any reason, you can specify you cpt-model binding inside the `app/Interfaces/ICpts.php` interface. [read more](README.md)
+> If you are not following the naming convention for any reason, you can specify your custom cpt-model binding inside the `app/Interfaces/ICpts.php` interface. [read more](README.md)
 
 <!-- tabs:start -->
 
-#### ** Minimal **
+
+#### ** Custom post type **
 
 ```php
 <?php
 
 namespace App\Models;
 
-use OP\Framework\Models\PostModel;
+use OP\Framework\Models\Post;
 
-class Example extends PostModel
+class Example extends Post
 {
     /**
      * Wordpress post type identifier, associated to the current model
@@ -79,6 +86,36 @@ class Example extends PostModel
 }
 ```
 
+#### ** Extending Page **
+
+```php
+<?php
+
+namespace App\Models;
+
+use OP\Framework\Models\Page as OP_Page;
+
+class Page extends Page
+{
+    // methods goes here
+}
+```
+
+#### ** Extending Post **
+
+```php
+<?php
+
+namespace App\Models;
+
+use OP\Framework\Models\Post as OP_Post;
+
+class Post extends Post
+{
+    // methods goes here
+}
+```
+
 <!-- tabs:end -->
 
 
@@ -89,7 +126,31 @@ class Example extends PostModel
 
 Models are a way to treat your custom post types, including default `post` & `page` post types.
 
-`PostModel` contains various methods allowing you to treat your post the right way :
+The all point is to isolate your methods, but also use the same methods name between your different models, without struggling about logic differences.
+
+For example, posts and user both *have metas*. However, wordpress doesn't manage metas the exact same way, and you would need to use different methods when managing post or user metas. With ObjectPress, you can simply use the right model :
+
+```php
+$user = App\Models\User::find(1);
+$page = App\Models\Page::find(1);
+
+$page->getMeta('my-meta');
+$user->getMeta('my-meta');
+```
+
+Having a model for each piece of data allows to partionate your code :
+
+```php
+$page    = App\Models\Page::find(1);    // `page` post type 
+$product = App\Models\Product::find(2); // `product` post type
+
+// Using shared methods between posts
+$page->postDate();
+$product->postDate();
+
+// Using model-specific methods
+$page->getTemplate();
+```
 
 <!-- tabs:start -->
 
@@ -145,14 +206,11 @@ $post_date = $example->postDate('d-m-Y');
 
 <!-- tabs:end -->
 
-#### Affecting WP_Post properties
+#### Post properties
 
-The WP_Post properties (post_title, post_name, ...) can be changed directly on your models. Be carefull, the `post_`prefix is removed on models, to avoid excessive length.
+The `WP_Post` properties (post_title, post_name, ...) can be changed directly on your models, using their selector. For example, to manage the post title :
 
-
-![docs_img_change_post_properties](_images/docs_img_change_post_properties.png)
-
-![docs_img_change_post_properties_results](_images/docs_img_change_post_properties_results.png)
+> On post properties, the `post_` prefix is removed for a more eloquent code. For example $post->post_name becomes $post->name.
 
 
 <!-- tabs:start -->
@@ -180,7 +238,7 @@ $post->save();
 <!-- tabs:end -->
 
 
-⚠️ Note the use of `->save()` method. Until you `save()` the post, properties *will not* be updated into you database !  
+!> ⚠️ Note the use of `->save()` method. Until you `save()` the post, properties *will not* be updated into you database if you change anything !  
 
 
 ## Shared methods across models

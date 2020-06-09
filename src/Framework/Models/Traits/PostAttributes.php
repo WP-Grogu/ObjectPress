@@ -12,6 +12,26 @@ namespace OP\Framework\Models\Traits;
 trait PostAttributes
 {
     /**
+     * Post attributes
+     *
+     * @var array
+     * @access private
+     * @since 0.1
+     */
+    private $attributes = [];
+
+
+    /**
+     * Post attributes, filleable by child class
+     *
+     * @var array
+     * @access private
+     * @since 0.1
+     */
+    private $fillable = [];
+
+
+    /**
      * Transform WP_Post OP Post to attributes
      *
      * @param \WP_Post $post

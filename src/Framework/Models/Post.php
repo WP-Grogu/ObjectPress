@@ -14,11 +14,11 @@ use OP\Framework\Models\Traits\PostQuery;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.2
+ * @version  1.3.1
  * @access   public
  * @since    0.1
  */
-abstract class PostModel
+abstract class Post
 {
     use PostAttributes,
         PostType,
@@ -53,26 +53,6 @@ abstract class PostModel
      * @since 0.1
      */
     private static $post_type;
-
-
-    /**
-     * Post attributes
-     *
-     * @var array
-     * @access private
-     * @since 0.1
-     */
-    private $attributes = [];
-
-
-    /**
-     * Post attributes, filleable by child class
-     *
-     * @var array
-     * @access private
-     * @since 0.1
-     */
-    private $fillable = [];
 
 
 

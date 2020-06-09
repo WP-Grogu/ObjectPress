@@ -12,11 +12,11 @@ use \WP_User;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.3
+ * @version  1.3.1
  * @access   public
  * @since    7.0
  */
-abstract class UserModel
+abstract class User
 {
     /**
      * @var int

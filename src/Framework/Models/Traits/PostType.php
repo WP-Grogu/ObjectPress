@@ -21,13 +21,13 @@ trait PostType
     public function pTypeExistsOrFail()
     {
         if ((!isset(static::$post_type)
-            || empty(static::$post_type)
-            || !post_type_exists(static::$post_type))
+                || empty(static::$post_type)
+                || !post_type_exists(static::$post_type))
             && static::$post_type !== 'post'
             && static::$post_type !== 'page'
         ) {
             throw new \Exception(
-                "ObjectPress: Could not initiate `". static::class ."` because `" . (static::$post_type ?? 'undefined') . "` is not a registred wordpress post_type."
+                "ObjectPress: Could not initiate `" . static::class . "` because `" . (static::$post_type ?: 'undefined') . "` is not a registred wordpress post_type."
             );
         }
     }
@@ -73,7 +73,7 @@ trait PostType
      */
     public function cptLabels()
     {
-        $postType = get_post_type_object(static::$post_type);
+        $postType = $this->getPostTypeObject();
 
         if ($postType) {
             return $postType->labels ?? [];
