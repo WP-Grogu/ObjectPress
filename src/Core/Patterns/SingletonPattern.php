@@ -2,7 +2,7 @@
 
 namespace OP\Core\Patterns;
 
-trait Singleton
+trait SingletonPattern
 {
     private static $_instance = null;
 

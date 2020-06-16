@@ -5,9 +5,9 @@ namespace OP\Framework\Models\Traits;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  1.0.0
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 trait PostAcf
 {
@@ -18,7 +18,7 @@ trait PostAcf
      * @return mixed
      *
      * @reference https://www.advancedcustomfields.com/resources/get_fields/
-     * @since 1.0.2
+     * @since 1.1.0.1
      */
     public function fields(bool $format_value = true)
     {
@@ -33,7 +33,7 @@ trait PostAcf
      * @return mixed
      *
      * @reference https://www.advancedcustomfields.com/resources/get_fields/
-     * @since 0.1
+     * @since 1.0.0
      */
     public function getFields(bool $format_value = true)
     {
@@ -49,7 +49,7 @@ trait PostAcf
      * @return mixed
      *
      * @reference https://www.advancedcustomfields.com/resources/get_field/
-     * @since 0.1
+     * @since 1.0.0
      */
     public function getField(string $key, bool $format_value = true)
     {
@@ -64,7 +64,7 @@ trait PostAcf
      * @param mixed  $value The new value.
      *
      * @reference https://www.advancedcustomfields.com/resources/update_field/
-     * @since 0.2
+     * @since 1.0.1
      */
     public function setField(string $key, $value)
     {

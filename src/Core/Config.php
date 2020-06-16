@@ -2,20 +2,20 @@
 
 namespace OP\Core;
 
-use OP\Core\Patterns\Singleton;
+use OP\Core\Patterns\SingletonPattern;
 
 final class Config
 {
-    use Singleton;
+    use SingletonPattern;
 
     private static $paths = [];
 
     /**
      * Get a single config item from it's full key path
      * eg. Config/auth.php => auth.encryption
-     * 
+     *
      * @param string $key
-     * 
+     *
      * @return string|false on failure
      */
     public function get(string $key)
@@ -39,9 +39,9 @@ final class Config
 
     /**
      * Get a config Domain array from it's path
-     * 
+     *
      * @param string $domain
-     * 
+     *
      * @return array|false
      */
     public function getDomain(string $domain)
@@ -60,9 +60,9 @@ final class Config
     /**
      * Iterate into paths to find the first presence of $relative_path.
      * If the relative path can't be found on any paths, returns false
-     * 
+     *
      * @param string $relative_path
-     * 
+     *
      * @return string|false
      */
     private function relativeToFullPath(string $relative_path)
@@ -81,9 +81,9 @@ final class Config
 
     /**
      * From domain, get relative file path
-     * 
+     *
      * @param string $domain
-     * 
+     *
      * @return string
      */
     private function domainToRelPath(string $domain): string

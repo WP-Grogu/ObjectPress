@@ -11,7 +11,7 @@ use OP\Framework\Boilerplates\Traits\Common;
  * @author   tgeorgel
  * @version  1.0.3
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 abstract class CustomPostType
 {
@@ -27,7 +27,7 @@ abstract class CustomPostType
     /**
      * Custom post type name/key
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     protected static $cpt = 'custom-post-type';
 
@@ -36,7 +36,7 @@ abstract class CustomPostType
      * Singular and plural names of CPT
      *
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     public static $singular = 'Custom post type';
     public static $plural   = 'Custom post types';
@@ -221,7 +221,7 @@ abstract class CustomPostType
      * Returns CPT's domain for string translation
      *
      * @return string
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function getDomain()
     {
@@ -241,7 +241,7 @@ abstract class CustomPostType
      *
      * @param string
      * @return string
-     * @since 0.1
+     * @since 1.0.0
      */
     private static function graphqlFormatName(string $type)
     {

@@ -20,14 +20,14 @@ abstract class User
 {
     /**
      * @var int
-     * @since 0.1
+     * @since 1.0.0
      */
     protected $user_id;
 
 
     /**
      * @var \WP_User
-     * @since 0.1
+     * @since 1.0.0
      */
     private $user;
 
@@ -50,7 +50,7 @@ abstract class User
      * @param bool $refresh If the user data should be refreshed from database
      *
      * @return object
-     * @since 0.1
+     * @since 1.0.0
      */
     public function get(bool $refresh = false)
     {
@@ -72,7 +72,7 @@ abstract class User
      * Retreive user_id
      *
      * @return int
-     * @since 0.1
+     * @since 1.0.0
      */
     public function id()
     {
@@ -87,7 +87,7 @@ abstract class User
      * @param int $reassign Reassign posts and links to new User ID.
      *
      * @return bool True when finished
-     * @since 0.1
+     * @since 1.0.0
      */
     public function delete(int $reassign = null)
     {
@@ -108,7 +108,7 @@ abstract class User
      * Get the user metas
      *
      * @return array
-     * @since 0.1
+     * @since 1.0.0
      */
     public function metas()
     {
@@ -120,7 +120,7 @@ abstract class User
      * Get the user metas as key only
      *
      * @return array
-     * @since 0.1
+     * @since 1.0.0
      */
     public function metasKeys()
     {
@@ -136,7 +136,7 @@ abstract class User
      * @param bool   $single   (optionnal) should it get all the fields or single one
      *
      * @return mixed
-     * @since 0.1
+     * @since 1.0.0
      *
      * @reference https://developer.wordpress.org/reference/functions/get_user_meta/
      */
@@ -154,7 +154,7 @@ abstract class User
      * @param mixed  $multiple  Tells if meta key is unique or not
      *
      * @return mixed
-     * @since 0.2
+     * @since 1.0.1
      *
      * @reference https://developer.wordpress.org/reference/functions/update_user_meta/
      */
@@ -183,7 +183,7 @@ abstract class User
      * @param array $metas ['meta_key' => 'meta_value']
      *
      * @return void
-     * @since 0.2
+     * @since 1.0.1
      */
     public function setMetas(array $metas)
     {
@@ -205,7 +205,7 @@ abstract class User
      * Get a new password reset token for the user
      *
      * @return string
-     * @since 0.2
+     * @since 1.0.1
      * @reference https://developer.wordpress.org/reference/functions/get_password_reset_key/
      */
     public function getPasswordResetKey()
@@ -218,7 +218,7 @@ abstract class User
      * Get a new password reset token for the user
      *
      * @return string
-     * @since 0.2
+     * @since 1.0.1
      * @reference https://developer.wordpress.org/reference/functions/check_password_reset_key/
      */
     public function checkPasswordResetKey(string $token)
@@ -233,7 +233,7 @@ abstract class User
      * @param string $password Plain text password
      *
      * @return string
-     * @since 0.2
+     * @since 1.0.1
      * @reference https://developer.wordpress.org/reference/functions/wp_set_password/
      */
     public function setPassword(string $password)
@@ -256,7 +256,7 @@ abstract class User
      * Get the user roles
      *
      * @return array
-     * @since 0.1
+     * @since 1.0.0
      */
     public function roles()
     {
@@ -270,7 +270,7 @@ abstract class User
      * @param string|array $roles Role or array of roles to be checked
      *
      * @return bool
-     * @since 0.1
+     * @since 1.0.0
      */
     public function hasRole($roles)
     {
@@ -296,7 +296,7 @@ abstract class User
      * @param  string role name
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function addRole(string $role)
     {
@@ -316,7 +316,7 @@ abstract class User
      *
      * @param  string role name
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function removeRole($role)
     {
@@ -344,7 +344,7 @@ abstract class User
      * Get current loggedin user's class object
      *
      * @return int 0 on not found
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function current()
     {
@@ -366,7 +366,7 @@ abstract class User
      * @param   mixed  $value     Value of the attribute
      *
      * @return  User|false
-     * @since 0.1
+     * @since 1.0.0
      *
      * @reference https://developer.wordpress.org/reference/functions/get_user_by/
      */
@@ -387,7 +387,7 @@ abstract class User
      * @param string $password Password of the user to create (optionnal)
      *
      * @return self|false on failure
-     * @since 0.2
+     * @since 1.0.1
      * @reference https://developer.wordpress.org/reference/functions/wp_create_user/
      */
     public static function create(string $username, string $email, string $password = '')
@@ -413,7 +413,7 @@ abstract class User
      * @param array $userData User data to insert
      *
      * @return self|false on failure
-     * @since 0.2
+     * @since 1.0.1
      * @reference https://developer.wordpress.org/reference/functions/wp_insert_user/
      */
     public static function insert(array $userData)

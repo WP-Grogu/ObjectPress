@@ -35,7 +35,7 @@ trait Common
      * Enable graphql on this CPT/Taxonomy
      *
      * @var bool
-     * @since 0.1
+     * @since 1.0.0
      */
     public static $graphql_enabled = false;
 
@@ -44,7 +44,7 @@ trait Common
      * i18n translation domain
      *
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     protected static $i18n_domain = '';
 
@@ -68,4 +68,21 @@ trait Common
      * @since 1.0
      */
     public static $i18n_is_female = false;
+
+
+    /**
+     * Return the boilerplate wordpress identifier (cpt/taxo `name` on register)
+     */
+    public static function identifier()
+    {
+        if (isset(static::$cpt)) {
+            return static::$cpt;
+        }
+
+        if (isset(static::$taxonomy)) {
+            return static::$taxonomy;
+        }
+
+        return '';
+    }
 }

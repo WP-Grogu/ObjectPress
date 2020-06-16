@@ -5,9 +5,9 @@ namespace OP\Framework\Models\Traits;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  1.0.0
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 trait PostType
 {
@@ -16,7 +16,7 @@ trait PostType
      *
      * @access private
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function pTypeExistsOrFail()
     {
@@ -37,7 +37,7 @@ trait PostType
      * Return post_type
      *
      * @return string post_type
-     * @since 0.1
+     * @since 1.0.0
      */
     public function postType()
     {
@@ -52,7 +52,7 @@ trait PostType
      * @param string $x Label tag to retrieve
      *
      * @return string|void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function cptLabel(string $x = 'singular_name')
     {
@@ -69,7 +69,7 @@ trait PostType
      * Retrieves post type labels.
      *
      * @return object|null
-     * @since 0.1
+     * @since 1.0.0
      */
     public function cptLabels()
     {
@@ -85,7 +85,7 @@ trait PostType
      * Retrieves a post type object by name.
      *
      * @return WP_Post_Type|null
-     * @since 0.1
+     * @since 1.0.0
      */
     public function getPostTypeObject()
     {

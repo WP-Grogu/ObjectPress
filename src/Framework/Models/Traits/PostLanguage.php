@@ -9,7 +9,7 @@ use OP\Framework\Helpers\LanguageHelper;
  * @author   tgeorgel
  * @version  1.0.3
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 trait PostLanguage
 {
@@ -17,7 +17,7 @@ trait PostLanguage
      * Get post current language
      *
      * @return string
-     * @since 0.1
+     * @since 1.0.0
      */
     public function lang()
     {
@@ -29,7 +29,7 @@ trait PostLanguage
      * Get post current language
      *
      * @return string Lang slug (eg: 'en')
-     * @since 0.1
+     * @since 1.0.0
      */
     public function getLang()
     {
@@ -43,7 +43,7 @@ trait PostLanguage
      * @param string $language_slug Lang slug (eg: 'en')
      *
      * @return static
-     * @since 0.1
+     * @since 1.0.0
      */
     public function getTranslation(string $language_slug)
     {
@@ -64,7 +64,7 @@ trait PostLanguage
      *
      * @return self
      * @chainable
-     * @since 0.1
+     * @since 1.0.0
      */
     public function setLang(string $lang)
     {

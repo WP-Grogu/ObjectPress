@@ -5,9 +5,9 @@ namespace OP\Framework\Models\Traits;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  1.0.0
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 trait PostAttributes
 {
@@ -16,7 +16,7 @@ trait PostAttributes
      *
      * @var array
      * @access private
-     * @since 0.1
+     * @since 1.0.0
      */
     private $attributes = [];
 
@@ -26,7 +26,7 @@ trait PostAttributes
      *
      * @var array
      * @access private
-     * @since 0.1
+     * @since 1.0.0
      */
     private $fillable = [];
 
@@ -36,7 +36,7 @@ trait PostAttributes
      *
      * @param \WP_Post $post
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     protected function wpPostToAttributes(\WP_Post $post)
     {
@@ -74,7 +74,7 @@ trait PostAttributes
      * Transform post attributes to WP_post object
      *
      * @return array
-     * @since 0.1
+     * @since 1.0.0
      */
     protected function attributesToPostArray(): array
     {
@@ -108,7 +108,7 @@ trait PostAttributes
      * Merge new fillable fields into attributes
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function mergeFillableIntoAttributes(): void
     {
@@ -123,7 +123,7 @@ trait PostAttributes
      * @return \WP_post|array
      *
      * @reference https://developer.wordpress.org/reference/functions/get_post/
-     * @since 0.1
+     * @since 1.0.0
      */
     public function getPost($output = OBJECT)
     {
@@ -138,7 +138,7 @@ trait PostAttributes
      * @param WP_Post|array $post post data to be updated
      *
      * @return this
-     * @since 0.1
+     * @since 1.0.0
      */
     protected function updatePost($post)
     {

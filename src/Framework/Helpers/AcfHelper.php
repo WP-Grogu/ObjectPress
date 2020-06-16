@@ -7,7 +7,7 @@ namespace OP\Framework\Helpers;
  * @author   tgeorgel
  * @version  1.0.3
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 class AcfHelper
 {
@@ -17,7 +17,7 @@ class AcfHelper
      *
      * @access public
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     public static $thumbnails_relative_folder_path = '/dist/images/blocks_thumbnails/';
 
@@ -28,7 +28,7 @@ class AcfHelper
      * @param array $blocks
      *
      * @return array of objects
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function formatBlocks($blocks, $blocks_prfx = 'bloc_')
     {
@@ -51,7 +51,7 @@ class AcfHelper
      * @param string $prefix
      *
      * @return object
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function formatFields($fields, $prefix = '', $blocks_prfx = 'bloc_')
     {
@@ -92,7 +92,7 @@ class AcfHelper
      * Register flexible content layouts thumbnails reading acf JSON files
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function setThumbnails()
     {
@@ -117,7 +117,7 @@ class AcfHelper
      * @param string $layout_name Name of the layout
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     private static function registerThumbnail(string $flexible_name, string $layout_name): void
     {
@@ -154,7 +154,7 @@ class AcfHelper
      * @param array
      * @param string Blocks fields prefix
      * @return object
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function fieldsToBlocks($fields, $prefix = 'bloc_')
     {
@@ -203,7 +203,7 @@ class AcfHelper
      * @param array $sort   Sorted array of blocks keys
      *
      * @return array
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function sortBlocks($blocks, $sort = [])
     {

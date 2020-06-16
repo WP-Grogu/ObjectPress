@@ -5,7 +5,7 @@ namespace OP\Framework;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  1.0.0
  * @access   public
  * @since    7.0
  */

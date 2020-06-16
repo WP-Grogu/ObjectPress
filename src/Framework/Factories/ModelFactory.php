@@ -10,7 +10,7 @@ use OP\Framework\Helpers\PostHelper;
  * @author   tgeorgel
  * @version  1.2.1
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 class ModelFactory
 {
@@ -21,7 +21,7 @@ class ModelFactory
      *
      * @return Model
      * @version 1.3.1
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function post($post)
     {

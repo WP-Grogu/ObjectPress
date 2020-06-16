@@ -16,7 +16,7 @@ use OP\Framework\Models\Traits\PostQuery;
  * @author   tgeorgel
  * @version  1.3.1
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 abstract class Post
 {
@@ -30,7 +30,7 @@ abstract class Post
      * Wordpress post's id
      *
      * @var int
-     * @since 0.1
+     * @since 1.0.0
      */
     private $post_id;
 
@@ -40,7 +40,7 @@ abstract class Post
      *
      * @var \WP_Post
      * @access private
-     * @since 0.1
+     * @since 1.0.0
      */
     private $post;
 
@@ -50,7 +50,7 @@ abstract class Post
      *
      * @var string
      * @access private
-     * @since 0.1
+     * @since 1.0.0
      */
     private static $post_type;
 
@@ -70,7 +70,7 @@ abstract class Post
      * @param string $key Attribute to retreive
      * @return mixed
      * @access public
-     * @since 0.1
+     * @since 1.0.0
      */
     public function __get(string $key)
     {
@@ -83,13 +83,41 @@ abstract class Post
      * @param string $key Attribute to retreive
      * @return mixed
      * @access public
-     * @since 0.1
+     * @since 1.0.0
      */
     public function __set(string $key, $value): void
     {
         if (key_exists($key, $this->fillable)) {
             $this->fillable[$key] = $value;
         }
+    }
+
+    /**
+     * Parse debugs informations displayed
+     *
+     * @param string $key Attribute to retreive
+     * @return array
+     * @access public
+     * @since 1.0.4
+     */
+    public function __debugInfo()
+    {
+        $acf   = array_keys($this->getFields());
+        // $metas = array_keys($this->getMetas());
+
+        return [
+            'model'        => get_class($this),
+            'id'           => $this->id,
+            'title'        => sprintf('"%s"', $this->title),
+            'status'       => sprintf('"%s"', $this->status),
+            'permalink'    => $this->permalink(),
+            'fields'       => $acf,
+            // 'attributes'   => $this->attributes,
+            // 'metas' => [
+            //     'fields'    => $acf,
+            //     'other'     => array_diff($metas, $acf),
+            // ],
+        ];
     }
 
 
@@ -101,7 +129,7 @@ abstract class Post
      * @param bool     $strict (optionnal) In strict mode, throw exception if post doesn't exist
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function __construct(?int $model_id = null, bool $strict = false)
     {
@@ -145,7 +173,7 @@ abstract class Post
      *
      * @param  bool   $refresh Refresh data from database
      * @return object
-     * @since 0.1
+     * @since 1.0.0
      */
     public function get(bool $refresh = false)
     {
@@ -162,7 +190,7 @@ abstract class Post
      *
      * @param  array $attr Attributes to link to the post (optionnal)
      * @return int   $post_id
-     * @since 0.1
+     * @since 1.0.0
      *
      * @reference https://developer.wordpress.org/reference/functions/wp_insert_post/
      */
@@ -186,7 +214,7 @@ abstract class Post
      * Get the post permalink
      *
      * @return string|false
-     * @since 0.1
+     * @since 1.0.0
      */
     public function permalink()
     {
@@ -198,7 +226,7 @@ abstract class Post
      * Publish the current post
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function publish()
     {
@@ -210,7 +238,7 @@ abstract class Post
      * Trash the current post
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function trash()
     {
@@ -223,7 +251,7 @@ abstract class Post
      *
      * @param bool $force_delete Optional. Whether to bypass trash and force deletion. Default false.
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      *
      * @reference https://developer.wordpress.org/reference/functions/wp_delete_post/
      */
@@ -237,7 +265,7 @@ abstract class Post
      * Save post attributes into database
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function save()
     {
@@ -254,7 +282,7 @@ abstract class Post
      * @param string $format Eg. 'd/m/y' for '18/02/19'
      *
      * @return string
-     * @since 0.1
+     * @since 1.0.0
      */
     public function postDate($format = 'd/m/Y')
     {
@@ -277,7 +305,7 @@ abstract class Post
      * @param string|array $attr (optionnal)
      *
      * @return string|false The post thumbnail image tag. False on failure (no thumbnail image)
-     * @since 0.1
+     * @since 1.0.0
      *
      * @reference https://developer.wordpress.org/reference/functions/get_the_post_thumbnail/
      */
@@ -295,7 +323,7 @@ abstract class Post
      *
      * @param string|array $size (optionnal)
      * @return array|false
-     * @since 0.1
+     * @since 1.0.0
      *
      * @reference https://developer.wordpress.org/reference/functions/wp_get_attachment_image_src/
      */
@@ -309,7 +337,7 @@ abstract class Post
      * Return post thumbnail id
      *
      * @return int The post thumbnail image id
-     * @since 0.1
+     * @since 1.0.0
      */
     public function getThumbnailID()
     {
@@ -322,7 +350,7 @@ abstract class Post
      *
      * @param string|array $size (optionnal)
      * @return string (empty on failure)
-     * @since 0.2
+     * @since 1.0.1
      *
      * @reference https://developer.wordpress.org/reference/functions/wp_get_attachment_image_src/
      */
@@ -337,7 +365,7 @@ abstract class Post
      * Set post thumbnail from attachement ID
      *
      * @param int $thumbnail_id ID of the attachement (image)
-     * @since 0.1
+     * @since 1.0.0
      *
      * @reference https://developer.wordpress.org/reference/functions/set_post_thumbnail/
      */
@@ -355,7 +383,7 @@ abstract class Post
      *
      * @return int $thumbnail_id
      * @throw Exception
-     * @since 0.1
+     * @since 1.0.0
      */
     public function setThumbailFromUrl(string $url, string $name = ''): int
     {
@@ -384,7 +412,7 @@ abstract class Post
      * @param mixed $value value to set
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function setPostProperty(string $property, $value)
     {
@@ -402,7 +430,7 @@ abstract class Post
      *
      * @return this
      * @chainable
-     * @since 0.1
+     * @since 1.0.0
      */
     public function setPostProperties(array $args, bool $set_permalink = true)
     {
@@ -428,7 +456,7 @@ abstract class Post
      *
      * @return this
      * @chainable
-     * @since 0.1
+     * @since 1.0.0
      */
     public function generatePermalink()
     {
@@ -441,23 +469,36 @@ abstract class Post
      * Retrieve post metas from database
      *
      * @return array
-     * @since 0.1
+     * @since 1.0.0
      */
     public function metas()
     {
-        return get_post_custom($this->post_id);
+        return $this->getMetas();
     }
 
-
+    
+    
     /**
      * Retrieve post metas keys from database
      *
      * @return array
-     * @since 0.1
+     * @since 1.0.0
      */
     public function metasKeys()
     {
-        return array_keys($this->metas());
+        return array_keys($this->getMetas());
+    }
+    
+
+    /**
+     * Retrieve post metas from database
+     *
+     * @return array
+     * @since 1.0.0
+     */
+    public function getMetas()
+    {
+        return get_post_custom($this->post_id);
     }
 
 
@@ -468,7 +509,7 @@ abstract class Post
      * @param bool   $single   optional $single see get_post_meta() single opt
      *
      * @return array|string|int
-     * @since 0.1
+     * @since 1.0.0
      */
     public function getMeta(string $meta_key, bool $single = true)
     {
@@ -484,7 +525,7 @@ abstract class Post
      * @param bool   $multiple tells is the meta key unique or not
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function setMeta(string $key, $value, $multiple = false)
     {
@@ -502,7 +543,7 @@ abstract class Post
      * @param array $metas ['meta_key' => 'meta_value']
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function setMetas(array $metas)
     {
@@ -528,7 +569,7 @@ abstract class Post
      * @param array  $terms    terms list
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public function setTaxonomyTerms(string $taxonomy, array $terms)
     {
@@ -542,7 +583,7 @@ abstract class Post
      *
      * @param $hide_empty Weither should we get unused terms
      * @return array
-     * @since 0.1
+     * @since 1.0.0
      */
     public function getTaxonomies($hide_empty = false)
     {
@@ -566,7 +607,7 @@ abstract class Post
      *
      * @param  string $taxonomy Taxonomy slug to search in
      * @return array
-     * @since 0.1
+     * @since 1.0.0
      */
     public function getTaxonomyTerms(string $taxonomy)
     {

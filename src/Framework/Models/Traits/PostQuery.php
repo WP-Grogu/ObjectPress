@@ -7,9 +7,9 @@ use OP\Framework\Helpers\PostHelper;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.2
+ * @version  1.0.4
  * @access   public
- * @since    0.2
+ * @since    1.0.1
  */
 trait PostQuery
 {
@@ -17,7 +17,7 @@ trait PostQuery
      * Get current post using wordpress magic function
      *
      * @return Model null on failure
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function current()
     {
@@ -42,7 +42,7 @@ trait PostQuery
      * @param array_a Post attributes (optionnal)
      *
      * @return this|false on failure
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function insert(array $attributes = [])
     {
@@ -84,15 +84,37 @@ trait PostQuery
 
 
     /**
-     * Get all the properties IDs from database
+     * Get all the posts from database
      *
      * @param int   $limit   Maximum posts to retrive
      * @param array $status  Post status to retreive, default to 'publish' status
      *
      * @return array of Model
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function all(?int $limit = null, array $status = ['publish'])
+    {
+        $posts   = [];
+        $results = static::allIds($limit, $status);
+
+        foreach ($results as $result) {
+            $posts[] = new static($result);
+        }
+
+        return $posts;
+    }
+
+
+    /**
+     * Get all the ids from post from database
+     *
+     * @param int   $limit   Maximum posts to retrive
+     * @param array $status  Post status to retreive, default to 'publish' status
+     *
+     * @return array of Model
+     * @since 1.0.4
+     */
+    public static function allIds(?int $limit = null, array $status = ['publish'])
     {
         global $wpdb;
         $prefix = $wpdb->prefix;
@@ -113,11 +135,9 @@ trait PostQuery
 
         $results = $wpdb->get_results($query);
 
-        foreach ($results as $result) {
-            $posts[] = new static($result->ID);
-        }
-
-        return $posts;
+        return array_map(function ($e) {
+            return (int) $e->ID;
+        }, $results);
     }
 
 
@@ -128,7 +148,7 @@ trait PostQuery
      * @param array $status  Post status to retreive, default to 'publish' status
      *
      * @return array of Model
-     * @since 0.2
+     * @since 1.0.1
      */
     public static function first(int $limit = 1, array $status = ['publish'])
     {
@@ -157,9 +177,25 @@ trait PostQuery
 
 
     /**
+     * Find the ressource by slug, or return false
+     *
+     * @param string  $slug Post slug
+     *
+     * @return self|false
+     * @since 1.2.1
+     */
+    public static function findBySlug(string $slug)
+    {
+        $post = get_page_by_path($slug, OBJECT, static::$post_type);
+
+        return $post ? static::find($post->ID) : false;
+    }
+
+
+    /**
      * Find the ressource, or return false
      *
-     * @param string  $identifier Identifier to get by
+     * @param string  $identifier Post identifier ('id', 'url', 'slug')
      * @param *       $value
      *
      * @return self
@@ -167,7 +203,7 @@ trait PostQuery
      */
     public static function findBy($identifier, $value)
     {
-        $post = PostHelper::getPostBy($identifier, $value);
+        $post = PostHelper::getPostBy($identifier, $value, static::$post_type);
 
         if (!$post || !static::belongsToModel($post->ID)) {
             return false;

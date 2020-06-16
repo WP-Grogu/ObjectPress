@@ -5,9 +5,9 @@ namespace OP\Framework\Helpers;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  1.0.0
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 class AcfJsonHelper
 {
@@ -16,7 +16,7 @@ class AcfJsonHelper
      *
      * @var string
      * @access private
-     * @since 0.1
+     * @since 1.0.0
      */
     private $acf_path;
 
@@ -24,7 +24,7 @@ class AcfJsonHelper
     /**
      * Class constructor
      *
-     * @since 0.1
+     * @since 1.0.0
      */
     public function __construct()
     {
@@ -41,7 +41,7 @@ class AcfJsonHelper
      * If there is no files to checkup, will return an empty array
      *
      * @return array of objects
-     * @since 0.1
+     * @since 1.0.0
      */
     public function getGroups(): array
     {
@@ -63,7 +63,7 @@ class AcfJsonHelper
      * Retrieve JSON files
      *
      * @return array
-     * @since 0.1
+     * @since 1.0.0
      */
     private function getAcfJsonFileNames(): array
     {
@@ -84,7 +84,7 @@ class AcfJsonHelper
      *
      * @param string $file Json file name
      * @return array
-     * @since 0.1
+     * @since 1.0.0
      */
     private function jsonToFields($file)
     {

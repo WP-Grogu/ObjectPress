@@ -1,0 +1,33 @@
+<script type='text/javascript'>
+    
+  jQuery('#publish').click(function() {
+
+    let bails = jQuery('#postbox-container-1')
+    console.log(bails);
+
+    var cats = jQuery('[id^=\"taxonomy\"]')
+      .find('.selectit')
+      .find('input');
+
+    category_selected = false;
+
+    for (counter = 0; counter < cats.length; counter++)
+    {
+      if (cats.get(counter).checked == true)
+      {
+        category_selected = true;
+        break;
+      }
+    }
+
+    if (category_selected == false)
+    {
+      alert('You have not selected any category for the post. Please select post category.')
+      setTimeout("jQuery('#ajax-loading').css('visibility', 'hidden');", 100);
+      jQuery('[id^=\"taxonomy\"]').find('.tabs-panel').css('background', '#F96');
+      setTimeout("jQuery('#publish').removeClass('button-primary-disabled');", 100);
+      return false;
+    }
+  });
+
+</script>

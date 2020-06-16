@@ -59,7 +59,7 @@ class LanguageHelper
      * @param string $lang
      *
      * @return string|void
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function getPostLang(int $id)
     {
@@ -87,7 +87,7 @@ class LanguageHelper
      * @param string $lang
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function setPostLang(int $id, string $lang)
     {
@@ -117,7 +117,7 @@ class LanguageHelper
      * @param array $assoc Post association, as ['fr' => $post_id, 'en' => $post_id]
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function syncPosts(array $assoc): void
     {

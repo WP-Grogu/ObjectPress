@@ -3,23 +3,23 @@
 namespace OP\Core;
 
 use OP\Framework\Helpers\LanguageHelper;
-use OP\Core\Patterns\Singleton;
+use OP\Core\Patterns\SingletonPattern;
 
 final class Locale
 {
-    use Singleton;
+    use SingletonPattern;
 
     private static $paths = [];
 
 
     /**
-     * Get a i18n item from config files in default language. 
+     * Get a i18n item from config files in default language.
      * You can specify another language by using $lang param.
      * Returns false if key is not existing in selected lang.
-     * 
+     *
      * @param string $key
      * @param string $lang
-     * 
+     *
      * @return string
      */
     public function get(string $key, string $lang = '')
@@ -43,13 +43,13 @@ final class Locale
 
 
     /**
-     * Get a Domain translation array in default language. 
+     * Get a Domain translation array in default language.
      * You can specify another language by using $lang param.
      * Returns false if domain is not existing in selected lang.
-     * 
+     *
      * @param string $domain
      * @param string $lang
-     * 
+     *
      * @return array|false
      */
     public function getDomain(string $domain, string $lang = '')
@@ -78,9 +78,9 @@ final class Locale
     /**
      * Iterate into paths to find the first presence of $relative_path.
      * If the relative path can't be found on any paths, returns false
-     * 
+     *
      * @param string $relative_path
-     * 
+     *
      * @return string|false
      */
     private function relativeToFullPath(string $relative_path)
@@ -99,10 +99,10 @@ final class Locale
 
     /**
      * From domain, get relative file path
-     * 
+     *
      * @param string $domain
      * @param string $lang
-     * 
+     *
      * @return string
      */
     private function domainToRelPath(string $domain, string $lang): string
@@ -118,9 +118,9 @@ final class Locale
 
     /**
      * Returns the default language.
-     * It first reads App constant OP_DEFAULT_APP_LOCALE, 
+     * It first reads App constant OP_DEFAULT_APP_LOCALE,
      * then lang wp-plugins data, and then WP defaults.
-     * 
+     *
      * @return string (lang slug)
      */
     public static function defaultLang()

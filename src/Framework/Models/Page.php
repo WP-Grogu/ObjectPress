@@ -7,7 +7,7 @@ namespace OP\Framework\Models;
  * @author   tgeorgel
  * @version  1.3.1
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 class Page extends Post
 {

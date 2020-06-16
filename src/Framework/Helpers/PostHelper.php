@@ -5,9 +5,9 @@ namespace OP\Framework\Helpers;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.1
+ * @version  1.0.0
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 class PostHelper
 {
@@ -134,13 +134,13 @@ class PostHelper
     /**
      * Find the post, or return false
      *
-     * @param string  $identifier Post identifier (av. : 'id', 'url')
+     * @param string  $identifier Post identifier (av. : 'id', 'url', 'slug')
      * @param *       $value
      *
      * @return WP_Post
      * @since 1.2.1
      */
-    public static function getPostBy($identifier, $value)
+    public static function getPostBy($identifier, $value, $_ptype = 'page')
     {
         if ($identifier === 'id') {
             return static::getPostFromUndefined($value);
@@ -149,6 +149,10 @@ class PostHelper
         if ($identifier === 'url') {
             $p_id = url_to_postid($value);
             return static::getPostFromUndefined($p_id);
+        }
+        
+        if ($identifier === 'slug') {
+            return get_page_by_path($value, OBJECT, $_ptype) ?: false;
         }
     }
 }

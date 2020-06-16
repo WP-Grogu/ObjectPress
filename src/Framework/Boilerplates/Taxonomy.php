@@ -12,7 +12,7 @@ use OP\Lib\TaxonomySingleTerm\TaxonomySingleTerm;
  * @author   tgeorgel
  * @version  1.0.3
  * @access   public
- * @since    0.1
+ * @since    1.0.0
  */
 abstract class Taxonomy
 {
@@ -29,7 +29,7 @@ abstract class Taxonomy
      * Taxonomy name
      *
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     protected static $taxonomy = 'custom-taxonomy';
 
@@ -38,7 +38,7 @@ abstract class Taxonomy
      * Singular and plural names of Taxonomy
      *
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     public static $singular = 'Custom Taxonomy';
     public static $plural   = 'Custom Taxonomies';
@@ -48,7 +48,7 @@ abstract class Taxonomy
      * Register this taxonomy on thoses post types
      *
      * @var array
-     * @since 0.1
+     * @since 1.0.0
      */
     protected static $post_types = [];
 
@@ -133,7 +133,7 @@ abstract class Taxonomy
      * @param array $labels Optionnal. Labels to override.
      *
      * @return void
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function register()
     {
@@ -216,7 +216,7 @@ abstract class Taxonomy
      * Returns Taxonomy's domain for string translation
      *
      * @return string
-     * @since 0.1
+     * @since 1.0.0
      */
     public static function getDomain()
     {
