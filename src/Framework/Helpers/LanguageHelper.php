@@ -59,7 +59,7 @@ class LanguageHelper
      * @param string $lang
      *
      * @return string|void
-     * @since 1.0.0
+     * @since 0.1
      */
     public static function getPostLang(int $id)
     {
@@ -87,7 +87,7 @@ class LanguageHelper
      * @param string $lang
      *
      * @return void
-     * @since 1.0.0
+     * @since 0.1
      */
     public static function setPostLang(int $id, string $lang)
     {
@@ -117,7 +117,7 @@ class LanguageHelper
      * @param array $assoc Post association, as ['fr' => $post_id, 'en' => $post_id]
      *
      * @return void
-     * @since 1.0.0
+     * @since 0.1
      */
     public static function syncPosts(array $assoc): void
     {
@@ -172,7 +172,7 @@ class LanguageHelper
 
 
     /**
-     * Get a translated string in desired lang (created with __('str', 'domain'))
+     * Get a i18n translated string in desired lang
      *
      * @param
      * @return string
@@ -182,6 +182,7 @@ class LanguageHelper
         // WPML
         if (function_exists('wpml_get_language_information')) {
             $base_lang = static::currentLang();
+            $string = __($string, $domain);
 
             if ($lang !== $base_lang) {
                 do_action('wpml_switch_language', $lang);
@@ -191,5 +192,36 @@ class LanguageHelper
 
             return $string;
         }
+    }
+
+
+    /**
+     * Get a i18n translated string in desired lang
+     *
+     * @param
+     * @return string|null
+     */
+    public static function getPostPermalinkIn($post, ?string $lang)
+    {
+        if (!$lang) {
+            return get_permalink($post);
+        }
+        
+        $permalink = false;
+
+        // WPML
+        if (function_exists('wpml_get_language_information')) {
+            $base_lang = static::currentLang();
+
+            if ($lang !== $base_lang) {
+                do_action('wpml_switch_language', $lang);
+                $permalink = get_permalink($post);
+                do_action('wpml_switch_language', $base_lang);
+            } else {
+                $permalink = get_permalink($post);
+            }
+        }
+        
+        return $permalink;
     }
 }

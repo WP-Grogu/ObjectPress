@@ -1,6 +1,6 @@
 <?php
 
-namespace OP\Framework;
+namespace OP\Core;
 
 /**
  * @package  ObjectPress
@@ -9,7 +9,7 @@ namespace OP\Framework;
  * @access   public
  * @since    7.0
  */
-class Theme
+final class Theme
 {
     private static $_instance = null;
 

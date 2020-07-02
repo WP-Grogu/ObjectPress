@@ -96,11 +96,36 @@ final class Config
 
 
     /**
+     * Add a path to list of paths
+     *
+     * @param  string|array $paths
+     * @return void
+     */
+    public function addPath($paths)
+    {
+        if (is_string($paths)) {
+            $paths = [$paths];
+        }
+
+        if (!is_array($paths)) {
+            throw new \Exception("OP : Error : Adding a path to config class must be a string or an array");
+        }
+
+        array_map('realpath', $paths);
+
+        array_unshift(static::$paths, ...$paths);
+    }
+
+
+    /**
      * is not allowed to call from outside to prevent from creating multiple instances,
      * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
      */
     private function __construct()
     {
-        static::$paths[] = realpath(__DIR__ . '/../Config/');
+        $_theme = get_template_directory() . '/config';
+        $_base  = __DIR__ . '/../Config/';
+
+        $this->addPath([$_theme, $_base]);
     }
 }

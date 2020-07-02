@@ -4,6 +4,7 @@ namespace OP\Framework\Models;
 
 use \Exception;
 use OP\Framework\Helpers\PostHelper;
+use OP\Framework\Helpers\LanguageHelper;
 use OP\Framework\Utils\Media;
 use OP\Framework\Models\Traits\PostAttributes;
 use OP\Framework\Models\Traits\PostType;
@@ -18,7 +19,7 @@ use OP\Framework\Models\Traits\PostQuery;
  * @access   public
  * @since    1.0.0
  */
-abstract class Post
+class Post
 {
     use PostAttributes,
         PostType,
@@ -52,7 +53,7 @@ abstract class Post
      * @access private
      * @since 1.0.0
      */
-    private static $post_type;
+    public static $post_type = 'post';
 
 
 
@@ -140,20 +141,24 @@ abstract class Post
             if ($strict === false) {
                 $model_id = $this->create();
             } else {
-                throw new Exception("Post id is required in strict mode");
+                throw new Exception("ObjectPress: Post id is required in strict mode");
             }
         }
 
         $post = get_post($model_id);
 
         if ($post == null) {
-            throw new Exception("Failed to retreive post");
+            throw new Exception("ObjectPress: Failed to retreive post");
         } elseif ($post->post_type !== static::$post_type) {
-            throw new Exception("Given post id is not part of the current model post_type");
+            throw new Exception("ObjectPress: Given post id is not part of the current model post_type");
         } else {
             $this->post_id = $model_id;
             $this->post = $post;
             $this->wpPostToAttributes($post);
+        }
+
+        if (method_exists($this, '_modelConstructor')) {
+            $this->_modelConstructor();
         }
     }
 
@@ -213,12 +218,18 @@ abstract class Post
     /**
      * Get the post permalink
      *
+     * @param bool $force_current_lang Set true to force permalink to be the current language post translation permalink instead
+     *
      * @return string|false
-     * @since 1.0.0
+     * @version 1.0.4
+     * @since 1.0.1
      */
-    public function permalink()
+    public function permalink($force_current_lang = false)
     {
-        return get_permalink($this->post_id);
+        return LanguageHelper::getPostPermalinkIn(
+            $this->post,
+            $force_current_lang ? LanguageHelper::currentLang() : $this->lang()
+        );
     }
 
 
