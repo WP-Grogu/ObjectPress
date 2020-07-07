@@ -2,7 +2,7 @@
 
 /**
  * Software is like sex: It’s better when it’s free.
- * 
+ *
  * This file is used if you decide to put the lib in your WP plugins folder.
  */
 
@@ -15,5 +15,4 @@ if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
-
-\OP\Core\Container::getInstance();
+include_once __DIR__ . '/src/Support/helpers.php';

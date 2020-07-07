@@ -111,7 +111,7 @@ final class Config
             throw new \Exception("OP : Error : Adding a path to config class must be a string or an array");
         }
 
-        array_map('realpath', $paths);
+        $paths = array_filter(array_map('realpath', $paths));
 
         array_unshift(static::$paths, ...$paths);
     }

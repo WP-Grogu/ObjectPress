@@ -30,4 +30,12 @@ abstract class GqlField implements IGqlField
             register_graphql_field($target, static::$field_name, $field_props);
         }
     }
+
+    /**
+     * Init method for app autoload
+     */
+    public static function init()
+    {
+        static::register();
+    }
 }

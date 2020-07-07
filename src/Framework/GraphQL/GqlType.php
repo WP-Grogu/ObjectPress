@@ -30,4 +30,12 @@ abstract class GqlType implements IGqlType
 
         register_graphql_object_type(static::$type_name, $type_props);
     }
+
+    /**
+     * Init method for app autoload
+     */
+    public static function init()
+    {
+        static::register();
+    }
 }

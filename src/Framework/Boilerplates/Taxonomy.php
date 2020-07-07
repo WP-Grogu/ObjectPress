@@ -147,12 +147,14 @@ abstract class Taxonomy
         $base_args   = self::generateArgs($labels);
         $args        = array_replace($base_args, static::$args_override);
 
-        register_taxonomy(static::$taxonomy, static::$post_types, $args);
+        $post_types = array_map('strtolower', static::$post_types);
+
+        register_taxonomy(static::$taxonomy, $post_types, $args);
     }
 
     /**
      * Generate the labels based on i18n default lang
-     * 
+     *
      * @return array
      */
     private static function generateLabels()
@@ -181,9 +183,9 @@ abstract class Taxonomy
 
     /**
      * Generate the args based on i18n default lang
-     * 
+     *
      * @param array $labels
-     * 
+     *
      * @return array
      */
     private static function generateArgs(array $labels)
