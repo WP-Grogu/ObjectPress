@@ -65,7 +65,7 @@ class ExampleTaxonomy extends Taxonomy
      * @var string
      * @since 0.1
      */
-    protected static $taxonomy = 'custom-taxonomy';
+    protected static $taxonomy = 'example-taxonomy';
 
 
     /**
@@ -74,8 +74,8 @@ class ExampleTaxonomy extends Taxonomy
      * @var string
      * @since 0.1
      */
-    public static $singular = 'Custom Taxonomy';
-    public static $plural   = 'Custom Taxonomies';
+    public static $singular = 'Example Taxonomy';
+    public static $plural   = 'Example Taxonomies';
 
 
     /**
@@ -176,35 +176,53 @@ You can override post type `args` or `labels` as you please inside their dedicat
 
 ## Initiate your Taxonomy 
 
-Inside your `function.php` file :  
+ObjectPress manage the taxonomies initialisation out of the box for you. Just make sure to add your Taxonomy inside `taxonomies` conf key in `config/app.php` : 
+
+```php
+    /*
+    |--------------------------------------------------------------------------
+    | App taxonomies declaration
+    |--------------------------------------------------------------------------
+    |
+    | Insert here you app/theme taxonomies
+    | Format : 'taxonomy-identifier' => 'Path\To\Taxonomy\Class'
+    |
+    */
+    'taxonomies' => [
+        'example-taxonomy' => 'App\Taxonomies\ExampleTaxonomy',
+    ],
+```
+
+> The taxonomiess are going to be initialized after custom post types and in the order they appears in the configuration array.
+
+Alternatively, you can initiate your taxonomies manually :  
 
 ```php
 <?php
 
-/**
- * Theme configuration class
- */
-$theme = OP\Framework\Theme::getInstance();
+use OP\Support\Facades\Theme;
 
-
-/**
- * Post types & taxonomies initialisation
- */
-$theme->on('init', function () {
-    // Register CPTs
-    ...
-
-    // Register Taxonomies
-    App\Taxonomies\ExampleTaxonomy::init()
+Theme::on('init', function () {
+    App\Taxonomies\ExampleTaxonomy::init();
 });
 ```
 
+## Helper methods
+
+You can get some Taxonomy properties from it's class :
+
+```php
+use App\Taxonomies\ExampleTaxonomy;
+
+ExampleTaxonomy::getDomain();      // => i18n translation domain
+ExampleTaxonomy::getIdentifier();  // => WP Taxonomy identifier, eg: 'example-taxonomy'
+```
 
 ## Single Term Taxonomy
 
-Sometimes you may wish to allow only one term selection on a taxonomy. Thanks to WebDevStudios's [Taxonomy_Single_Term](https://github.com/WebDevStudios/Taxonomy_Single_Term/blob/master/README.md) class, we've integreated an easy way to force a single Term selection on your taxonomies.
+Sometimes you may wish to allow only one term selection on a taxonomy. Thanks to WebDevStudios's [Taxonomy_Single_Term](https://github.com/WebDevStudios/Taxonomy_Single_Term/blob/master/README.md) class, we've integreated an easy way to force a single Term selection on your taxonomies, directly in your taxonomy definition class.
 
-> Activate the single term mode and setup some optionnal params
+> Activate the single term mode and setup some optional params
 
 ```php
     /**
@@ -216,7 +234,7 @@ Sometimes you may wish to allow only one term selection on a taxonomy. Thanks to
     public static $single_term = true;
 
     /**
-     * 'single term' mode params (optionnal)
+     * 'single term' mode params (optional)
      * 
      * @var array
      * @since 1.3
@@ -226,13 +244,14 @@ Sometimes you may wish to allow only one term selection on a taxonomy. Thanks to
         'priority' => 'high',
     ];
 ```
-##### Available params
+
+##### Available params ($single_term_params)
 
 | Key  | Type |  Description | Default |
-|---|---|---|---|
-| `default_term`  |  `string`, `int` |  Default term to auto-select |  (none) |
-| `priority`  | `string`  | Metabox priority. (vertical placement). 'high', 'core', 'default' or 'low'   | `'low'`  |
-| `context`  | `string`  | Metabox position. (column placement). 'normal', 'advanced', or 'side'  | `'side'`  |
+|:---:|:---:|---|:---:|
+| `default_term`  |  `string` or  `int` |  Default term to auto-select |  (none) |
+| `priority`  | `string`  | Metabox priority (vertical placement). 'high', 'core', 'default' or 'low'   | `'low'`  |
+| `context`  | `string`  | Metabox position (column placement). 'normal', 'advanced', or 'side'  | `'side'`  |
 | `force_selection`  | `bool`  |  Set to true to hide "None" option & force a term selection |  `true` |
 | `children_indented`  | `bool`  | Whether hierarchical taxonomy inputs should be indented to represent hierarchy  | `false`  |
 | `allow_new_terms`  |  `bool` | Whether adding new terms via the metabox is permitted  |   `false` |

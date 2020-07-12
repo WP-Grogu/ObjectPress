@@ -7,15 +7,16 @@
 
   - [Custom post types](custom-post-types.md)
   - [Taxonomies](taxonomies.md)
-  - [Theme class](theme-class.md)
   - [Models](models.md)
-  - [i18 Support](i18.md)
+  - [Theme class](theme-class.md)
+  - [i18n Support](i18.md)
 
-- Helpers
+<!-- - Helpers -->
 
+- Digging deeper
 
 - Interfaces
 
   - [ICpts](icpts.md)
 
-- Functions references
+<!-- - Functions references -->

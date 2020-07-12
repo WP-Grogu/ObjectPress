@@ -1,21 +1,26 @@
 # Models
 
-Models are really usefull, they are the link between your app and your database. A model represents a piece of data; It generally contains all the usefull methods for it's management.  
+Models are really usefull, they are the link between your app and your database. A model represents a piece of data; It generally contains all the usefull methods for it's management. 
 
-Because wordpress relies on post types, ObjectPress models are "binded" to thoses post types.  
+According to [this article](https://www.sitepoint.com/the-mvc-pattern-and-php-1/#:~:text=each%20component%20works.-,Model,component%20in%20the%20overall%20pattern.) from sitepoint, here is a definition of a model in a MVC pattern :
+
+> The Model is the name given to the permanent storage of the data used in the overall design. It must allow access for the data to be viewed, or collected and written to, and is the bridge between the View component and the Controller component in the overall pattern.
+
+Because wordpress relies on post types, ObjectPress models are "binded" to thoses ones.  
 
 A custom post type model extends the base ObjectPress `OP\Framework\Models\Post` class.  For default post types, you can use or respectively extend `Page` or `Post` classes, or  `User` class for user management.
 
-> A typical app would have a `User`, a `Page` and a `Post` model.  
+> A typical app should at least have a `User`, a `Page` and a `Post` model.  
+
+Thoses models already include a lot of methods to manage wordpress posts.
  
 !> Methods from `OP\Models\User` class differs from typical posts classes, as `user` *isn't a post type*. Please read more about User model below.
 
-Thoses models already include a lot of methods to manage wordpress posts.
 
 
 ## Defining models
 
-Define your models inside the `app/Models` folder. To be able to easily grab Models from ObjectPress Factories, you should respect the naming convention : kebab-case wordpress custom post types should be converted to camel-case in you models. For example, a `case-study` CPT should have `CaseStudy` as model class name.
+Define your models inside the `app/Models` folder. To be able to easily grab Models from ObjectPress Factories, you should respect the naming convention : kebab-case wordpress custom post types identifier (eg: 'post' or 'case-study') should have a to camel-case class name. For example, a `case-study` CPT should have `CaseStudy` as model class name.
 
 > If you are not following the naming convention for any reason, you can specify your custom cpt-model binding inside the `app/Interfaces/ICpts.php` interface. [read more](README.md)
 
@@ -126,16 +131,24 @@ class Post extends Post
 
 Models are a way to treat your custom post types, including default `post` & `page` post types.
 
-The all point is to isolate your methods, but also use the same methods name between your different models, without struggling about logic differences.
+The all point is to isolate specific methods, but also share the same methods short names between your different models, without struggling about logic differences.
 
-For example, posts and user both *have metas*. However, wordpress doesn't manage metas the exact same way, and you would need to use different methods when managing post or user metas. With ObjectPress, you can simply use the right model :
+For example, posts and users both **have metas**. However, wordpress doesn't manage their metas the exact same way, it uses different database tables, different methods and so on. That means that you would need to **use different methods and logic** when managing **post metas** or **user metas**.  
+
+The OOP way allows us to write easily readable code, so we should call `getMeta` on both of our models, without caring about the "background" logic differences :  
 
 ```php
+/**
+ * Get my models from database
+ */
 $user = App\Models\User::find(1);
-$page = App\Models\Page::find(1);
+$page = App\Models\Page::find(5);
 
-$page->getMeta('my-meta');
-$user->getMeta('my-meta');
+/**
+ * Get a single meta
+ */
+$page->getMeta('my-post-meta');
+$user->getMeta('my-user-meta');
 ```
 
 Having a model for each piece of data allows to partionate your code :
@@ -145,8 +158,8 @@ $page    = App\Models\Page::find(1);    // `page` post type
 $product = App\Models\Product::find(2); // `product` post type
 
 // Using shared methods between posts
-$page->postDate();
-$product->postDate();
+$page->postDate('d/m/Y');
+$product->postDate('d/m/Y');
 
 // Using model-specific methods
 $page->getTemplate();
@@ -194,11 +207,11 @@ $example->trash();
 
 // Manage metas 
 $example->setMeta('meta_key', 'Hell yeah');
-$example->getMeta('meta_key');                 // 'Hell yeah'
+$example->getMeta('meta_key');                  // 'Hell yeah'
 
 
 $permalink   = $example->permalink();
-$metas       = $example->getMetas();              // or $example->metas();
+$metas       = $example->getMetas();            // or $example->metas();
 $taxonomies  = $example->getTaxonomies();
 
 $post_date = $example->postDate('d-m-Y');
@@ -208,7 +221,7 @@ $post_date = $example->postDate('d-m-Y');
 
 #### Post properties
 
-The `WP_Post` properties (post_title, post_name, ...) can be changed directly on your models, using their selector. For example, to manage the post title :
+The `WP_Post` properties (eg: 'post_title', 'post_name', ...) can be affected directly on your models, using their selector. (eg: $post->title)
 
 > On post properties, the `post_` prefix is removed for a more eloquent code. For example $post->post_name becomes $post->name.
 
@@ -221,15 +234,18 @@ The `WP_Post` properties (post_title, post_name, ...) can be changed directly on
 echo $post->date;
 
 if (isset($post->parent) {
-    echo Post::find($post->parent)->title;
+    echo Post::find($post->parent)->title;  // Echo $post parent title
 }
 ```
 
 #### ** Affecting **
 
 ```php
+
+$parent = Post::find(10); // Get post with ID 10
+
 $post->title    = 'Awesome !';
-$post->parent   = $parent_id;
+$post->parent   = $parent->id;
 $post->password = 'secret :o';
 
 $post->save();
@@ -241,56 +257,25 @@ $post->save();
 !> ⚠️ Note the use of `->save()` method. Until you `save()` the post, properties *will not* be updated into you database if you change anything !  
 
 
-## Shared methods across models
+## Models factories
 
-You can create a global model as well, extending `PostModel`, so you can put commun methods, shared across your Models. For example, if your models all have a `location` meta, you could have a `getLocation()` method, returning this meta.  
+Sometimes, you may have a post_id, but you don't know if it's a post, a page or another post_type. Because of that, you can't simply use `Post::find($post_id)` or `Page::find($post_id)`. In this case you can call the ModelFactory to automatically retreive your model, based on it's id :
 
 ```php
+use OP\Framework\Factories\ModelFactory;
 
-//  app/models/abstracts/PostModel.php
-
-namespace App\Models\Abstracts;
-
-use OP\Frameworks\Models\PostModel as BasePostModel;
-
-abstract class PostModel extends BasePostModel
-{
-     public function getLocation()
-     {
-          return $this->getMeta('location');
-     }
-}
-
-//  app/models/Example.php
-
-use App\Models\Abstracts\PostModel;
-
-class Example extends PostModel
-{
-     //
-}
-
-//  app/models/Post.php
-
-use App\Models\Abstracts\PostModel;
-
-class Post extends PostModel
-{
-     //
-}
-
-
-
-// Anywhere
-
-
-$example = new Example($example_id);
-$post    = new Post($post_id);
-
-$example->getLocation();
-$post->getLocation();
+$post = ModelFactory::post($post_id);  // If $post_id is a `page` CPT, will return an instance of App\Models\Page
 ```
 
+>You can also get the current post as if you were using the model method (eg: `Post::current()`)
+
+```php
+use OP\Framework\Factories\ModelFactory;
+
+$post = ModelFactory::currentPost(); // Get the current post in WP loop, return an instance of it's model
+```
+
+## Some more methods
 
 ##### Check if a post belongs to a model, given a $post_id
 

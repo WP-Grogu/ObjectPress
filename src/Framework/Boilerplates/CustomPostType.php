@@ -3,7 +3,6 @@
 namespace OP\Framework\Boilerplates;
 
 use OP\Support\Facades\Locale;
-use OP\Support\Facades\Config;
 use OP\Framework\Boilerplates\Traits\Common;
 
 /**
@@ -54,9 +53,10 @@ abstract class CustomPostType
 
     /********************************/
     /*                              */
-    /*           Methods            */
+    /*       Private Methods        */
     /*                              */
     /********************************/
+
 
 
     /**
@@ -71,22 +71,6 @@ abstract class CustomPostType
 
 
     /**
-     * Custom post type init (registration)
-     *
-     * @return void
-     * @since 1.0.3
-     */
-    public static function init()
-    {
-        if (!static::$i18n_domain) {
-            static::$i18n_domain = defined('OP_DEFAULT_I18N_DOMAIN_CPTS') ? OP_DEFAULT_I18N_DOMAIN_CPTS : 'op-theme-cpts';
-        }
-
-        static::register();
-    }
-
-
-    /**
      * Class constructor, register CTP to wordpress
      *
      * @param array $args   Optionnal. Args to overide.
@@ -96,7 +80,7 @@ abstract class CustomPostType
      * @version 1.0.3
      * @since 1.0
      */
-    public static function register()
+    protected static function register()
     {
         if (post_type_exists(static::$cpt)) {
             return;
@@ -218,24 +202,6 @@ abstract class CustomPostType
 
 
     /**
-     * Returns CPT's domain for string translation
-     *
-     * @return string
-     * @since 1.0.0
-     */
-    public static function getDomain()
-    {
-        $domain = static::$i18n_domain;
-
-        if (Config::get('i18n.suffix_domains_current_lang') === true) {
-            $domain .= '__' . (static::$i18n_base_lang ?: Locale::defaultLang());
-        }
-
-        return $domain;
-    }
-
-
-    /**
      * Convert CPT names to graphql format
      * eg: 'Étude de cas' => 'etudeDeCas'
      *
@@ -243,8 +209,33 @@ abstract class CustomPostType
      * @return string
      * @since 1.0.0
      */
-    private static function graphqlFormatName(string $type)
+    protected static function graphqlFormatName(string $type)
     {
         return lcfirst(preg_replace('/\s/', '', ucwords(str_replace('-', ' ', sanitize_title($type)))));
+    }
+
+
+
+    /********************************/
+    /*                              */
+    /*       Public Methods         */
+    /*                              */
+    /********************************/
+
+
+
+    /**
+     * Custom post type init (registration)
+     *
+     * @return void
+     * @since 1.0.3
+     */
+    public static function init()
+    {
+        if (!static::$i18n_domain) {
+            static::$i18n_domain = defined('OP_DEFAULT_I18N_DOMAIN_CPTS') ? OP_DEFAULT_I18N_DOMAIN_CPTS : 'op-theme-cpts';
+        }
+
+        static::register();
     }
 }

@@ -3,6 +3,7 @@
 namespace OP\Framework\Boilerplates\Traits;
 
 use OP\Core\Locale;
+use OP\Support\Facades\Config;
 
 /**
  * @package  ObjectPress
@@ -70,10 +71,20 @@ trait Common
     public static $i18n_is_female = false;
 
 
+
+
+    /********************************/
+    /*                              */
+    /*       Public Methods         */
+    /*                              */
+    /********************************/
+
+
+
     /**
      * Return the boilerplate wordpress identifier (cpt/taxo `name` on register)
      */
-    public static function identifier()
+    public static function getIdentifier()
     {
         if (isset(static::$cpt)) {
             return static::$cpt;
@@ -84,5 +95,23 @@ trait Common
         }
 
         return '';
+    }
+
+
+    /**
+     * Returns Taxonomy's domain for string translation
+     *
+     * @return string
+     * @since 1.0.0
+     */
+    public static function getDomain()
+    {
+        $domain = static::$i18n_domain;
+
+        if (Config::get('i18n.suffix_domains_current_lang') === true) {
+            $domain .= '__' . (static::$i18n_base_lang ?: Locale::defaultLang());
+        }
+
+        return $domain;
     }
 }

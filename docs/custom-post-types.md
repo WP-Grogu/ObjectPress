@@ -145,28 +145,34 @@ You can override post type `args` or `labels` as you please inside their dedicat
 
 ## Initiate your custom post type
 
-A custom post type should be initied during the `init` wordpress action.
+ObjectPress manage the custom post types initialisation out of the box for you. Just make sure to add your Custom post type inside `cpts` conf key in `config/app.php` : 
 
-Inside your `function.php` file :  
+```php
+    /*
+    |--------------------------------------------------------------------------
+    | App custom post types declaration
+    |--------------------------------------------------------------------------
+    |
+    | Insert here your app/theme custom post types
+    | Format : 'cpt-identifier' => 'Path\To\CustomPostType\Class'
+    |
+    */
+    'cpts' => [
+        'example' => 'App\CustomPostTypes\Example',
+    ],
+```
+
+> The custom post types are going to be initialized before taxonomies and in the order they appears in the configuration array.
+
+Alternatively, you can initiate your custom post types manually :  
 
 ```php
 <?php
 
-/**
- * Theme configuration class
- */
-$theme = OP\Framework\Theme::getInstance();
+use OP\Support\Facades\Theme;
 
-
-/**
- * Post types & taxonomies initialisation
- */
-$theme->on('init', function () {
-    // Register CPTs
+Theme::on('init', function () {
     App\CustomPostTypes\Example::init();
- 
-    // Register taxonomies
-    ...
 });
 ```
 
@@ -182,4 +188,16 @@ $example = new App\Models\Example();
 $example->title = 'My first example';
 $example->setMeta('my-meta', 'Yes, it works !');
 $example->save();
+```
+
+
+## Helper methods
+
+You can get some Custom post type properties from it's class :
+
+```php
+use App\CustomPostTypes\Example;
+
+Example::getDomain();      // => i18n translation domain
+Example::getIdentifier();  // => WP CPT identifier, eg: 'example'
 ```

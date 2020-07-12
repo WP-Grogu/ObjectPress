@@ -88,64 +88,60 @@ Please read the dedicated pages for [Custom Post Types](Custom-Post-Types), [Tax
 
 ## Function.php
 
-In your `function.php`, you should have at least a call to `OP\Core\Container::getInstance();`, it will define necessary constants.
+In your `function.php`, you should have at least a call to `OP\Support\ObjectPress::init();`.  
+It will initiate the frameworks, and so define necessary constants, load configs, initiate Custom post types, taxonomies, API routes and so on.
 
 ```php
 <?php
 
-$theme = OP\Framework\Theme::getInstance();
+new OP\Support\ObjectPress;
 
-
-/**
- * Init OP and theme CPTs & Taxonomies
- */
-$theme->on('init', function () {
-    // Init ObjectPress
-    OP\Core\Container::getInstance();
-
-    // Init CPTs
-    // App\CustomPostTypes\Example::init();
-
-    // Init Taxonomies
-    // App\Taxonomies\ExampleTaxonomy::init();
-});
+ObjectPress::init();
 
 ```
 
 ## The theme class
 
-The theme class allows a fluent way of configuring your project settings.
+The theme class allows a fluent way of configuring your project settings. It globally calls wordpress functions, statically and properly. This class also contains helper functions.  
 
 ```php
-/// ** function.php ** ///
+// function.php
+
+use OP\Support\Facades\Theme;
 
 
 /**
- * Theme configuration class
+ * Force e-mails content type to HTML
  */
-$theme = OP\Framework\Theme::getInstance();
-
-
-/**
- * Post types & taxonomies initialisation
- */
-$theme->on('init', function () {
-    // Register CPTs
-    new App\CustomPostTypes\Example('theme-cpts');
-    new App\CustomPostTypes\City('theme-cpts');
-    
-    // Register Taxonomies
-    new App\Taxonomies\Department('theme-cpts');
-    new App\Taxonomies\PriceRange('theme-cpts');
+Theme::on('wp_mail_content_type', function () {
+    return 'text/html';
 });
+
+
+/**
+ * Replace front URLs (using custom function `replaceFrontUrl`)
+ */
+Theme::on(['post_link', 'page_link', 'post_type_link', 'term_link'], function ($post_link) {
+    return replaceFrontUrl($post_link);
+}, 101);
 
 
 /**
  * Add my theme styles to WP styles queue
  */
-$theme->addStyle('path/to/style.ccs')
-	  ->addStyle('path/to/style2.ccs');
+Theme::addStyle('path/to/style.ccs')
+Theme::addStyle('path/to/style2.ccs');
+
+
+/**
+ * Register nav menus
+ */
+Theme::addNavMenus([
+    'main' => 'Main Menu',
+    'footer' => 'Footer Menu',
+]);
 ```
 
+> `Theme::on()` is similar to `Theme::addAction()`, except it allows sending an array of actions as first parameter instead of a single action.
 
 Read more about the Theme class on the dedicated [wiki page](theme-class.md).  

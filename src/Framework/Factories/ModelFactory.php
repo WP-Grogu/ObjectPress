@@ -50,8 +50,8 @@ class ModelFactory
             }
         } else {
             // Try to guess class model name (eg: 'custom-post-type' => 'App\Models\CustomPostType')
-            $supposed_class_name    = str_replace('-', '', ucwords($post->post_type, '-'));
-            $full_supposed_class    = "\App\Models\\$supposed_class_name";
+            $supposed_class_name = str_replace('-', '', ucwords($post->post_type, '-'));
+            $full_supposed_class = "\App\Models\\$supposed_class_name";
 
             if (class_exists($full_supposed_class)) {
                 $model = $full_supposed_class;
@@ -64,7 +64,7 @@ class ModelFactory
 
         return null;
     }
-    
+
 
     /**
      * Call the model factory on the current post

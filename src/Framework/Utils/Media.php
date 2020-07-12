@@ -19,7 +19,7 @@ class Media
         $path = wp_upload_dir()['path'] ?? '';
 
         if (!$path) {
-            throw new \Exception("wp_upload_dir() did not return required upload dir path.");
+            throw new \Exception("OP : wp_upload_dir() did not returned required upload dir path.");
         }
 
         $base_dir = explode('uploads/', $path)[0];

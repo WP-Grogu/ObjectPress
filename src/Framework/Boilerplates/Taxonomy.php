@@ -4,7 +4,6 @@ namespace OP\Framework\Boilerplates;
 
 use OP\Framework\Boilerplates\Traits\Common;
 use OP\Support\Facades\Locale;
-use OP\Support\Facades\Config;
 use OP\Lib\TaxonomySingleTerm\TaxonomySingleTerm;
 
 /**
@@ -87,9 +86,11 @@ abstract class Taxonomy
         'allow_new_terms'       => false,
     ];
 
+
+
     /********************************/
     /*                              */
-    /*           Methods            */
+    /*       Private Methods        */
     /*                              */
     /********************************/
 
@@ -107,26 +108,6 @@ abstract class Taxonomy
 
 
     /**
-     * Taxonomy init (registration)
-     *
-     * @return void
-     * @since 1.0.3
-     */
-    public static function init()
-    {
-        if (!static::$i18n_domain) {
-            static::$i18n_domain = defined('OP_DEFAULT_I18N_DOMAIN_TAXOS') ? OP_DEFAULT_I18N_DOMAIN_TAXOS : 'op-theme-taxos';
-        }
-
-        static::register();
-
-        if (static::$single_term) {
-            static::setupSingleTerm();
-        }
-    }
-
-
-    /**
      * Class constructor, register Taxonomy to wordpress
      *
      * @param array $args   Optionnal. Args to overide.
@@ -135,7 +116,7 @@ abstract class Taxonomy
      * @return void
      * @since 1.0.0
      */
-    public static function register()
+    protected static function register()
     {
         if (taxonomy_exists(static::$taxonomy)) {
             return;
@@ -215,24 +196,6 @@ abstract class Taxonomy
 
 
     /**
-     * Returns Taxonomy's domain for string translation
-     *
-     * @return string
-     * @since 1.0.0
-     */
-    public static function getDomain()
-    {
-        $domain = static::$i18n_domain;
-
-        if (Config::get('i18n.suffix_domains_current_lang') === true) {
-            $domain .= '__' . (static::$i18n_base_lang ?: Locale::defaultLang());
-        }
-
-        return $domain;
-    }
-
-
-    /**
      * Convert Taxonomy names to graphql format
      * eg: 'Étude de cas' => 'etudeDeCas'
      *
@@ -253,7 +216,7 @@ abstract class Taxonomy
      * @return void
      * @since 1.0.3
      */
-    public static function setupSingleTerm(): void
+    protected static function setupSingleTerm(): void
     {
         $available_properties = [
             'default' => 'default_term',
@@ -278,6 +241,35 @@ abstract class Taxonomy
             $key = is_string($tst_property) ? $tst_property : $op_property;
 
             $taxonomy_box->set($key, $params[$op_property]);
+        }
+    }
+
+
+
+    /********************************/
+    /*                              */
+    /*       Public Methods         */
+    /*                              */
+    /********************************/
+
+
+
+    /**
+     * Taxonomy init (registration)
+     *
+     * @return void
+     * @since 1.0.3
+     */
+    public static function init()
+    {
+        if (!static::$i18n_domain) {
+            static::$i18n_domain = defined('OP_DEFAULT_I18N_DOMAIN_TAXOS') ? OP_DEFAULT_I18N_DOMAIN_TAXOS : 'op-theme-taxos';
+        }
+
+        static::register();
+
+        if (static::$single_term) {
+            static::setupSingleTerm();
         }
     }
 }
