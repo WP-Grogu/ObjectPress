@@ -63,6 +63,15 @@ abstract class Taxonomy
 
 
     /**
+     * Single term box type ('select' or 'radio', default to radio)
+     *
+     * @var string
+     * @since 1.0.4
+     */
+    public static $single_term_type = 'radio';
+
+
+    /**
      * 'single term' mode params
      *
      * @var array
@@ -229,7 +238,7 @@ abstract class Taxonomy
 
         $params = static::$single_term_params + self::$_default_single_term_params;
 
-        $taxonomy_box = new TaxonomySingleTerm(static::$taxonomy);
+        $taxonomy_box = new TaxonomySingleTerm(static::$taxonomy, static::$post_types, static::$single_term_type);
 
         $taxonomy_box->set('metabox_title', __(static::$singular, static::getDomain()));
 

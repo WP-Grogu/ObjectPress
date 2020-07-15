@@ -233,6 +233,16 @@ Sometimes you may wish to allow only one term selection on a taxonomy. Thanks to
      */
     public static $single_term = true;
 
+
+    /**
+     * Single term box type ('select' or 'radio', default to radio)
+     *
+     * @var string
+     * @since 1.0.4
+     */
+    public static $single_term_type = 'radio';
+
+
     /**
      * 'single term' mode params (optional)
      * 
