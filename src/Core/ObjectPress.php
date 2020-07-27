@@ -50,11 +50,13 @@ final class ObjectPress
      */
     public function init()
     {
+        $priority = Config::get('app.init-priority') ?: 9;
+
         // Init Custom post types & Taxonomies
         Theme::on('init', function () {
             $this->initClasses(Config::get('app.cpts') ?: []);
             $this->initClasses(Config::get('app.taxonomies') ?: []);
-        });
+        }, $priority);
         
         // Init Api routes
         Theme::on('rest_api_init', function () {
