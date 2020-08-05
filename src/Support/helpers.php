@@ -1,6 +1,6 @@
 <?php
 
-if (! function_exists('dd')) {
+if (! function_exists('vdd')) {
     /**
      * Dump the passed variables and end the script, using var_dump.
      *
@@ -18,14 +18,14 @@ if (! function_exists('dd')) {
 }
 
 
-if (! function_exists('pd')) {
+if (! function_exists('prd')) {
     /**
      * Dump the passed variables and end the script, using print_r.
      *
      * @param  mixed
      * @return void
      */
-    function pd()
+    function prd()
     {
         print '<pre>';
         array_map(function ($x) {

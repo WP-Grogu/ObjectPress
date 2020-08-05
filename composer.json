@@ -16,6 +16,7 @@
         }
     },
     "require": {
-        "illuminate/config": "^7.15"
+        "illuminate/config": "^7.15",
+        "as247/wp-eloquent": "^1.0"
     }
 }
