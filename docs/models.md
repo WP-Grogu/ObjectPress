@@ -100,7 +100,7 @@ namespace App\Models;
 
 use OP\Framework\Models\Page as OP_Page;
 
-class Page extends Page
+class Page extends OP_Page
 {
     // methods goes here
 }
@@ -115,7 +115,7 @@ namespace App\Models;
 
 use OP\Framework\Models\Post as OP_Post;
 
-class Post extends Post
+class Post extends OP_Post
 {
     // methods goes here
 }

@@ -121,7 +121,7 @@ class AcfHelper
      */
     private static function registerThumbnail(string $flexible_name, string $layout_name): void
     {
-        add_filter("acfe/flexible/layout/thumbnail/name={$flexible_name}&layout={$layout_name}", function ($thumbnail, $field, $layout) {
+        add_filter("acfe/flexible/thumbnail/name={$flexible_name}&layout={$layout_name}", function ($thumbnail, $field, $layout) {
             $theme_dir = str_replace('/resources', '', get_template_directory());
 
             $thumb_fld = $theme_dir . \OP\Framework\Helpers\AcfHelper::$thumbnails_relative_folder_path;
