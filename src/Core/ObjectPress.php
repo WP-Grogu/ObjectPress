@@ -57,6 +57,12 @@ final class ObjectPress
             $this->initClasses(Config::get('app.cpts') ?: []);
             $this->initClasses(Config::get('app.taxonomies') ?: []);
         }, $priority);
+
+        // Init GQL Types & Fields
+        Theme::on('graphql_register_types', function () {
+            $this->initClasses(Config::get('app.gql-types') ?: []);
+            $this->initClasses(Config::get('app.gql-fields') ?: []);
+        });
         
         // Init Api routes
         Theme::on('rest_api_init', function () {
@@ -92,7 +98,19 @@ final class ObjectPress
      */
     private function includeHelpers()
     {
-        require_once realpath(__DIR__ . '/../Support/helpers.php');
+        $rel_paths = [
+            '/../Support/helpers.php',
+        ];
+
+        foreach ($rel_paths as $rel_path) {
+            $path = realpath(__DIR__ . $rel_path);
+
+            if (!$path) {
+                throw new \Exception("OP : includeHelpers : Missing core helpers files.");
+            }
+
+            require_once $path;
+        }
     }
 
     
@@ -102,7 +120,7 @@ final class ObjectPress
      * @param array $classes Array of classes to initiate
      * @return void
      */
-    private function initClasses(array $classes)
+    private function initClasses(array $classes, string $method = 'init')
     {
         if (empty($classes)) {
             return;
@@ -113,11 +131,11 @@ final class ObjectPress
                 throw new \Exception("OP : Init : Class `$class` does not exists.");
             }
 
-            if (! method_exists($class, 'init')) {
-                throw new \Exception("OP : Init : Class `$class` does not have an init() method.");
+            if (! method_exists($class, $method)) {
+                throw new \Exception("OP : Init : Class `$class` does not have an `$method()` method.");
             }
 
-            $class::init();
+            $class::$method();
         }
     }
 }

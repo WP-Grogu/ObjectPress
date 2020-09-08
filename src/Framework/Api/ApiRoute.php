@@ -97,7 +97,7 @@ abstract class ApiRoute implements IApiRoute
 
 
     /**
-     * Get the paramaters for register_rest_route()
+     * Get the parameters for register_rest_route()
      *
      * @return array
      */
@@ -135,6 +135,8 @@ abstract class ApiRoute implements IApiRoute
 
     /**
      * Format register rest api route arguments
+     *
+     * @return array
      */
     private static function getArgs()
     {

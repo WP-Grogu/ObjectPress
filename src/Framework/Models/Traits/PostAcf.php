@@ -70,4 +70,22 @@ trait PostAcf
     {
         return update_field($key, $value, $this->post_id);
     }
+    
+    
+    /**
+     * Set/Update ACF fields from a given key => value pair array
+     *
+     * @param string $fields The field array containing keys => values
+     *
+     * @return $this
+     * @reference https://www.advancedcustomfields.com/resources/update_field/
+     * @since 1.0.4
+     */
+    public function setFields(array $fields)
+    {
+        foreach ($fields as $key => $value) {
+            update_field($key, $value, $this->post_id);
+        }
+        return $this;
+    }
 }

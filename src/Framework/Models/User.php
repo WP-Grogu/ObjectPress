@@ -263,6 +263,17 @@ abstract class User
         return $this->user->roles;
     }
 
+    /**
+     * Get the user roles
+     *
+     * @return array
+     * @since 1.0.0
+     */
+    public function caps()
+    {
+        return $this->user->allcaps;
+    }
+
 
     /**
      * Check if user has specified role(s)
@@ -328,6 +339,30 @@ abstract class User
         } else {
             return false;
         }
+    }
+
+
+    /**
+     * Check if user has the specified capability
+     *
+     * @param string|array $caps Capability or array of capabilities to be checked
+     *
+     * @return bool
+     * @since 1.0.0
+     */
+    public function can($caps)
+    {
+        if (is_string($caps)) {
+            return user_can($this->user_id, $caps);
+        }
+        if (is_array($caps)) {
+            foreach ($caps as $cap) {
+                if (!user_can($this->user_id, $cap)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 
