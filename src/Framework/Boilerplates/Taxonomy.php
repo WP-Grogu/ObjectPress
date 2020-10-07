@@ -205,21 +205,6 @@ abstract class Taxonomy
 
 
     /**
-     * Convert Taxonomy names to graphql format
-     * eg: 'Étude de cas' => 'etudeDeCas'
-     *
-     * @param string
-     * @return string
-     *
-     * @since 1.2
-     */
-    protected static function graphqlFormatName(string $type): string
-    {
-        return lcfirst(preg_replace('/\s/', '', ucwords(str_replace('-', ' ', sanitize_title($type)))));
-    }
-
-
-    /**
      * Set this Taxonomy as as Single Term taxonomy
      *
      * @return void
@@ -280,5 +265,33 @@ abstract class Taxonomy
         if (static::$single_term) {
             static::setupSingleTerm();
         }
+    }
+
+
+    /**
+     * Return taxonomy terms.
+     *
+     * @param bool|string (optionnal) If set, returns only the selected identifier (eg: 'slug', 'title') from WP_Term object
+     *
+     * @return array
+     */
+    public static function getTerms($identifier = false)
+    {
+        $terms = \get_terms([
+            'taxonomy'   => static::$taxonomy,
+            'hide_empty' => false,
+            'meta_key'   => 'tax_position',
+            'orderby'    => 'tax_position',
+        ]);
+
+        if (!$identifier) {
+            return $terms;
+        }
+
+        return array_filter(
+            array_map(function ($e) use ($identifier) {
+                return $e->{$identifier} ?? '';
+            }, $terms)
+        );
     }
 }

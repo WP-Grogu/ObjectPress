@@ -98,7 +98,7 @@ abstract class CustomPostType
 
     /**
      * Generate the labels based on i18n default lang
-     * 
+     *
      * @return array
      */
     private static function generateLabels()
@@ -143,9 +143,9 @@ abstract class CustomPostType
 
     /**
      * Generate the args based on i18n default lang
-     * 
+     *
      * @param array $labels
-     * 
+     *
      * @return array
      */
     private static function generateArgs(array $labels)
@@ -199,22 +199,7 @@ abstract class CustomPostType
 
         return $args;
     }
-
-
-    /**
-     * Convert CPT names to graphql format
-     * eg: 'Étude de cas' => 'etudeDeCas'
-     *
-     * @param string
-     * @return string
-     * @since 1.0.0
-     */
-    protected static function graphqlFormatName(string $type)
-    {
-        return lcfirst(preg_replace('/\s/', '', ucwords(str_replace('-', ' ', sanitize_title($type)))));
-    }
-
-
+    
 
     /********************************/
     /*                              */

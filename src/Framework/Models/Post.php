@@ -380,7 +380,7 @@ class Post
      *
      * @reference https://developer.wordpress.org/reference/functions/set_post_thumbnail/
      */
-    public function setThumbail(int $thumbnail_id)
+    public function setThumbnail(int $thumbnail_id)
     {
         set_post_thumbnail($this->post_id, $thumbnail_id);
     }
@@ -396,12 +396,12 @@ class Post
      * @throw Exception
      * @since 1.0.0
      */
-    public function setThumbailFromUrl(string $url, string $name = ''): int
+    public function setThumbnailFromUrl(string $url, string $name = ''): int
     {
         $media = new Media();
 
         $thumbnail_id = $media->insertImageFromUrl($url, $name, $this->post_id);
-        $this->setThumbail($thumbnail_id);
+        $this->setThumbnail($thumbnail_id);
 
         return $thumbnail_id;
     }
@@ -625,6 +625,27 @@ class Post
         return wp_get_post_terms($this->post_id, $taxonomy);
     }
 
+
+    /**
+     * Get post terms selected in a given taxonomy,
+     * returns only asked identifier (slug, name..) instead of WP_Term object
+     *
+     * @param string $taxonomy    Taxonomy slug to get terms from
+     * @param string $identifier  WP_Term identifier to get
+     *
+     * @return array
+     * @since 1.0.4
+     */
+    public function getTaxonomyTermsField(string $taxonomy, string $identifier = 'name')
+    {
+        $values = $this->getTaxonomyTerms($taxonomy);
+
+        return array_filter(
+            array_map(function ($e) use ($identifier) {
+                return $e->{$identifier} ?? '';
+            }, $values)
+        );
+    }
 
 
     /******************************************/

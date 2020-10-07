@@ -114,4 +114,31 @@ trait Common
 
         return $domain;
     }
+
+
+    /**
+     * Convert CPT / Taxonomy names to graphql format.
+     * eg: 'Étude de cas' => 'etudeDeCas'
+     *
+     * @param string
+     * @return string
+     *
+     * @since 1.2
+     */
+    protected static function graphqlFormatName(string $type): string
+    {
+        return lcfirst(
+            preg_replace(
+                '/\s/',
+                '',
+                ucwords(
+                    str_replace(
+                        ['—', '-', '/', '\\'],
+                        ' ',
+                        sanitize_title($type)
+                    )
+                )
+            )
+        );
+    }
 }

@@ -39,6 +39,14 @@ final class ObjectPress
         if (!defined('OP_DEFAULT_I18N_DOMAIN_TAXOS')) {
             define('OP_DEFAULT_I18N_DOMAIN_TAXOS', 'op-theme-taxos');
         }
+
+        if (!defined('DATERANGE_1_DAY')) {
+            define('DATERANGE_1_DAY', 86400);
+        }
+        
+        if (!defined('DATERANGE_1_HOUR')) {
+            define('DATERANGE_1_HOUR', 3600);
+        }
     }
 
 
@@ -137,5 +145,16 @@ final class ObjectPress
 
             $class::$method();
         }
+    }
+
+
+    /**
+     * Has ObjectPress been Initiated ?
+     *
+     * @return bool
+     */
+    public function isInitiated()
+    {
+        return isset(static::$_instance) && !is_null(static::$_instance);
     }
 }
