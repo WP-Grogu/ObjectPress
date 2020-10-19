@@ -17,6 +17,8 @@
     },
     "require": {
         "illuminate/config": "^7.15",
-        "as247/wp-eloquent": "^1.0"
+        "as247/wp-eloquent": "^1.0",
+        "phpfastcache/phpfastcache": "^8.0",
+        "symfony/finder": "^5.1"
     }
 }

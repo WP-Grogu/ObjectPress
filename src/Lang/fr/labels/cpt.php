@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'label'                 => "%s", // singular
-    'description'           => "Créer %s %s",  // pronoun, singular
+    'label'       => "%s",            // singular
+    'description' => "Créer %s %s",   // pronoun, singular
 
     'name'                  => "%s",
     'singular_name'         => "%s",
@@ -11,10 +11,10 @@ return [
     'archives'              => "%s Archives",
     'attributes'            => "%s Attributes",
     'parent_item_colon'     => "Parent %s:",
-    'all_items'             => "Tous les %s",
-    'add_new_item'          => "Ajouter nouveau %s",
+    'all_items'             => "%s les %s",                            // all, plural
+    'add_new_item'          => "Ajouter %s %s",                        // new, singular
     'add_new'               => "Ajouter",
-    'new_item'              => "Nouveau %s'",
+    'new_item'              => "%s %s'",                               // new, singular
     'edit_item'             => "Éditer %s",
     'update_item'           => "Mettre à jour %s",
     'view_item'             => "Voir %s",

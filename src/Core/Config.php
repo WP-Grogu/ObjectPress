@@ -47,13 +47,35 @@ final class Config
     public function getDomain(string $domain)
     {
         $relative_path = $this->domainToRelPath($domain);
-        $full_path     = $this->relativeToFullPath($relative_path);
-
-        if (!$full_path) {
+        $full_paths    = $this->relativeToFullPath($relative_path);
+        
+        if (empty($full_paths)) {
             return false;
         }
+        
+        $conf_arrays = $result = [];
 
-        return include $full_path;
+        foreach ($full_paths as $full_path) {
+            $conf_arrays[] = include $full_path;
+        }
+        
+        foreach ($conf_arrays as $conf_array) {
+            foreach ($conf_array as $key => $val) {
+                if (!array_key_exists($key, $result)) {
+                    $result[$key] = $val;
+                    continue;
+                }
+
+                if (is_array($result[$key]) && is_array($val)) {
+                    $result[$key] = array_merge($result[$key], $val);
+                }
+                if (is_array($result[$key]) && (is_string($val))) {
+                    $result[$key][] = $val;
+                }
+            }
+        }
+
+        return $result;
     }
 
 
@@ -63,19 +85,21 @@ final class Config
      *
      * @param string $relative_path
      *
-     * @return string|false
+     * @return array
      */
     private function relativeToFullPath(string $relative_path)
     {
+        $paths = [];
+
         foreach (static::$paths as $path) {
             $test_path = implode('', [$path, '/', $relative_path]);
 
             if (file_exists($test_path)) {
-                return $test_path;
+                $paths[] = $test_path;
             }
         }
 
-        return false;
+        return $paths;
     }
 
 

@@ -155,17 +155,23 @@ abstract class Taxonomy
 
         $i18n_labels = Locale::getDomain('labels.taxo', static::$i18n_base_lang);
 
+        $genre = static::$i18n_is_female ? 'female' : 'male';
+        $words = [
+            'all' => Locale::get("words.{$genre}_all", static::$i18n_base_lang),
+            'new' => Locale::get("words.{$genre}_new", static::$i18n_base_lang),
+        ];
+
         return [
             'name'              => _x(sprintf($i18n_labels['name'], $plural), 'taxonomy general name', $domain),
             'singular_name'     => _x(sprintf($i18n_labels['singular_name'], $singular), 'taxonomy singular name', $domain),
             'search_items'      => __(sprintf($i18n_labels['search_items'], $plural), $domain),
-            'all_items'         => __(sprintf($i18n_labels['all_items'], $plural), $domain),
+            'all_items'         => __(sprintf($i18n_labels['all_items'], ucfirst($words['all']), $plural), $domain),
             'parent_item'       => __(sprintf($i18n_labels['parent_item'], $singular), $domain),
             'parent_item_colon' => __(sprintf($i18n_labels['parent_item_colon'], $singular), $domain),
             'edit_item'         => __(sprintf($i18n_labels['edit_item'], $singular), $domain),
             'update_item'       => __(sprintf($i18n_labels['update_item'], $singular), $domain),
-            'add_new_item'      => __(sprintf($i18n_labels['add_new_item'], $singular), $domain),
-            'new_item_name'     => __(sprintf($i18n_labels['new_item_name'], $singular), $domain),
+            'add_new_item'      => __(sprintf($i18n_labels['add_new_item'], $words['new'], $singular), $domain),
+            'new_item_name'     => __(sprintf($i18n_labels['new_item_name'], ucfirst($words['new']), $singular), $domain),
             'menu_name'         => __(sprintf($i18n_labels['menu_name'], $plural), $domain),
         ];
     }

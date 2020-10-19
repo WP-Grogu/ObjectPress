@@ -5,6 +5,9 @@ namespace OP\Core;
 use OP\Core\Patterns\SingletonPattern;
 use OP\Support\Facades\Config;
 use OP\Support\Facades\Theme;
+use Phpfastcache\CacheManager;
+use Phpfastcache\Config\ConfigurationOption;
+use As247\WpEloquent\Capsule\Manager as Capsule;
 
 final class ObjectPress
 {
@@ -58,6 +61,22 @@ final class ObjectPress
      */
     public function init()
     {
+        // Initiate capsule (wpEloquent, https://github.com/as247/wp-eloquent)
+        Capsule::bootWp();
+
+        // Setup cache folder
+        $cache_rel_path = wp_upload_dir()['basedir'] . '/../cache';
+
+        if (!realpath($cache_rel_path)) {
+            throw new \Exception(
+                sprintf("OP : Error : Missing cache folder at `%s`", $cache_rel_path)
+            );
+        } else {
+            CacheManager::setDefaultConfig(new ConfigurationOption([
+                'path' => realpath($cache_rel_path),
+            ]));
+        }
+
         $priority = Config::get('app.init-priority') ?: 9;
 
         // Init Custom post types & Taxonomies
