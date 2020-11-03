@@ -15,7 +15,7 @@ use OP\Framework\Helpers\PostHelper;
 class ModelFactory
 {
     /**
-     * Factory 'post' model, get the post type and initiate a corresponding Model if applicable
+     * Factory 'post' model, get the post type and initiate a corresponding Model if applicable.
      *
      * @param WP_post|int|string    $post_id   ID of the concerned post
      *
@@ -87,5 +87,26 @@ class ModelFactory
         }
 
         return static::post($id);
+    }
+
+
+    /**
+     * Factory an array of 'post' model, get the post type and initiate a corresponding Model if applicable.
+     *
+     * @param array $posts WP_post|int|string of the concerned posts
+     *
+     * @return array
+     * @version 1.0.4
+     * @since 1.0.4
+     */
+    public static function posts(array $posts)
+    {
+        $results = [];
+
+        foreach ($posts as $post) {
+            $results[] = static::post($post);
+        }
+        
+        return $results;
     }
 }

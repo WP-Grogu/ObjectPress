@@ -301,6 +301,27 @@ class Post
     }
 
 
+    /**
+     * Get the post edition link in back-office
+     *
+     * @return string
+     */
+    public function getEditLink()
+    {
+        return admin_url("post.php?post={$this->post_id}&action=edit");
+    }
+
+
+    /**
+     * Get the post edition link in back-office
+     *
+     * @return string
+     */
+    public function getPreviewLink()
+    {
+        return get_preview_post_link($this->post_id);
+    }
+
 
     /******************************************/
     /*                                        */

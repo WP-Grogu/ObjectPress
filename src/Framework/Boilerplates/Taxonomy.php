@@ -87,12 +87,12 @@ abstract class Taxonomy
      * @since 1.0.3
      */
     private static $_default_single_term_params = [
-        'default_term'          => null,      // Term name, slug or id
-        'priority'              => 'default',     // 'high', 'core', 'default' or 'low'
-        'context'               => 'side',  // 'normal', 'advanced', or 'side'
-        'force_selection'       => true,      // Set to true to hide "None" option & force a term selection
-        'children_indented'     => false,
-        'allow_new_terms'       => false,
+        'default_term'      => null,        // Term name, slug or id
+        'priority'          => 'default',   // 'high', 'core', 'default' or 'low'
+        'context'           => 'side',      // 'normal', 'advanced', or 'side'
+        'force_selection'   => true,        // Set to true to hide "None" option & force a term selection
+        'children_indented' => false,
+        'allow_new_terms'   => false,
     ];
 
 
@@ -234,10 +234,9 @@ abstract class Taxonomy
         $taxonomy_box->set('metabox_title', __(static::$singular, static::getDomain()));
 
         foreach ($available_properties as $tst_property => $op_property) {
-            if (!isset($params[$op_property]) || $params[$op_property] == null) {
+            if (!isset($params[$op_property]) || $params[$op_property] === null) {
                 continue;
             }
-
             $key = is_string($tst_property) ? $tst_property : $op_property;
 
             $taxonomy_box->set($key, $params[$op_property]);
