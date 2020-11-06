@@ -15,8 +15,21 @@ class LanguageHelper
      * Return the current language
      *
      * @return string
+     * @deprecated since version 1.0.4
      */
     public static function currentLang()
+    {
+        return static::getCurrentLang();
+    }
+
+
+    /**
+     * Return the current language
+     *
+     * @return string
+     * @since 1.0.4
+     */
+    public static function getCurrentLang()
     {
         // PolyLang
         if (function_exists('pll_current_language')) {
@@ -28,6 +41,32 @@ class LanguageHelper
         if (defined('ICL_LANGUAGE_CODE')) {
             return ICL_LANGUAGE_CODE;
         }
+    }
+
+
+    /**
+     * Return the current language
+     *
+     * @param string $lang the design language slug
+     *
+     * @return bool
+     * @since 1.0.4
+     */
+    public static function setCurrentLang(string $lang)
+    {
+        // PolyLang
+        if (function_exists('PLL')) {
+            PLL()->curlang = PLL()->model->get_language($lang);
+            return true;
+        }
+
+        // WPML
+        if (defined('ICL_LANGUAGE_CODE')) {
+            do_action('wpml_switch_language', $lang);
+            return true;
+        }
+
+        return false;
     }
 
 

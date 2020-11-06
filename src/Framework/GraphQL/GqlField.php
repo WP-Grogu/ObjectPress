@@ -7,7 +7,7 @@ use OP\Framework\GraphQL\Interfaces\IGqlField;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.3
+ * @version  1.0.4
  * @access   public
  * @since    1.0.3
  */
@@ -23,7 +23,7 @@ abstract class GqlField implements IGqlField
         $field_props = [
             'type'          => static::$field_type,
             'description'   => __(static::$field_description, 'wp-graphql'),
-            'resolve'       => [static::class, 'resolve']
+            'resolve'       => [static::class, 'resolve____op']
         ];
 
         foreach (static::$targets as $target) {
@@ -37,5 +37,25 @@ abstract class GqlField implements IGqlField
     public static function init()
     {
         static::register();
+    }
+
+
+    /**
+     * GraphQL resolve callback
+     *
+     * @param \WP_Post $post
+     *
+     * @return string
+     * @since 1.0.4
+     */
+    public static function resolve____op($post, $args, $context, $info)
+    {
+        do_action('op_graphql_field_resolve_before', $post, $args, $context, $info);
+
+        $r = static::resolve($post, $args, $context, $info);
+
+        do_action('op_graphql_field_resolve_after', $post, $args, $context, $info);
+
+        return $r;
     }
 }
