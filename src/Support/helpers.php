@@ -1,6 +1,6 @@
 <?php
 
-if (! function_exists('dd')) {
+if (!function_exists('dd')) {
     /**
      * Dump the passed variables and end the script, using var_dump.
      *
@@ -18,7 +18,7 @@ if (! function_exists('dd')) {
 }
 
 
-if (! function_exists('pd')) {
+if (!function_exists('pd')) {
     /**
      * Dump the passed variables and end the script, using print_r.
      *
@@ -32,7 +32,21 @@ if (! function_exists('pd')) {
             print_r($x);
         }, func_get_args());
         print '</pre>';
-        
+
         die(1);
+    }
+}
+
+
+if (!function_exists('old')) {
+    /**
+     * Return the old field value input in forms.
+     *
+     * @param  mixed
+     * @return void
+     */
+    function old(?string $key = null)
+    {
+        return !is_null($key) ? ($_REQUEST[$key] ?? '') : $_REQUEST;
     }
 }
