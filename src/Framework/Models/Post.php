@@ -288,6 +288,23 @@ class Post
 
 
     /**
+     * /!\ This function is DEPRECATED, use  getDateCreated() or getDate() instead /!\
+     *
+     * Get the post creation date at the specified date_format (php ref)
+     *
+     * @param string $format Eg. 'd/m/y' for '18/02/19'
+     *
+     * @return string
+     * @since 1.0.0
+     * @deprecated
+     */
+    public function postDate($format = 'd/m/Y')
+    {
+        return get_the_date($format, $this->post_id);
+    }
+
+
+    /**
      * Get the post creation date at the specified date_format (php ref)
      *
      * @param string $format Eg. 'd/m/y' for '18/02/19'
@@ -295,9 +312,37 @@ class Post
      * @return string
      * @since 1.0.0
      */
-    public function postDate($format = 'd/m/Y')
+    public function getDate($format = 'd/m/Y')
+    {
+        return $this->getDateCreated($format);
+    }
+
+
+    /**
+     * Get the post creation date at the specified date_format (php ref)
+     *
+     * @param string $format Eg. 'd/m/y' for '18/02/19'
+     *
+     * @return string
+     * @since 1.0.0
+     */
+    public function getDateCreated($format = 'd/m/Y')
     {
         return get_the_date($format, $this->post_id);
+    }
+
+
+    /**
+     * Get the post modification date at the specified date_format (php ref)
+     *
+     * @param string $format Eg. 'd/m/y' for '18/02/19'
+     *
+     * @return string
+     * @since 1.0.4
+     */
+    public function getDateModified($format = 'd/m/Y')
+    {
+        return get_the_modified_date($format, $this->post_id);
     }
 
 
