@@ -680,16 +680,21 @@ class Post
 
 
     /**
+     * Retrieve post metas from database
      * Get post terms selected in a given taxonomy
      *
-     * @param  string $taxonomy Taxonomy slug to search in
+     * @param string $taxonomy Taxonomy slug to get terms from
+     * @param array  $args     Term query parameters
+     *
      * @return array
      * @since 1.0.0
+     * @version 1.0.4
      */
-    public function getTaxonomyTerms(string $taxonomy)
+    public function getTaxonomyTerms(string $taxonomy, array $args = [])
     {
-        return wp_get_post_terms($this->post_id, $taxonomy);
+        return wp_get_post_terms($this->post_id, $taxonomy, $args);
     }
+
 
 
     /**
@@ -698,13 +703,15 @@ class Post
      *
      * @param string $taxonomy    Taxonomy slug to get terms from
      * @param string $identifier  WP_Term identifier to get
+     * @param array  $args        Term query parameters
      *
      * @return array
      * @since 1.0.4
+     * @version 1.0.4
      */
-    public function getTaxonomyTermsField(string $taxonomy, string $identifier = 'name')
+    public function getTaxonomyTermsField(string $taxonomy, string $identifier = 'name', array $args = [])
     {
-        $values = $this->getTaxonomyTerms($taxonomy);
+        $values = $this->getTaxonomyTerms($taxonomy, $args);
 
         return array_filter(
             array_map(function ($e) use ($identifier) {
@@ -712,6 +719,36 @@ class Post
             }, $values)
         );
     }
+
+
+    /**
+     * Get post primary term for a given taxonomy.
+     * Required Yoast SEO
+     *
+     * @param string $taxonomy The taxonomy identifier
+     *
+     * @return array
+     * @since 1.0.4
+     * @version 1.0.4
+     */
+    public function getPrimaryTaxonomyTerms(string $taxonomy)
+    {
+        $yoastMetaPrimaryCategory = $this->getMeta('_yoast_wpseo_primary_' . $taxonomy, true);
+
+        if ($yoastMetaPrimaryCategory) {
+            return get_term($yoastMetaPrimaryCategory, $taxonomy);
+        } else {
+            $terms = $this->getTaxonomyTerms($taxonomy, array('fields' => 'all'));
+            
+            if (count($terms) == 1) {
+                $term = reset($terms);
+                return get_term($term->term_id, $taxonomy);
+            }
+        }
+
+        return null;
+    }
+
 
 
     /******************************************/
