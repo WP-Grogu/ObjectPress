@@ -274,6 +274,17 @@ abstract class Taxonomy
 
 
     /**
+     * Get taxonomy name
+     *
+     * @return string
+     */
+    public static function getName()
+    {
+        return static::$taxonomy;
+    }
+
+
+    /**
      * Return taxonomy terms.
      *
      * @param bool|string (optionnal) If set, returns only the selected identifier (eg: 'slug', 'title') from WP_Term object
