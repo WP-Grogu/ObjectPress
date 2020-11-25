@@ -50,6 +50,10 @@ final class ObjectPress
         if (!defined('DATERANGE_1_HOUR')) {
             define('DATERANGE_1_HOUR', 3600);
         }
+        
+        if (!defined('DATERANGE_1_MINUTE')) {
+            define('DATERANGE_1_MINUTE', 60);
+        }
     }
 
 
