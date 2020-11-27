@@ -680,8 +680,8 @@ class Post
 
 
     /**
-     * Retrieve post metas from database
-     * Get post terms selected in a given taxonomy
+     * Get post terms selected in a given taxonomy.
+     * This function is DEPECRATED, use getTerms() instead
      *
      * @param string $taxonomy Taxonomy slug to get terms from
      * @param array  $args     Term query parameters
@@ -689,12 +689,42 @@ class Post
      * @return array
      * @since 1.0.0
      * @version 1.0.4
+     * @deprecated 1.0.4
      */
     public function getTaxonomyTerms(string $taxonomy, array $args = [])
     {
         return wp_get_post_terms($this->post_id, $taxonomy, $args);
     }
-
+    
+    
+    /**
+     * Get post terms selected in given taxonomy(ies)
+     *
+     * @param string|array  $taxonomies Taxonomy slug(s) to get terms from
+     * @param array         $args       Term query parameters
+     *
+     * @return array
+     * @since 1.0.4
+     */
+    public function getTerms($taxonomies, array $args = [])
+    {
+        return $this->getTaxonomiesTerms($taxonomies, $args);
+    }
+    
+    
+    /**
+     * Get post terms selected in given taxonomy(ies)
+     *
+     * @param string|array  $taxonomies Taxonomy slug(s) to get terms from
+     * @param array         $args       Term query parameters
+     *
+     * @return array
+     * @since 1.0.4
+     */
+    public function getTaxonomiesTerms($taxonomies, array $args = [])
+    {
+        return wp_get_post_terms($this->post_id, $taxonomies, $args);
+    }
 
 
     /**
@@ -711,7 +741,7 @@ class Post
      */
     public function getTaxonomyTermsField(string $taxonomy, string $identifier = 'name', array $args = [])
     {
-        $values = $this->getTaxonomyTerms($taxonomy, $args);
+        $values = $this->getTerms($taxonomy, $args);
 
         return array_filter(
             array_map(function ($e) use ($identifier) {
