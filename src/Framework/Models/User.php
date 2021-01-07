@@ -137,10 +137,11 @@ abstract class User
      *
      * @return mixed
      * @since 1.0.0
+     * @version 1.0.4
      *
      * @reference https://developer.wordpress.org/reference/functions/get_user_meta/
      */
-    public function getMeta(string $meta_key = '', bool $single = false)
+    public function getMeta(string $meta_key = '', bool $single = true)
     {
         return get_user_meta($this->user_id, $meta_key, $single);
     }
@@ -390,6 +391,23 @@ abstract class User
         }
 
         return false;
+    }
+
+
+    /**
+     * Get a user depending on its ID
+     * Return false if not found
+     *
+     * @param mixed  $id  The user id.
+     *
+     * @return  User|false
+     * @since 1.0.4
+     *
+     * @reference https://developer.wordpress.org/reference/functions/get_user_by/
+     */
+    public static function find($id)
+    {
+        return static::getBy('ID', $id);
     }
 
 

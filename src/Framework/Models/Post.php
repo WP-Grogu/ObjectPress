@@ -612,6 +612,55 @@ class Post
             return add_post_meta($this->post_id, $key, $value, false);
         }
     }
+    
+    
+    /**
+     * Delete post meta
+     *
+     * @param string $key    Metadata name.
+     * @param mixed  $value  If provided, rows will only be removed that match the value. Must be serializable if non-scalar.
+     *
+     * @return bool True on success, false on failure.
+     * @since 1.0.4
+     */
+    public function unsetMeta(string $key, $value = '')
+    {
+        return delete_post_meta($this->post_id, $key, $value);
+    }
+
+
+    /**
+     * Delete post meta
+     *
+     * @param string $key    Metadata name.
+     * @param mixed  $value  If provided, rows will only be removed that match the value. Must be serializable if non-scalar.
+     *
+     * @return bool True on success, false on failure.
+     * @since 1.0.4
+     * @alias of unsetMeta()
+     */
+    public function deleteMeta(string $key, $value = '')
+    {
+        return $this->unsetMeta($this->post_id, $key, $value);
+    }
+
+
+    /**
+     * Delete post meta
+     *
+     * @param array $key  Array of metadata names to be deleted.
+     *
+     * @return this
+     * @since 1.0.4
+     * @chainable
+     */
+    public function unsetMetas(array $keys)
+    {
+        foreach ($keys as $key) {
+            $this->unsetMeta($key);
+        }
+        return $this;
+    }
 
 
     /**
@@ -770,6 +819,29 @@ class Post
         } else {
             $terms = $this->getTaxonomyTerms($taxonomy, array('fields' => 'all'));
             
+            if (count($terms) == 1) {
+                $term = reset($terms);
+                return get_term($term->term_id, $taxonomy);
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Get post primary term for a given taxonomy.
+     * Required Yoast SEO
+     *
+     * @return array
+     */
+    public function getPrimaryCategory($taxonomy)
+    {
+        $yoastMetaPrimaryCategory = $this->getMeta('_yoast_wpseo_primary_' . $taxonomy, true);
+        if ($yoastMetaPrimaryCategory) {
+            return get_term($yoastMetaPrimaryCategory, $taxonomy);
+        } else {
+            $terms = $this->getTerms($taxonomy, array('fields' => 'all'));
             if (count($terms) == 1) {
                 $term = reset($terms);
                 return get_term($term->term_id, $taxonomy);

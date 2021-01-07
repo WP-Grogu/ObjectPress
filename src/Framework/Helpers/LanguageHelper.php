@@ -71,6 +71,20 @@ class LanguageHelper
 
 
     /**
+     * Get available languages on this app.
+     *
+     * @return array
+     */
+    public static function getAvailableLanguages()
+    {
+        // WPML
+        if (defined('icl_get_languages')) {
+            return icl_get_languages();
+        }
+    }
+
+
+    /**
      * Return the primary language
      *
      * @return string|null

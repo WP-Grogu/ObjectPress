@@ -88,7 +88,7 @@ trait PostAttributes
         $post['post_excerpt']             = $this->attributes['excerpt'];
         $post['post_status']              = $this->attributes['status'];
         $post['comment_status']           = $this->attributes['comment_status'];
-        $post['ping_status']              = $this->attributes['status'];
+        $post['ping_status']              = $this->attributes['ping_status'];
         $post['post_password']            = $this->attributes['password'];
         $post['post_name']                = $this->attributes['name'];
         $post['post_modified']            = $this->attributes['modified'];

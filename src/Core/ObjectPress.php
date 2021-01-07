@@ -42,6 +42,10 @@ final class ObjectPress
         if (!defined('OP_DEFAULT_I18N_DOMAIN_TAXOS')) {
             define('OP_DEFAULT_I18N_DOMAIN_TAXOS', 'op-theme-taxos');
         }
+        
+        if (!defined('OP_DEFAULT_I18N_DOMAIN_ROLES')) {
+            define('OP_DEFAULT_I18N_DOMAIN_ROLES', 'op-theme-roles');
+        }
 
         if (!defined('DATERANGE_1_DAY')) {
             define('DATERANGE_1_DAY', 86400);
@@ -87,6 +91,11 @@ final class ObjectPress
         Theme::on('init', function () {
             $this->initClasses(Config::get('app.cpts') ?: []);
             $this->initClasses(Config::get('app.taxonomies') ?: []);
+        }, $priority);
+
+        // Init User roles
+        Theme::on('init', function () {
+            $this->initClasses(Config::get('app.user-roles') ?: []);
         }, $priority);
 
         // Init GQL Types & Fields

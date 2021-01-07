@@ -5,7 +5,7 @@ namespace OP\Framework\Helpers;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.3
+ * @version  1.0.4
  * @access   public
  * @since    1.0.0
  */
@@ -19,7 +19,7 @@ class AcfHelper
      * @var string
      * @since 1.0.0
      */
-    public static $thumbnails_relative_folder_path = '/dist/images/blocks_thumbnails/';
+    public static $thumbnails_relative_folder_path = '/resources/static/blocks_thumbnails/';
 
 
     /**
@@ -53,16 +53,19 @@ class AcfHelper
      * @return object
      * @since 1.0.0
      */
-    public static function formatFields($fields, $prefix = '', $blocks_prfx = 'bloc_')
+    public static function formatFields($fields, $prefix = '')
     {
         $flds = [];
 
         foreach ($fields as $fld_name => $fld_value) {
             if ($fld_name === 'acf_fc_layout') {
                 $name = '__layout';
-                if (strpos($fld_value, $blocks_prfx) === 0) {
-                    $fld_value = str_replace($blocks_prfx, '', $fld_value);
+                if (preg_match('/^(b[sp]a?(?:\d+)-)[a-zA-Z0-9]+$/', $fld_value, $matches)) {
+                    $fld_value = str_replace($matches[1], '', $fld_value);
                 }
+                // if (strpos($fld_value, $blocks_prfx) === 0) {
+                //     $fld_value = str_replace($blocks_prfx, '', $fld_value);
+                // }
             } elseif (!empty($prefix) && strpos($fld_name, $prefix) === 0) {
                 $name = str_replace($prefix . '_', '', $fld_name);
             } else {
@@ -84,7 +87,7 @@ class AcfHelper
             $flds[$name] = $fld_value;
         }
 
-        return (object) $flds;
+        return $flds;
     }
 
 
@@ -152,37 +155,40 @@ class AcfHelper
      * Read fields and sort blocks into objects (for format: 'prefix_blockname_field_subfield)
      *
      * @param array
-     * @param string Blocks fields prefix
      * @return object
      * @since 1.0.0
      */
-    public static function fieldsToBlocks($fields, $prefix = 'bloc_')
+    public static function fieldsToBlocks($fields)
     {
         if (!$fields || !is_array($fields)) {
             return [];
         }
 
         $blocks = [];
-
+        
         if (is_array($fields)) {
             foreach ($fields as $fld_name => $fld_value) {
-                if (strpos($fld_name, $prefix) !== false) {
-                    $arr = explode('_', $fld_name); // Get the bloc name without bloc_ prefix
+                if (preg_match('/^(b[sp]a?(?:\d+)-)([a-zA-Z0-9]+)(?:_(.+))?$/', $fld_name, $matches)) {
+                    $block_prefix = $matches[1];
+                    $block_name = $matches[2];
+                    $block_fields = $matches[3] ?? false;
 
-                    if (count($arr) > 2) {
+                    if ($block_fields) {
                         // Fields based (eg. 'bloc_intro_bgimage')
-                        $blocks[$arr[1]][$fld_name] = $fld_value;
-                    } elseif (count($arr) === 2) {
+                        $blocks[$block_prefix.$block_name][$block_fields] = $fld_value;
+                    } else {
                         // Repeator based (eg. : institutionnal repetor)
-                        $blocks[$arr[1]][] = $fld_value;
+                        $blocks[$block_prefix.$block_name][] = $fld_value;
                     }
+                    
+                    $blocks[$block_prefix.$block_name] = self::formatFields($blocks[$block_prefix.$block_name], $block_prefix.$block_name);
                 }
             }
         }
 
         foreach ($blocks as $name => &$block) {
             // Format each blocks
-            $block              = self::formatFields($block, $prefix . $name);
+            $block = json_decode(json_encode($block));
             $block->__layout    = $name;
 
             // Remove unecessary stuffs
