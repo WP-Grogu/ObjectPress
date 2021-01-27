@@ -74,9 +74,28 @@ class LanguageHelper
      * Get available languages on this app.
      *
      * @return array
+     * @since 1.0.4
+     */
+    public static function getLanguages()
+    {
+        return static::getAvailableLanguages();
+    }
+
+
+    /**
+     * Get available languages on this app.
+     *
+     * @return array
+     * @since 1.0.4
      */
     public static function getAvailableLanguages()
     {
+        // Polylang
+        if (function_exists('pll_default_language')) {
+            global $polylang;
+            return $polylang->model->get_languages_list();
+        }
+
         // WPML
         if (defined('icl_get_languages')) {
             return icl_get_languages();
@@ -276,5 +295,42 @@ class LanguageHelper
         }
         
         return $permalink;
+    }
+
+
+    /**
+     * Get all front page ids (in all translations)
+     *
+     * @return array
+     */
+    public static function getFrontPageIds()
+    {
+        $front_id = absint(get_option('page_on_front', 0));
+
+        if (!$front_id) {
+            return [];
+        }
+
+        return static::getPostTranslations($front_id);
+    }
+
+
+    /**
+     * Get all translation ids of a post given it's id/WP_Post/post.
+     *
+     * @param mixed The post ID / WP_Post
+     *
+     * @return array of ints (post ids)
+     */
+    public static function getPostTranslations($post)
+    {
+        $langs = static::getAvailableLanguages();
+        $posts = [];
+
+        foreach ($langs as $lang) {
+            $posts[] = static::getPostIn($post, $lang->slug);
+        }
+
+        return $posts;
     }
 }

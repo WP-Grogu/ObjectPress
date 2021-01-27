@@ -2,6 +2,7 @@
 
 namespace OP\Framework\Models\Traits;
 
+use OP\Framework\Factories\ModelFactory;
 use OP\Framework\Helpers\LanguageHelper;
 
 /**
@@ -54,6 +55,20 @@ trait PostLanguage
         }
 
         return static::find($translation);
+    }
+
+    
+    /**
+     * Get post all translations.
+     *
+     * @return array
+     * @since 1.0.4
+     */
+    public function getTranslations()
+    {
+        $translations = LanguageHelper::getPostTranslations($this->id);
+
+        return ModelFactory::posts($translations);
     }
 
 
