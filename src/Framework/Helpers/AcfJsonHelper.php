@@ -5,7 +5,7 @@ namespace OP\Framework\Helpers;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.0
+ * @version  1.0.4
  * @access   public
  * @since    1.0.0
  */
@@ -28,7 +28,7 @@ class AcfJsonHelper
      */
     public function __construct()
     {
-        $this->acf_path = WP_CONTENT_DIR . '/mu-plugins/148-tools/ACF/acf-json';
+        $this->acf_path = WP_CONTENT_DIR . '/mu-plugins/stack-tools/ACF/acf-json';
 
         if (!file_exists($this->acf_path)) {
             return false;

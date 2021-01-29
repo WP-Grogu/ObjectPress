@@ -4,6 +4,13 @@ namespace OP\Core;
 
 use Phpfastcache\Helper\Psr16Adapter;
 
+/**
+ * @package  ObjectPress
+ * @author   tgeorgel
+ * @version  1.0.4
+ * @access   public
+ * @since    1.0.4
+ */
 class Cache extends Psr16Adapter
 {
     protected static $_driver   = 'Files';

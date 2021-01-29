@@ -7,7 +7,11 @@ use Exception;
 require_once ABSPATH . 'wp-admin/includes/image.php';
 
 /**
- * Medias management class
+ * @package  ObjectPress
+ * @author   tgeorgel
+ * @version  1.0.0
+ * @access   public
+ * @since    1.0.0
  */
 class Media
 {

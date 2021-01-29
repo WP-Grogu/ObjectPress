@@ -9,6 +9,13 @@ use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
 use As247\WpEloquent\Capsule\Manager as Capsule;
 
+/**
+ * @package  ObjectPress
+ * @author   tgeorgel
+ * @version  1.0.5
+ * @access   public
+ * @since    1.0.3
+ */
 final class ObjectPress
 {
     use SingletonPattern;

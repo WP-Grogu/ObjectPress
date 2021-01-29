@@ -5,6 +5,13 @@ namespace OP\Core;
 use OP\Framework\Helpers\LanguageHelper;
 use OP\Core\Patterns\SingletonPattern;
 
+/**
+ * @package  ObjectPress
+ * @author   tgeorgel
+ * @version  1.0.2
+ * @access   public
+ * @since    1.0.1
+ */
 final class Locale
 {
     use SingletonPattern;

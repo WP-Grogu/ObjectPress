@@ -2,10 +2,12 @@
 
 namespace OP\Framework\Helpers;
 
+use OP\Framework\Factories\ModelFactory;
+
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.0
+ * @version  1.0.5
  * @access   public
  * @since    1.0.0
  */
@@ -54,11 +56,14 @@ class PostHelper
 
 
     /**
-     * Excerpt
+     * Get generate an excerpt from content text and maximum length allowed.
      *
-     * @param $text, $length
+     * @param string  $text
+     * @param int     $length
+     *
+     * @return string
      */
-    public function excerpt($text, $length)
+    public static function excerpt(string $text, $length)
     {
         if (mb_strlen($text) <= $length) {
             return $text;
@@ -154,5 +159,31 @@ class PostHelper
         if ($identifier === 'slug') {
             return get_page_by_path($value, OBJECT, $_ptype) ?: false;
         }
+    }
+
+
+    /**
+     * Get pages associated to a template.
+     *
+     * @param  string    $tpml   Template name (eg: 'blog' for 'template-blog.php')
+     * @param  int|null  $limit  If set, only return this number of page(s). 0 for all posts.
+     *
+     * @return array of Page
+     */
+    public static function getTemplatePages(string $tmpl, ?int $limit = 0)
+    {
+        // Replace 'example' to 'template-example.php'
+        if (!preg_match('/^template-[a-zA-Z0-9_.-].php$/', $tmpl)) {
+            $tmpl = "template-{$tmpl}.php";
+        }
+
+        $posts = get_pages([
+            'meta_key'     => '_wp_page_template',
+            'meta_value'   => $tmpl,
+            'hierarchical' => false,                 // Take children pages as well
+            'number'       => abs($limit),
+        ]);
+
+        return $posts;
     }
 }

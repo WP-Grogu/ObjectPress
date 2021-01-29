@@ -39,6 +39,8 @@ abstract class Facade
         if (is_string($name) && class_exists($name)) {
             if (method_exists($name, 'getInstance')) {
                 return $name::getInstance();
+            } elseif (method_exists($name, 'instance')) {
+                return $name::instance();
             }
         }
 

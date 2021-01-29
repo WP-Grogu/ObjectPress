@@ -87,7 +87,7 @@ class AcfHelper
             $flds[$name] = $fld_value;
         }
 
-        return $flds;
+        return json_decode(json_encode($flds));
     }
 
 

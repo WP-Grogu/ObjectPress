@@ -6,6 +6,13 @@ use As247\WpEloquent\Capsule\Manager as Capsule;
 use Exception;
 use OP\Database\Interfaces\MigrationSchema;
 
+/**
+ * @package  ObjectPress
+ * @author   tgeorgel
+ * @version  1.0.5
+ * @access   public
+ * @since    1.0.5
+ */
 abstract class Migration implements MigrationSchema
 {
     /**

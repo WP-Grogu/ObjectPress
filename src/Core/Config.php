@@ -4,6 +4,13 @@ namespace OP\Core;
 
 use OP\Core\Patterns\SingletonPattern;
 
+/**
+ * @package  ObjectPress
+ * @author   tgeorgel
+ * @version  1.0.3
+ * @access   public
+ * @since    1.0.1
+ */
 final class Config
 {
     use SingletonPattern;

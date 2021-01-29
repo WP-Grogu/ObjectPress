@@ -2,6 +2,13 @@
 
 namespace OP\Core\Patterns;
 
+/**
+ * @package  ObjectPress
+ * @author   tgeorgel
+ * @version  1.0.2
+ * @access   public
+ * @since    1.0.2
+ */
 trait SingletonPattern
 {
     private static $_instance = null;

@@ -142,17 +142,17 @@ trait PostQuery
 
 
     /**
-     * Get the first n post of current model
+     * Get the first n ($take) post of current model
      *
-     * @param int   $limit   Number of posts to retrive (n)
+     * @param int   $take   Number of posts to retrive (n)
      * @param array $status  Post status to retreive, default to 'publish' status
      *
      * @return array of Model
      * @since 1.0.1
      */
-    public static function first(int $limit = 1, array $status = ['publish'])
+    public static function first(int $take = 1, array $status = ['publish'])
     {
-        return static::all($limit, $status);
+        return static::all($take, $status);
     }
 
 

@@ -8,7 +8,7 @@ use OP\Framework\Helpers\LanguageHelper;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.3
+ * @version  1.0.5
  * @access   public
  * @since    1.0.0
  */

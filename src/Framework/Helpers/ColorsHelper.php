@@ -5,9 +5,9 @@ namespace OP\Framework\Helpers;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  0.4.0
+ * @version  0.0.4
  * @access   public
- * @since    0.4.0
+ * @since    0.0.4
  */
 class ColorsHelper
 {

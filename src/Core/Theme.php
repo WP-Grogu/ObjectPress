@@ -5,9 +5,9 @@ namespace OP\Core;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.0
+ * @version  1.0.3
  * @access   public
- * @since    7.0
+ * @since    1.0.0
  */
 final class Theme
 {

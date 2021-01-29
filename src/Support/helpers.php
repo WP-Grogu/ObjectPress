@@ -42,7 +42,7 @@ if (!function_exists('old')) {
     /**
      * Return the old field value input in forms.
      *
-     * @param  mixed
+     * @param  string $key Optional. The Request item name. If not specified, returns all values.
      * @return void
      */
     function old(?string $key = null)

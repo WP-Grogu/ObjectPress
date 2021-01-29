@@ -12,9 +12,9 @@ use \WP_User;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.3.1
+ * @version  1.0.4
  * @access   public
- * @since    7.0
+ * @since    1.0.3
  */
 abstract class User
 {

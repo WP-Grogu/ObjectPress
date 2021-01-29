@@ -10,9 +10,9 @@ use OP\Framework\Exceptions\RoleNotFoundException;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.3
+ * @version  1.0.4
  * @access   public
- * @since    1.0.0
+ * @since    1.0.4
  */
 abstract class Role
 {

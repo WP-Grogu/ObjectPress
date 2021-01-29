@@ -3,7 +3,6 @@
 namespace OP\Framework\Models;
 
 use \Exception;
-use OP\Framework\Helpers\PostHelper;
 use OP\Framework\Helpers\LanguageHelper;
 use OP\Framework\Utils\Media;
 use OP\Framework\Models\Traits\PostAttributes;
@@ -15,7 +14,7 @@ use OP\Framework\Models\Traits\PostQuery;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.3.1
+ * @version  1.0.3
  * @access   public
  * @since    1.0.0
  */
@@ -103,7 +102,7 @@ class Post
      */
     public function __debugInfo()
     {
-        $acf   = array_keys($this->getFields());
+        $acf   = array_keys($this->getFields() ?: []);
         // $metas = array_keys($this->getMetas());
 
         return [
