@@ -3,23 +3,24 @@
 namespace OP\Core;
 
 use Phpfastcache\Helper\Psr16Adapter;
+use OP\Support\Facades\Config;
 
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.4
+ * @version  1.0.5
  * @access   public
  * @since    1.0.4
  */
 class Cache extends Psr16Adapter
 {
-    protected static $_driver   = 'Files';
     protected static $_instance = null;
 
     public static function getInstance()
     {
         if (static::$_instance === null) {
-            static::$_instance = new static(static::$_driver);
+            $driver = Config::get('object-press.cache')['driver'] ?: 'Files';
+            static::$_instance = new static($driver);
         }
 
         return static::$_instance;

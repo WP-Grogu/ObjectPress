@@ -7,6 +7,7 @@ use OP\Support\Facades\Config;
 use OP\Support\Facades\Theme;
 use Phpfastcache\CacheManager;
 use Phpfastcache\Config\ConfigurationOption;
+use OP\Framework\Exceptions\FileNotFoundException;
 use As247\WpEloquent\Capsule\Manager as Capsule;
 
 /**
@@ -80,11 +81,11 @@ final class ObjectPress
         Capsule::bootWp();
 
         // Setup cache folder
-        $cache_rel_path = wp_upload_dir()['basedir'] . '/../cache';
+        $cache_rel_path = Config::get('object-press.cache')['path'];
 
         if (!realpath($cache_rel_path)) {
-            throw new \Exception(
-                sprintf("OP : Error : Missing cache folder at `%s`", $cache_rel_path)
+            throw new FileNotFoundException(
+                "ObjectPress error : The specified cache folder $cache_rel_path doesn't exists. Please create it or check your configuration file ({theme}/config/object-press.php)."
             );
         } else {
             CacheManager::setDefaultConfig(new ConfigurationOption([

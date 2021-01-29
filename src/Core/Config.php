@@ -7,7 +7,7 @@ use OP\Core\Patterns\SingletonPattern;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.3
+ * @version  1.0.5
  * @access   public
  * @since    1.0.1
  */
@@ -74,7 +74,7 @@ final class Config
                 }
 
                 if (is_array($result[$key]) && is_array($val)) {
-                    $result[$key] = array_merge($result[$key], $val);
+                    $result[$key] = $result[$key] + $val;
                 }
                 if (is_array($result[$key]) && (is_string($val))) {
                     $result[$key][] = $val;
@@ -155,7 +155,7 @@ final class Config
     private function __construct()
     {
         $_theme = get_template_directory() . '/config';
-        $_base  = __DIR__ . '/../Config/';
+        $_base  = __DIR__ . '/../../config/';
 
         $this->addPath([$_theme, $_base]);
     }
