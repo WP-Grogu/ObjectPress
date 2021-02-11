@@ -3,11 +3,13 @@
 Custom post types are the way wordpress manage particular type of data.
 With ObjectPress, you want to optimise this custom post type creation, to gain time and easily enable/disable custom post types in your theme.
 
-This class is inspired by [generate wordpress](https://generatewp.com/post-type/) style, you can checkup `labels` and `args` overwritable on their website. 
+This class is inspired by [generate wordpress](https://generatewp.com/post-type/), feel free to checkup `labels` and `args` overwritable on their website. 
  
 ## Defining custom post types properties
 
-Define your custom post types inside the `app/CustomPostTypes` folder. You can start with the `Minimal` template, and add needed properties displayed in the `Full` tab (displayed values are defaults).
+Define your custom post types inside the `app/CustomPostTypes/` folder. 
+The class defined inside the `Minimal` tab is all you need to quickly initiate a Custom post type with ObjectPress. 
+You can adjust some properties properties, showed in the `Full` tab (shown values are ObjectPress defaults).
 
 <!-- tabs:start -->
 
@@ -53,7 +55,7 @@ class Example extends CustomPostType
     /**
      * Custom post type name/key
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     protected static $cpt = 'example';
 
@@ -62,7 +64,7 @@ class Example extends CustomPostType
      * Singular and plural names of CPT
      *
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     public static $singular = 'Example';
     public static $plural   = 'Examples';
@@ -72,7 +74,7 @@ class Example extends CustomPostType
      * Menu icon to display in back-office (dash-icon)
      *
      * @var string
-     * @since 1.3
+     * @since 1.0.3
      */
     public static $menu_icon = 'dashicons-book';
 
@@ -81,7 +83,7 @@ class Example extends CustomPostType
      * i18n translation domain
      *
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     protected static $i18n_domain = 'theme-cpts';
 
@@ -92,7 +94,7 @@ class Example extends CustomPostType
      *
      *
      * @var string
-     * @since 1.3
+     * @since 1.0.3
      */
     protected static $i18n_base_lang = '';
 
@@ -101,7 +103,7 @@ class Example extends CustomPostType
      * Set true if should use female pronoun for this cpt
      *
      * @var bool
-     * @since 1.0
+     * @since 1.0.3
      */
     public static $i18n_is_female = false;
 
@@ -110,7 +112,7 @@ class Example extends CustomPostType
      * Enable graphql on this CPT
      *
      * @var bool
-     * @since 0.1
+     * @since 1.0.0
      */
     public static $graphql_enabled = false;
 
@@ -119,7 +121,7 @@ class Example extends CustomPostType
      * CPT argument to overide over boilerplate
      *
      * @var array
-     * @since 1.3
+     * @since 1.0.3
      */
     public static $args_override = [];
 
@@ -128,7 +130,7 @@ class Example extends CustomPostType
      * CPT labels to overide over boilerplate
      *
      * @var array
-     * @since 1.3
+     * @since 1.0.3
      */
     public static $labels_override = [];
 }
@@ -138,14 +140,12 @@ class Example extends CustomPostType
 <!-- tabs:end -->
 
 
-You can override post type `args` or `labels` as you please inside their dedicated vars `$args_override/$labels_override`.
-
-> Please refer to the [wordpress documentation](https://developer.wordpress.org/reference/functions/register_post_type/) or the [generate WP website](https://generatewp.com/post-type/) to have a listing of available arguments. 
+> Please refer to the [wordpress documentation](https://developer.wordpress.org/reference/functions/register_post_type/) or the [generate WP website](https://generatewp.com/post-type/) to have a listing of available arguments and labels, overritable by using their dedicated variables `$args_override` and `$labels_override`. 
 
 
 ## Initiate your custom post type
 
-ObjectPress manage the custom post types initialisation out of the box for you. Just make sure to add your Custom post type inside `cpts` conf key in `config/app.php` : 
+ObjectPress manage the custom post types initialisation out of the box for you. You simply need to add your Custom post type inside the `cpts` key, inside the `config/app.php` config file : 
 
 ```php
     /*
@@ -162,7 +162,7 @@ ObjectPress manage the custom post types initialisation out of the box for you. 
     ],
 ```
 
-> The custom post types are going to be initialized before taxonomies and in the order they appears in the configuration array.
+> The custom post types are going to be initialized before taxonomies, and in the order they appears in the configuration array.
 
 Alternatively, you can initiate your custom post types manually :  
 
@@ -177,10 +177,10 @@ Theme::on('init', function () {
 ```
 
 
-## Bind a model to you custom post type
+## Bind a model to your custom post type
 
-You can now create your Model to be able to fluently use your new CPT, the OOP way !
-Consult the [Models documentation](models.md)  
+You can now create your Model to be able to fluently use your new CPT, the OOP way !  
+Please read the [Models documentation](the-basics/models.md)  
 
 ```php
 $example = new App\Models\Example();

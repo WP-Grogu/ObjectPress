@@ -1,22 +1,29 @@
-- Getting started
+- Introduction
+  - [ObjectPress](README.md)
 
-  - [Quick start](quickstart.md)
-  - [Configuration](configuration.md)
+- Getting Started
+  - [Quick Start](getting-started/quickstart.md)
+  - [Configuration](getting-started/configuration.md)
+  <!-- - [Starter Themes](starters.md) -->
 
-- Features
+- The basics
+  - [Custom Post Types](the-basics/custom-post-types.md)
+  - [Taxonomies](the-basics/taxonomies.md)
+  - [Models](the-basics/models.md)
+  - [Languages Support (i18n)](the-basics/i18n.md)
+  - [Theme Configuration](the-basics/theme-class.md)
 
-  - [Custom post types](custom-post-types.md)
-  - [Taxonomies](taxonomies.md)
-  - [Models](models.md)
-  - [Theme class](theme-class.md)
-  - [i18n Support](i18.md)
+- Digging Deeper
+  - [Facades](digging-deeper/facades.md)
+  - [Database](digging-deeper/database.md)
 
-<!-- - Helpers -->
+- ThirdParty Support
+  - [ACF](thirdparty/acf.md)
+  - [GraphQL](thirdparty/gql.md)
+  - [WooCommerce](thirdparty/wc.md)
 
-- Digging deeper
+- Releases
+  - [Patch notes](patch-notes.md)
 
-- Interfaces
 
-  - [ICpts](icpts.md)
-
-<!-- - Functions references -->
+<!-- Api reference ? -->

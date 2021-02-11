@@ -47,7 +47,7 @@ class LanguageHelper
     /**
      * Return the current language
      *
-     * @param string $lang the design language slug
+     * @param string $lang the desired language slug.
      *
      * @return bool
      * @since 1.0.4
@@ -109,6 +109,17 @@ class LanguageHelper
      * @return string|null
      */
     public static function primaryLang()
+    {
+        return static::getPrimaryLang();
+    }
+
+
+    /**
+     * Return the primary language
+     *
+     * @return string|null
+     */
+    public static function getPrimaryLang()
     {
         // PolyLang
         if (function_exists('pll_default_language')) {
@@ -231,7 +242,9 @@ class LanguageHelper
     /**
      * Get Taxonomy Term in desired $lang
      *
-     * @param string $lang Language slug to get
+     * @param string $lang Language slug to get the term in
+     * @param int    $t_id Thge term id
+     *
      * @return int
      */
     public static function getTermIn(string $lang, string $t_id)

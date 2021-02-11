@@ -7,7 +7,10 @@ This class is inspired by [generate wordpress](https://generatewp.com/taxonomy/)
  
 ## Defining your taxonomy properties
 
-Define your taxonomies inside the `app/Taxonomies` folder. You can start with the `Minimal` template, and add needed properties displayed in the `Full` tab (displayed values are defaults).
+Define your taxonomies inside the `app/Taxonomies/` folder. 
+The class defined inside the `Minimal` tab is all you need to quickly initiate a Taxonomy with ObjectPress. 
+You can adjust some properties properties, showed in the `Full` tab (shown values are ObjectPress defaults).
+
 
 
 <!-- tabs:start -->
@@ -63,7 +66,7 @@ class ExampleTaxonomy extends Taxonomy
      * Taxonomy name
      *
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     protected static $taxonomy = 'example-taxonomy';
 
@@ -72,7 +75,7 @@ class ExampleTaxonomy extends Taxonomy
      * Singular and plural names of Taxonomy
      *
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     public static $singular = 'Example Taxonomy';
     public static $plural   = 'Example Taxonomies';
@@ -82,7 +85,7 @@ class ExampleTaxonomy extends Taxonomy
      * Register this taxonomy on thoses post types
      *
      * @var array
-     * @since 0.1
+     * @since 1.0.0
      */
     protected static $post_types = [];
 
@@ -91,7 +94,7 @@ class ExampleTaxonomy extends Taxonomy
      * Activate 'single term' mode on this taxonomy
      *
      * @var bool
-     * @since 1.3
+     * @since 1.0.3
      */
     public static $single_term = false;
 
@@ -100,7 +103,7 @@ class ExampleTaxonomy extends Taxonomy
      * 'single term' mode params 
      * 
      * @var array
-     * @since 1.3
+     * @since 1.0.3
      */
     public static $single_term_params = [
         'default_term' => 'my-category',
@@ -110,7 +113,7 @@ class ExampleTaxonomy extends Taxonomy
      * CPT/Taxonomy argument to overide over boilerplate
      *
      * @var array
-     * @since 1.3
+     * @since 1.0.3
      */
     public static $args_override = [];
 
@@ -119,7 +122,7 @@ class ExampleTaxonomy extends Taxonomy
      * CPT/Taxonomy labels to overide over boilerplate
      *
      * @var array
-     * @since 1.3
+     * @since 1.0.3
      */
     public static $labels_override = [];
 
@@ -128,7 +131,7 @@ class ExampleTaxonomy extends Taxonomy
      * Enable graphql on this CPT/Taxonomy
      *
      * @var bool
-     * @since 0.1
+     * @since 1.0.0
      */
     public static $graphql_enabled = false;
 
@@ -137,7 +140,7 @@ class ExampleTaxonomy extends Taxonomy
      * i18n translation domain
      *
      * @var string
-     * @since 0.1
+     * @since 1.0.0
      */
     protected static $i18n_domain = 'theme-cpts';
 
@@ -149,7 +152,7 @@ class ExampleTaxonomy extends Taxonomy
      *
      *
      * @var string
-     * @since 1.3
+     * @since 1.0.3
      */
     protected static $i18n_base_lang = '';
 
@@ -159,7 +162,7 @@ class ExampleTaxonomy extends Taxonomy
      * Set true if should use female pronoun for this cpt
      *
      * @var bool
-     * @since 1.0
+     * @since 1.0.3
      */
     public static $i18n_is_female = false;
 }
@@ -167,16 +170,14 @@ class ExampleTaxonomy extends Taxonomy
 
 <!-- tabs:end -->
 
-You can override post type `args` or `labels` as you please inside their dedicated vars `$args_override/$labels_override`.  
-
-> Please refer to the [wordpress documentation](https://developer.wordpress.org/reference/functions/register_taxonomy/) or the [generate WP website](https://generatewp.com/taxonomy/) to have a listing of available arguments. 
-
+> Please refer to the [wordpress documentation](https://developer.wordpress.org/reference/functions/register_taxonomy/) or the [generate WP website](https://generatewp.com/taxonomy/) to have a listing of available arguments and labels, overritable by using their dedicated variables `$args_override` and `$labels_override`. 
 
 
 
 ## Initiate your Taxonomy 
 
-ObjectPress manage the taxonomies initialisation out of the box for you. Just make sure to add your Taxonomy inside `taxonomies` conf key in `config/app.php` : 
+
+ObjectPress manage the custom post types initialisation out of the box for you. You simply need to add your Taxonomy inside the `taxonomies` key, inside the `config/app.php` config file :
 
 ```php
     /*
@@ -225,11 +226,21 @@ Sometimes you may wish to allow only one term selection on a taxonomy. Thanks to
 > Activate the single term mode and setup some optional params
 
 ```php
+<?php
+namespace App\Taxonomies;
+
+use OP\Framework\Boilerplates\Taxonomy;
+
+class ExampleTaxonomy extends Taxonomy
+{
+    /** Previous settings.. **/
+
+
     /**
      * Activate 'single term' mode on this taxonomy 
      * 
      * @var bool
-     * @since 1.3
+     * @since 1.0.3
      */
     public static $single_term = true;
 
@@ -247,12 +258,13 @@ Sometimes you may wish to allow only one term selection on a taxonomy. Thanks to
      * 'single term' mode params (optional)
      * 
      * @var array
-     * @since 1.3
+     * @since 1.0.3
      */
     public static $single_term_params = [
         'default_term' => 'my-default-value',
-        'priority' => 'high',
+        'priority'     => 'high',
     ];
+}
 ```
 
 ##### Available params ($single_term_params)

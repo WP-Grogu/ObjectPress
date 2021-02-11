@@ -37,6 +37,22 @@ trait PostLanguage
         return LanguageHelper::getPostLang($this->id);
     }
 
+    
+    /**
+     * Set post current language
+     *
+     * @param string $lang Set the post lang from it's slug (eg: 'en' or 'fr')
+     *
+     * @return self
+     * @chainable
+     * @since 1.0.0
+     */
+    public function setLang(string $lang)
+    {
+        LanguageHelper::setPostLang($this->id, $lang);
+        return $this;
+    }
+
 
     /**
      * Get post current language
@@ -69,21 +85,5 @@ trait PostLanguage
         $translations = LanguageHelper::getPostTranslations($this->id);
 
         return ModelFactory::posts($translations);
-    }
-
-
-    /**
-     * Set post current language
-     *
-     * @param string $lang Set the post lang from it's slug (eg: 'en' or 'fr')
-     *
-     * @return self
-     * @chainable
-     * @since 1.0.0
-     */
-    public function setLang(string $lang)
-    {
-        LanguageHelper::setPostLang($this->id, $lang);
-        return $this;
     }
 }
