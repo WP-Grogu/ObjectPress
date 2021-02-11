@@ -87,7 +87,7 @@ class AcfHelper
             $flds[$name] = $fld_value;
         }
 
-        return json_decode(json_encode($flds));
+        return $flds;
     }
 
 
@@ -165,12 +165,12 @@ class AcfHelper
         }
 
         $blocks = [];
-        
+
         if (is_array($fields)) {
             foreach ($fields as $fld_name => $fld_value) {
                 if (preg_match('/^(b[sp]a?(?:\d+)-)([a-zA-Z0-9]+)(?:_(.+))?$/', $fld_name, $matches)) {
                     $block_prefix = $matches[1];
-                    $block_name = $matches[2];
+                    $block_name   = $matches[2];
                     $block_fields = $matches[3] ?? false;
 
                     if ($block_fields) {

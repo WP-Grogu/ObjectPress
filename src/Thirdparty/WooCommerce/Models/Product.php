@@ -107,4 +107,42 @@ class Product extends Post
 
         return $this->wc_product->$method_name() ?: [];
     }
+
+
+    /**
+     * Return the product id.
+     *
+     * @return int
+     */
+    public function getProductId()
+    {
+        return $this->id;
+    }
+
+
+    /**
+     * Return the product variation id if existing.
+     *
+     * @return int|bool The variation id if allowed, else false.
+     */
+    public function getProductVariationId()
+    {
+        if ($this->isType('variable')) {
+            return $this->wc_product->get_variation_id();
+        }
+        return false;
+    }
+
+
+    /**
+     * Check if the product if of the given type.
+     *
+     * @param string $type Type to check (i.e. variable or simple)
+     *
+     * @return bool
+     */
+    public function isType($type)
+    {
+        return $this->wc_product->is_type($type);
+    }
 }

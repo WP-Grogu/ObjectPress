@@ -14,7 +14,7 @@ use OP\Framework\Models\Traits\PostQuery;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.3
+ * @version  1.0.5
  * @access   public
  * @since    1.0.0
  */
@@ -68,6 +68,7 @@ class Post
      * Variable getter
      *
      * @param string $key Attribute to retreive
+     *
      * @return mixed
      * @access public
      * @since 1.0.0
@@ -80,7 +81,9 @@ class Post
     /**
      * Variable setter
      *
-     * @param string $key Attribute to retreive
+     * @param string $key Attribute to modify
+     * @param mixed  $value Value to set to this Attribute
+     *
      * @return mixed
      * @access public
      * @since 1.0.0

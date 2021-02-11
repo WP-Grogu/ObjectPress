@@ -22,7 +22,7 @@ trait PostAttributes
 
 
     /**
-     * Post attributes, filleable by child class
+     * Post attributes, fillable by child class
      *
      * @var array
      * @access private

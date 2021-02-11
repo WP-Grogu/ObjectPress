@@ -63,7 +63,7 @@ class PostHelper
      *
      * @return string
      */
-    public static function excerpt(string $text, $length)
+    public static function excerpt(string $text, $length = 200)
     {
         if (mb_strlen($text) <= $length) {
             return $text;
