@@ -63,11 +63,11 @@ abstract class ApiRoute implements IApiRoute
 
 
     /**
-     * API call parameters to be filled on API request
+     * Route Body parameters / variables
      *
      * @var array
      */
-    public static $params = [];
+    public static $body_args = [];
 
 
     /**
@@ -112,7 +112,7 @@ abstract class ApiRoute implements IApiRoute
             'route'      => $route,
             'parameters' => [
                 'methods'  => static::$methods,
-                'callback' => [static::class, 'constructor'],
+                'callback' => [static::class, 'resolve____op'],
                 'args'     => $args
             ]
         ];
@@ -124,12 +124,21 @@ abstract class ApiRoute implements IApiRoute
      *
      * @return mixed
      */
-    public static function constructor(\WP_REST_Request $request)
+    public static function resolve____op(\WP_REST_Request $request)
     {
         static::$request = $request;
-        static::setParams();
 
-        return static::resolve();
+        $args      = (object) static::getComputedArgs();
+        $body_args = (object) static::getComputedBodyArgs();
+
+        if (is_a($args, 'WP_REST_Response')) {
+            return $args;
+        }
+        if (is_a($body_args, 'WP_REST_Response')) {
+            return $body_args;
+        }
+
+        return static::resolve($args, $body_args);
     }
 
 
@@ -173,17 +182,51 @@ abstract class ApiRoute implements IApiRoute
 
 
     /**
-     * Get API parameters and store them into static::$params
+     * Get API parameters and return them.
      *
-     * @return void
+     * @return object
      */
-    protected static function setParams()
+    protected static function getComputedArgs()
     {
-        $vars = array_keys(static::$args);
+        $vars   = array_keys(static::$args);
+        $params = [];
 
         foreach ($vars as $var) {
-            static::$params[$var] = static::$request->get_param($var);
+            $params[$var] = static::$request->get_param($var);
         }
+
+        do_action('op_api_get_computed_args', $vars);
+
+        return json_decode(json_encode($params));
+    }
+
+
+    /**
+     * Get API body parameters and return them.
+     *
+     * @return object
+     */
+    protected static function getComputedBodyArgs()
+    {
+        $vars   = static::$body_args;
+        $body   = json_decode(static::$request->get_body(), ARRAY_A);
+        $params = [];
+
+        foreach ($vars as $var => $args) {
+            $value = $body[$var] ?? null;
+
+            $validate = static::validateBodyParam($var, $value, $args);
+
+            if (is_a($validate, 'WP_REST_Response')) {
+                return $validate;
+            }
+
+            $params[$var] = $value;
+        }
+
+        do_action('op_api_get_computed_body_args', $vars, $body);
+        
+        return json_decode(json_encode($params));
     }
 
 
@@ -200,9 +243,20 @@ abstract class ApiRoute implements IApiRoute
      *
      * @return bool
      */
-    public static function validateString($param, $request, $key)
+    public static function validateString($param, $request = null, $key = null)
     {
         return is_string($param);
+    }
+
+
+    /**
+     * Validate the param as an email
+     *
+     * @return bool
+     */
+    public static function validateEmail($param, $request = null, $key = null)
+    {
+        return is_string($param) && filter_var($param, FILTER_VALIDATE_EMAIL);
     }
 
 
@@ -211,9 +265,40 @@ abstract class ApiRoute implements IApiRoute
      *
      * @return bool
      */
-    public static function validateInteger($param, $request, $key)
+    public static function validateInteger($param, $request = null, $key = null)
     {
         return preg_match("/^\d+$/", $param);
+    }
+
+
+    /**
+     * Validate body args.
+     *
+     * @return WP_REST_Response|bool
+     */
+    protected static function validateBodyParam($field, $value, $args)
+    {
+        if (isset($args['required']) && $args['required']) {
+            if (!$value || empty($value)) {
+                return new \WP_REST_Response([
+                    'success' => false,
+                    'message' => 'The field "' . $field . '" is mandatory on your body request.',
+                ], 400);
+            }
+
+            if (isset($args['type'])) {
+                $method = static::class . '::validate' . ucfirst(strtolower($args['type']));
+    
+                if (!$method($value)) {
+                    return new \WP_REST_Response([
+                        'success' => false,
+                        'message' => 'The field "' . $field . '" must be a "'. $args['type'] .'" type.',
+                    ], 400);
+                }
+            }
+        }
+
+        return true;
     }
 
 

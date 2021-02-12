@@ -10,6 +10,7 @@
   - [Custom Post Types](the-basics/custom-post-types.md)
   - [Taxonomies](the-basics/taxonomies.md)
   - [Models](the-basics/models.md)
+  - [API](the-basics/api.md)
   - [Languages Support (i18n)](the-basics/i18n.md)
   - [Theme Configuration](the-basics/theme-class.md)
 

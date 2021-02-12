@@ -11,5 +11,5 @@ namespace OP\Framework\Interfaces;
  */
 interface IApiRoute
 {
-    public static function resolve();
+    public static function resolve(object $args, object $body_args);
 }
