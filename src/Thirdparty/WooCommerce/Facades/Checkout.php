@@ -11,7 +11,7 @@ use OP\Support\Facades\Facade;
  * @access   public
  * @since    1.0.5
  */
-class WooCommerce extends Facade
+class Checkout extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -20,6 +20,6 @@ class WooCommerce extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return '\WooCommerce';
+        return 'OP\Thirdparty\WooCommerce\Classes\Checkout';
     }
 }

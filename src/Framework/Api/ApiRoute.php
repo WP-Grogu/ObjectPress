@@ -111,10 +111,11 @@ abstract class ApiRoute implements IApiRoute
             'namespace'  => $namespace,
             'route'      => $route,
             'parameters' => [
-                'methods'  => static::$methods,
-                'callback' => [static::class, 'resolve____op'],
-                'args'     => $args
-            ]
+                'methods'             => static::$methods,
+                'callback'            => [static::class, 'resolve____op'],
+                'args'                => $args,
+                'permission_callback' => '__return_true',
+            ],
         ];
     }
 

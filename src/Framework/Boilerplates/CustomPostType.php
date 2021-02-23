@@ -196,10 +196,8 @@ abstract class CustomPostType
         if (static::$graphql_enabled) {
             $args = array_replace($args, [
                 'show_in_graphql'       => true,
-                'graphql_single_name'   => static::graphqlFormatName($singular),
-                'graphql_plural_name'   => static::graphqlFormatName($plural),
-                'graphql_singular_type' => static::graphqlFormatName($singular),
-                'graphql_plural_type'   => static::graphqlFormatName($plural),
+                'graphql_single_name'   => static::getCamelizedSingular(),
+                'graphql_plural_name'   => static::getCamelizedPlural(),
             ]);
         }
 

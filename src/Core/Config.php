@@ -17,13 +17,34 @@ final class Config
 
     private static $paths = [];
 
+    
+    /**
+     * is not allowed to call from outside to prevent from creating multiple instances,
+     * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
+     *
+     * @since 1.0.3
+     */
+    private function __construct()
+    {
+        $_theme = get_template_directory() . '/config';
+        $_base  = __DIR__ . '/../../config/';
+
+        $this->addPath([$_theme, $_base]);
+    }
+
+
     /**
      * Get a single config item from it's full key path
-     * eg. Config/auth.php => auth.encryption
+     * Recursively look into arrays.
+     *
+     * eg, for : auth.encryption.name
+     * Config/auth.php => ['encryption' => ['name' => 'abc]]  => returns 'abc'
      *
      * @param string $key
      *
-     * @return string|false on failure
+     * @return string|null Returns null if the key is not found
+     * @since 1.0.3
+     * @version 1.0.5
      */
     public function get(string $key)
     {
@@ -31,18 +52,50 @@ final class Config
             return '';
         }
 
-        $key    = explode('.', $key);
-        $item   = array_pop($key);
-        $domain = implode('.', $key);
+        $keys   = explode('.', $key);
+        $domain = array_shift($keys);
+        $items  = $this->getDomain($domain);
 
-        $items = $this->getDomain($domain);
-
-        if (!$items || !array_key_exists($item, $items)) {
-            return false;
+        if (!$items) {
+            return null;
         }
 
-        return $items[$item];
+        return $this->getItemRecursive($items, $keys);
     }
+
+
+
+    /**
+     * Recursively look into arrays to find an item.
+     *
+     * For exemple, given the array ['my', 'key'] as $keys
+     * And the array ['my' => ['key' => true]] as $items
+     * Returns true.
+     *
+     * @param array $items The config array.
+     * @param array $keys  The keys array.
+     *
+     * @return mixed|null Returns null if the key is not found
+     * @since 1.0.5
+     */
+    public function getItemRecursive(array $items, array $keys)
+    {
+        if (!empty($items) && !empty($keys) && array_key_exists($keys[0], $items)) {
+            // Still has children to find.
+            if (count($keys) > 1 && is_array($items[$keys[0]])) {
+                $key = array_shift($keys);
+                return $this->getItemRecursive($items[$key], $keys);
+            }
+            
+            // No more keys to find, return result.
+            if (count($keys) == 1) {
+                return $items[$keys[0]];
+            }
+        }
+
+        return null;
+    }
+
 
     /**
      * Get a config Domain array from it's path
@@ -50,6 +103,7 @@ final class Config
      * @param string $domain
      *
      * @return array|false
+     * @since 1.0.3
      */
     public function getDomain(string $domain)
     {
@@ -93,6 +147,7 @@ final class Config
      * @param string $relative_path
      *
      * @return array
+     * @since 1.0.3
      */
     private function relativeToFullPath(string $relative_path)
     {
@@ -116,6 +171,7 @@ final class Config
      * @param string $domain
      *
      * @return string
+     * @since 1.0.3
      */
     private function domainToRelPath(string $domain): string
     {
@@ -130,7 +186,9 @@ final class Config
      * Add a path to list of paths
      *
      * @param  string|array $paths
+     *
      * @return void
+     * @since 1.0.3
      */
     public function addPath($paths)
     {
@@ -145,18 +203,5 @@ final class Config
         $paths = array_filter(array_map('realpath', $paths));
 
         array_unshift(static::$paths, ...$paths);
-    }
-
-
-    /**
-     * is not allowed to call from outside to prevent from creating multiple instances,
-     * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
-     */
-    private function __construct()
-    {
-        $_theme = get_template_directory() . '/config';
-        $_base  = __DIR__ . '/../../config/';
-
-        $this->addPath([$_theme, $_base]);
     }
 }

@@ -1,15 +1,18 @@
 <?php
 
-namespace OP\Framework\Helpers;
+namespace OP\Thirdparty\ACF\Classes;
+
+use OP\Support\Facades\Config;
+use OP\Framework\Exceptions\FileNotFoundException;
 
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.4
+ * @version  1.0.5
  * @access   public
  * @since    1.0.0
  */
-class AcfJsonHelper
+class JsonReader
 {
     /**
      * ACF json files folder
@@ -25,14 +28,19 @@ class AcfJsonHelper
      * Class constructor
      *
      * @since 1.0.0
+     * @version 1.0.5
      */
     public function __construct()
     {
-        $this->acf_path = WP_CONTENT_DIR . '/mu-plugins/stack-tools/ACF/acf-json';
+        $path = Config::get('object-press.acf.json-path');
 
-        if (!file_exists($this->acf_path)) {
-            return false;
+        if (!file_exists($path) || !is_dir($path)) {
+            throw new FileNotFoundException(
+                sprintf("ObjectPress: Could not load the %s folder. Please make sure the `object-press.acf.json-path` configuration is valid and that the specified path is an actual folder.", $path)
+            );
         }
+
+        $this->acf_path = $path;
     }
 
 

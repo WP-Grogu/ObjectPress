@@ -19,7 +19,7 @@ class Cache extends Psr16Adapter
     public static function getInstance()
     {
         if (static::$_instance === null) {
-            $driver = Config::get('object-press.cache')['driver'] ?: 'Files';
+            $driver = Config::get('object-press.cache.driver') ?: 'Files';
             static::$_instance = new static($driver);
         }
 

@@ -185,7 +185,7 @@ On your API class, you can setup 2 parameters variables.
 #### Validation Rules
 
 Setup your validation parameters inside the key value.    
-All valitation parameters are optional.  
+All validation parameters are optional.  
 
 | Name  | Type  |  Description |
 |:-:|:-:|---|
@@ -248,7 +248,7 @@ protected static validateId($param, $request = null, $key = null)
 
 Inside your `resolve()` method, you have access to `$args` and `$body_args`, which both contains the request parameters **after validation**. 
 
-!> Please note that fields that are not defined in class variables `$args` and `$body_args` **WILL NOT**  be returned in your `resolve()` method.
+!> Please note that fields that are not defined in class variables `$args` and `$body_args` **WILL NOT**  be returned in your `resolve()` method. If you need to get unspecified fields, use `static::$request->get_param()` or `static::$request->get_body()`.
 
 
 > You can retreive the wordpress `WP_REST_Request` instance using the `static::$request` property.

@@ -201,8 +201,8 @@ abstract class Taxonomy
         if (static::$graphql_enabled) {
             $args = array_replace($args, [
                 'show_in_graphql'       => true,
-                'graphql_single_name'   => static::graphqlFormatName($singular),
-                'graphql_plural_name'   => static::graphqlFormatName($plural),
+                'graphql_single_name'   => static::getCamelizedSingular(),
+                'graphql_plural_name'   => static::getCamelizedPlural(),
             ]);
         }
 
@@ -288,17 +288,18 @@ abstract class Taxonomy
      * Return taxonomy terms.
      *
      * @param bool|string (optionnal) If set, returns only the selected identifier (eg: 'slug', 'title') from WP_Term object
+     * @param array       (optionnal) If set, add some rules to get_terms() $args parameter
      *
      * @return array
      */
-    public static function getTerms($identifier = false)
+    public static function getTerms($identifier = false, array $args = [])
     {
-        $terms = \get_terms([
+        $args = $args + [
             'taxonomy'   => static::$taxonomy,
             'hide_empty' => false,
-            'meta_key'   => 'tax_position',
-            'orderby'    => 'tax_position',
-        ]);
+        ];
+
+        $terms = \get_terms($args);
 
         if (!$identifier) {
             return $terms;

@@ -141,4 +141,26 @@ trait Common
             )
         );
     }
+
+    
+    /**
+     * The post type singular name, camel case.
+     *
+     * @return string
+     */
+    public static function getCamelizedSingular()
+    {
+        return static::graphqlFormatName(static::$singular);
+    }
+
+
+    /**
+     * The post type plural name, camel case.
+     *
+     * @return string
+     */
+    public static function getCamelizedPlural()
+    {
+        return static::graphqlFormatName(static::$plural);
+    }
 }

@@ -2,15 +2,14 @@
 
 namespace OP\Framework\Boilerplates;
 
-use Exception;
-use OP\Support\Facades\Locale;
-use OP\Framework\Boilerplates\Traits\Common;
+use OP\Framework\Models\User;
+use OP\Support\Facades\Theme;
 use OP\Framework\Exceptions\RoleNotFoundException;
 
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.4
+ * @version  1.0.5
  * @access   public
  * @since    1.0.4
  */
@@ -32,6 +31,15 @@ abstract class Role
      * @since 1.0.4
      */
     protected static $i18n_domain = '';
+
+
+    /**
+     * The admin menu items the current role SHOULD NOT see.
+     *
+     * @var array
+     * @since 1.0.4
+     */
+    protected static $hidden_menues = [];
 
 
     /**
@@ -61,6 +69,7 @@ abstract class Role
      * Generate the caps based on the extended roles + custom perms.
      *
      * @return array
+     * @since 1.0.4
      */
     public static function generateCaps()
     {
@@ -102,6 +111,36 @@ abstract class Role
         }
 
         add_role(static::$identifier, __(static::$name, static::$i18n_domain), $caps);
+
+        static::removeAdminMenuItems();
+    }
+
+
+    /**
+     * Remove some menu items from admin menu for this specific role.
+     *
+     * @version 1.0.5
+     * @since 1.0.4
+     * @return void
+     */
+    protected static function removeAdminMenuItems()
+    {
+        if (!is_array(static::$hidden_menues) || empty(static::$hidden_menues)) {
+            return;
+        }
+
+        $slugs = static::$hidden_menues;
+        $role  = static::$identifier;
+
+        Theme::on('admin_menu', function () use ($slugs, $role) {
+            $u = User::current();
+
+            if (!$u || $u->hasRole($role)) {
+                foreach ($slugs as $slug) {
+                    remove_menu_page($slug);
+                }
+            }
+        }, 999);
     }
 
 
