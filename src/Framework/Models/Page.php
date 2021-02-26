@@ -35,31 +35,42 @@ class Page extends Post
 
 
     /**
-     * Find pages with given template.
+     * ⚠️ deprecated, please use whereTemplate() instead.
+     *
+     * Find page(s) with specified template.
      * Template name can be full (eg: 'template-example.php') or simplified (eg: 'example').
      *
      * @param string $template  The template name.
-     * @param bool   $unique    If set to tru, return only the first page found. Default to false.
+     * @param bool   $unique    If set to true, return only the first page found. Default to false.
      *
      * @return array
+     * @since since 1.0.4
+     * @deprecated since 1.0.5
      */
     public static function getByTemplate(string $template, bool $unique = false)
     {
+        return static::whereTemplate($template, $unique);
+    }
+
+
+    /**
+     * Find page(s) with specified template.
+     * Template name can be full (eg: 'template-example.php') or simplified (eg: 'example').
+     *
+     * @param string $template  The template name.
+     * @param bool   $unique    If set to true, return only the first page found. Default to false.
+     *
+     * @return Page|array|null If $unique set to false, return a collection of pages
+     * @since 1.0.5
+     */
+    public static function whereTemplate(string $template, bool $unique = false)
+    {
         $wp_pages = PostHelper::getTemplatePages($template, $unique ? 1 : 0);
-        $results  = [];
 
         if (empty($wp_pages)) {
-            return [];
+            return $unique ? null : [];
         }
 
-        if ($unique) {
-            return static::find($wp_pages[0]);
-        }
-
-        foreach ($wp_pages as $p) {
-            $results[] = static::find($p);
-        }
-
-        return $results;
+        return $unique ? static::find($wp_pages[0]) : static::collection($wp_pages);
     }
 }

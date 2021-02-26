@@ -18,6 +18,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Wordpress configurations
+    |--------------------------------------------------------------------------
+    |
+    | Insert here your Wordpress configurations.
+    |
+    */
+    'wp' => [
+        // The wordpress theme template file name structure.
+        // %s represents the template name. Used to find pages from their template identifier.
+        'template-files-structure' => 'template-%s.php',
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
     | ACF options (thirdparty)
     |--------------------------------------------------------------------------
     |

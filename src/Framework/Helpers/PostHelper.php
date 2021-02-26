@@ -2,7 +2,9 @@
 
 namespace OP\Framework\Helpers;
 
+use OP\Support\Facades\Config;
 use OP\Framework\Factories\ModelFactory;
+use OP\Framework\Exceptions\BadConfigurationException;
 
 /**
  * @package  ObjectPress
@@ -172,18 +174,35 @@ class PostHelper
      */
     public static function getTemplatePages(string $tmpl, ?int $limit = 0)
     {
-        // Replace 'example' to 'template-example.php'
-        if (!preg_match('/^template-[a-zA-Z0-9_.-].php$/', $tmpl)) {
-            $tmpl = "template-{$tmpl}.php";
+        $structure = Config::get('object-press.wp.template-files-structure');
+
+        // Check if there is a %s inside the string, otherwise throw exception.
+        if (substr_count($structure, '%s') !== 1) {
+            throw new BadConfigurationException(
+                "ObjectPress : Invalid `object-press.wp.template-files-structure` configuration. You must exactly include one `%s` in your string."
+            );
         }
 
-        $posts = get_pages([
+        // Build up regex based on the structural configuration.
+        $regex = sprintf(
+            '%s' . str_replace('/', '\/', preg_quote($structure)) . '%s',
+            '/^',
+            '[a-zA-Z0-9_.-]',
+            '$/'
+        );
+
+        // Replace 'example' to 'template-example.php'
+        if (!preg_match($regex, $tmpl)) {
+            $tmpl = sprintf($structure, $tmpl);
+        }
+
+        $params = [
             'meta_key'     => '_wp_page_template',
             'meta_value'   => $tmpl,
             'hierarchical' => false,                 // Take children pages as well
             'number'       => abs($limit),
-        ]);
+        ];
 
-        return $posts;
+        return get_pages($params);
     }
 }
