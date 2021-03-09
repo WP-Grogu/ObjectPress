@@ -3,6 +3,7 @@
 namespace OP\Framework\Models\Traits;
 
 use OP\Framework\Helpers\PostHelper;
+use WP_Query;
 
 /**
  * @package  ObjectPress
@@ -238,5 +239,40 @@ trait PostQuery
         }
 
         return true;
+    }
+
+
+    /**
+     * Get the posts from a pagination.
+     * Specify how many post you need per pages, and the page you wish to retrive.
+     * Returns current page being viewed, max number of pages, and current page items.
+     *
+     * @param int   $per_page  The number of posts per pages.
+     * @param int   $page      The page number to get.
+     * @param array $args      WP_Query arguments to override if needed.
+     *
+     * @return array
+     */
+    public static function paginate(int $per_page, int $page = 1, array $args = []): array
+    {
+        $op_args = array(
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'post_status'    => 'publish',
+            'post_type'      => static::$post_type,
+            'posts_per_page' => $per_page,
+            'paged'          => absint($page),
+            'fields'         => 'ids',
+        );
+
+        $query = new WP_Query($args + $op_args);
+
+        $max_page = (int) $query->max_num_pages;
+
+        return [
+            'page'     => $max_page ? absint($page) : 0,
+            'max_page' => $max_page,
+            'items'    => static::collection($query->posts),
+        ];
     }
 }
