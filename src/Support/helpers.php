@@ -9,23 +9,25 @@ if (!function_exists('dd')) {
      */
     function dd()
     {
+        print '<pre>';
         array_map(function ($x) {
             var_dump($x);
         }, func_get_args());
+        print '</pre>';
 
         die(1);
     }
 }
 
 
-if (!function_exists('pd')) {
+if (!function_exists('prd')) {
     /**
      * Dump the passed variables and end the script, using print_r.
      *
      * @param  mixed
      * @return void
      */
-    function pd()
+    function prd()
     {
         print '<pre>';
         array_map(function ($x) {

@@ -183,7 +183,7 @@ class PostHelper
             );
         }
 
-        // Build up regex based on the structural configuration.
+        // Build up regex, based on the structural configuration.
         $regex = sprintf(
             '%s' . str_replace('/', '\/', preg_quote($structure)) . '%s',
             '/^',
@@ -191,7 +191,7 @@ class PostHelper
             '$/'
         );
 
-        // Replace 'example' to 'template-example.php'
+        // Replace 'example' by 'template-example.php'
         if (!preg_match($regex, $tmpl)) {
             $tmpl = sprintf($structure, $tmpl);
         }

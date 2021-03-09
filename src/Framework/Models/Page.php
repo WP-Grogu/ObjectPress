@@ -44,8 +44,8 @@ class Page extends Post
      * @param bool   $unique    If set to true, return only the first page found. Default to false.
      *
      * @return array
-     * @since since 1.0.4
-     * @deprecated since 1.0.5
+     * @since 1.0.4
+     * @deprecated 1.0.5
      */
     public static function getByTemplate(string $template, bool $unique = false)
     {
@@ -55,10 +55,12 @@ class Page extends Post
 
     /**
      * Find page(s) with specified template.
-     * Template name can be full (eg: 'template-example.php') or simplified (eg: 'example').
+     * Template name can be full (eg: 'template-home.php') or simplified (eg: 'home').
+     *
+     * ℹ️ You can change your theme templates filenames structure in config, cf. `object-press.wp.template-files-structure`
      *
      * @param string $template  The template name.
-     * @param bool   $unique    If set to true, return only the first page found. Default to false.
+     * @param bool   $unique    If set to true, only return the first page found. Default: false.
      *
      * @return Page|array|null If $unique set to false, return a collection of pages
      * @since 1.0.5
