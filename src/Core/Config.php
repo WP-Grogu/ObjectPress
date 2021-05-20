@@ -113,7 +113,7 @@ final class Config
         if (empty($full_paths)) {
             return false;
         }
-        
+
         $conf_arrays = $result = [];
 
         foreach ($full_paths as $full_path) {
@@ -183,7 +183,7 @@ final class Config
 
 
     /**
-     * Add a path to list of paths
+     * Add a path to search config files from.
      *
      * @param  string|array $paths
      *
@@ -203,5 +203,16 @@ final class Config
         $paths = array_filter(array_map('realpath', $paths));
 
         array_unshift(static::$paths, ...$paths);
+    }
+
+
+    /**
+     * Returns the paths to search config files from.
+     *
+     * @return array
+     */
+    public function getPaths(): array
+    {
+        return static::$paths;
     }
 }

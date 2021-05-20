@@ -2,8 +2,10 @@
 
 namespace OP\Framework\Api;
 
-use OP\Framework\Interfaces\IApiRoute;
 use \WP_REST_Request;
+use OP\Framework\Interfaces\IApiRoute;
+use OP\Framework\Factories\ValidatorFactory;
+use OP\Framework\Exceptions\FailedInitializationException;
 
 /**
  * @package  ObjectPress
@@ -51,7 +53,7 @@ abstract class ApiRoute implements IApiRoute
      *
      * @var \WP_REST_Request
      */
-    public static $request;
+    protected static $request;
 
 
     /**
@@ -71,17 +73,6 @@ abstract class ApiRoute implements IApiRoute
 
 
     /**
-     * Default argument parameter
-     *
-     * @var array
-     */
-    protected static $default_arg = [
-        'required' => false,
-        'type' => 'String',
-    ];
-
-
-    /**
      * Initiate the API route, and expose it
      *
      * @return void
@@ -91,7 +82,9 @@ abstract class ApiRoute implements IApiRoute
         extract(static::getRegisterParams());
 
         if (! register_rest_route($namespace, $route, $parameters)) {
-            throw new \Exception('ObjectPress: API initialisation failed for `' . static::class . '`.');
+            throw new FailedInitializationException(
+                'API route initialization failed for `' . static::class . '`.'
+            );
         }
     }
 
@@ -105,14 +98,14 @@ abstract class ApiRoute implements IApiRoute
     {
         $namespace = static::$namespace . '/' . static::$version;
         $route     = (strpos(static::$route, '/') === 0) ? static::$route : '/' . static::$route;
-        $args      = static::getArgs();
+        $args      = static::__getArgs();
 
         return [
             'namespace'  => $namespace,
             'route'      => $route,
             'parameters' => [
                 'methods'             => static::$methods,
-                'callback'            => [static::class, 'resolve____op'],
+                'callback'            => [static::class, '__setup'],
                 'args'                => $args,
                 'permission_callback' => '__return_true',
             ],
@@ -125,18 +118,15 @@ abstract class ApiRoute implements IApiRoute
      *
      * @return mixed
      */
-    public static function resolve____op(\WP_REST_Request $request)
+    public static function __setup(\WP_REST_Request $request)
     {
         static::$request = $request;
 
-        $args      = (object) static::getComputedArgs();
-        $body_args = (object) static::getComputedBodyArgs();
+        $args      = (object) static::__getComputedArgs();
+        $body_args = (object) static::__getComputedBodyArgs();
 
-        if (is_a($args, 'WP_REST_Response')) {
-            return $args;
-        }
-        if (is_a($body_args, 'WP_REST_Response')) {
-            return $body_args;
+        if (is_a($body_args, 'WP_Error')) {
+            return new \WP_REST_Response($body_args, 400);
         }
 
         return static::resolve($args, $body_args);
@@ -148,7 +138,7 @@ abstract class ApiRoute implements IApiRoute
      *
      * @return array
      */
-    private static function getArgs()
+    private static function __getArgs()
     {
         $args       = static::$args;
         $formated   = [];
@@ -158,21 +148,18 @@ abstract class ApiRoute implements IApiRoute
         }
 
         foreach ($args as $arg_key => $arg_params) {
-            $arg_params = $arg_params + static::$default_arg;
+            $rules      = $arg_params['rules'] ?? [];
             $parameters = [];
 
-            if ($arg_params['required'] === true) {
-                $parameters['required'] = true;
-            }
-
-            if (isset($arg_params['validate_callback'])) {
-                $parameters['validate_callback'] = $arg_params['validate_callback'];
-            } else {
-                $type = isset($arg_params['type']) ? strtolower($arg_params['type']) : 'string';
-
-                if ($type !== 'undefined') {
-                    $parameters['validate_callback'] = [static::class, 'validate' . ucfirst($type)];
+            if (!empty($arg_params)) {
+                if (is_string($rules)) {
+                    $rules = explode('|', $rules);
                 }
+
+                $rules = array_map('strtolower', $rules);
+
+                $parameters['required']          = in_array('required', $rules);
+                $parameters['validate_callback'] = $arg_params['validate_callback'] ?? [static::class, '__validate'];
             }
 
             $formated[$arg_key] = $parameters;
@@ -187,18 +174,18 @@ abstract class ApiRoute implements IApiRoute
      *
      * @return object
      */
-    protected static function getComputedArgs()
+    protected static function __getComputedArgs()
     {
         $vars   = array_keys(static::$args);
         $params = [];
-
+        
         foreach ($vars as $var) {
             $params[$var] = static::$request->get_param($var);
         }
 
-        do_action('op_api_get_computed_args', $vars);
+        $params = json_decode(json_encode($params));
 
-        return json_decode(json_encode($params));
+        return apply_filters('op_api_get_computed_args', $params);
     }
 
 
@@ -207,27 +194,26 @@ abstract class ApiRoute implements IApiRoute
      *
      * @return object
      */
-    protected static function getComputedBodyArgs()
+    protected static function __getComputedBodyArgs()
     {
         $vars   = static::$body_args;
         $body   = json_decode(static::$request->get_body(), ARRAY_A);
-        $params = [];
 
+        // Validate the specified fields.
         foreach ($vars as $var => $args) {
             $value = $body[$var] ?? null;
 
-            $validate = static::validateBodyParam($var, $value, $args);
+            $validate = static::__validateBodyParam($var, $value, $args);
 
-            if (is_a($validate, 'WP_REST_Response')) {
+            // If there is an error, abort
+            if ($validate !== true) {
                 return $validate;
             }
-
-            $params[$var] = $value;
         }
 
         do_action('op_api_get_computed_body_args', $vars, $body);
         
-        return json_decode(json_encode($params));
+        return json_decode(json_encode($body));
     }
 
 
@@ -240,35 +226,35 @@ abstract class ApiRoute implements IApiRoute
 
 
     /**
-     * Validate the param as a string
+     * Validate the inputs based on their according rules.
      *
-     * @return bool
+     * @return true|MessageBag
      */
-    public static function validateString($param, $request = null, $key = null)
+    public static function __validate($param, $request, $key)
     {
-        return is_string($param);
-    }
+        $list  = (static::$args ?: []) + (static::$body_args ?: []);
 
+        $rules = $list[$key]['rules'] ?? null;
 
-    /**
-     * Validate the param as an email
-     *
-     * @return bool
-     */
-    public static function validateEmail($param, $request = null, $key = null)
-    {
-        return is_string($param) && filter_var($param, FILTER_VALIDATE_EMAIL);
-    }
+        if (!$rules) {
+            return true;
+        }
 
+        $input    = [$key => $param];
+        $rules    = [$key => $rules];
 
-    /**
-     * Validate the param as a int
-     *
-     * @return bool
-     */
-    public static function validateInteger($param, $request = null, $key = null)
-    {
-        return preg_match("/^\d+$/", $param);
+        $validator  = new ValidatorFactory();
+
+        $validation = $validator->make($input, $rules);
+
+        if ($validation->fails()) {
+            return new \WP_Error(
+                400,
+                implode(", ", $validation->messages()->all())
+            );
+        }
+        
+        return true;
     }
 
 
@@ -277,29 +263,15 @@ abstract class ApiRoute implements IApiRoute
      *
      * @return WP_REST_Response|bool
      */
-    protected static function validateBodyParam($field, $value, $args)
+    protected static function __validateBodyParam($field, $value, $args)
     {
-        if (isset($args['required']) && $args['required']) {
-            if (!$value || empty($value)) {
-                return new \WP_REST_Response([
-                    'success' => false,
-                    'message' => 'The field "' . $field . '" is mandatory on your body request.',
-                ], 400);
-            }
+        if (isset($args['validate_callback'])) {
+            $call = $args['validate_callback'];
 
-            if (isset($args['type'])) {
-                $method = static::class . '::validate' . ucfirst(strtolower($args['type']));
-    
-                if (!$method($value)) {
-                    return new \WP_REST_Response([
-                        'success' => false,
-                        'message' => 'The field "' . $field . '" must be a "'. $args['type'] .'" type.',
-                    ], 400);
-                }
-            }
+            return $call($value, static::$request, $field);
         }
 
-        return true;
+        return static::__validate($value, static::$request, $field);
     }
 
 
@@ -327,7 +299,7 @@ abstract class ApiRoute implements IApiRoute
      *
      * @return string
      */
-    public static function getBaseUrl($path = '/')
+    public static function getBaseUrl(string $path = '')
     {
         $params = static::getRegisterParams();
 

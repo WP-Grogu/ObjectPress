@@ -265,6 +265,10 @@ abstract class Taxonomy
             static::$i18n_domain = defined('OP_DEFAULT_I18N_DOMAIN_TAXOS') ? OP_DEFAULT_I18N_DOMAIN_TAXOS : 'op-theme-taxos';
         }
 
+        if (method_exists(static::class, 'conditionnalInitialization') && !static::conditionnalInitialization()) {
+            return;
+        }
+
         static::register();
 
         if (static::$single_term) {

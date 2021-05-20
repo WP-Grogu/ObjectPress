@@ -225,6 +225,14 @@ abstract class CustomPostType
             static::$i18n_domain = defined('OP_DEFAULT_I18N_DOMAIN_CPTS') ? OP_DEFAULT_I18N_DOMAIN_CPTS : 'op-theme-cpts';
         }
 
+        if (strpos(static::class, 'Contacts') !== false) {
+            dd(static::class, method_exists(static::class, 'conditionnalInitialization'));
+        }
+
+        if (method_exists(static::class, 'conditionnalInitialization') && !static::conditionnalInitialization()) {
+            return;
+        }
+
         static::register();
     }
 }

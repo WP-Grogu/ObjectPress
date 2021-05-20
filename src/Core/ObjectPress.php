@@ -43,6 +43,10 @@ final class ObjectPress
      */
     private function setupConstants()
     {
+        if (!defined('OBJECTPRESS_ROOT_DIR')) {
+            define('OBJECTPRESS_ROOT_DIR', realpath(__DIR__ . '/../../'));
+        }
+
         if (!defined('OP_DEFAULT_I18N_DOMAIN_CPTS')) {
             define('OP_DEFAULT_I18N_DOMAIN_CPTS', 'op-theme-cpts');
         }

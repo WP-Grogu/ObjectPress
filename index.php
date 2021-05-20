@@ -3,15 +3,15 @@
 /**
  * Software is like sex: It’s better when it’s free.
  *
- * This file is used if you decide to put the lib in your WP plugins folder.
+ * This file is usefull if you plan to put the lib sources in your wordpress mu-plugins folder.
  */
 
 if (!defined('ABSPATH')) {
-    throw new \Exception('This framework requires wordpress in order to work properly');
+    exit('This framework requires Wordpress in order to work properly.');
 }
 
 if (!file_exists(__DIR__ . '/vendor/autoload.php')) {
-    throw new \Exception('Couldn\'t find autoload file inside ObjectPress directory.');
+    exit('Couldn\'t find autoload file inside ObjectPress directory. Please run `composer install`');
 }
 
 require_once __DIR__ . '/vendor/autoload.php';

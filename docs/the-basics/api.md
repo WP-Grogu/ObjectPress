@@ -3,7 +3,7 @@
 
 ## Introduction
 
-API routes on ObjectPress are represented by classes. You must set one route per class.  
+API routes on ObjectPress are represented by classes. You **MUST** set one route per class.  
 ObjectPress automatically manage validation and request setup for you.
 
 ## Define an API route
@@ -115,7 +115,11 @@ class ContactForm extends ApiRoute
      *
      * @var array
      */
-    public static $args = [];
+    public static $args = [
+      'id' => [
+        'rules' => ['required', 'numeric'],
+      ],
+    ];
 
 
     /**
@@ -125,16 +129,13 @@ class ContactForm extends ApiRoute
      */
     public static $body_args = [
         'name' => [
-            'required' => true,
-            'type'     => 'String',
+            'rules' => 'required|alpha_numeric',
         ],
         'email' => [
-            'required' => true,
-            'type'     => 'Email',
+            'rules' => ['required', 'email'],
         ],
         'phone' => [
-            'required' => false,
-            'type'     => 'Integer',
+            'validate_callback' => [static::class, 'validatePhone'],
         ],
     ];
 
@@ -145,6 +146,7 @@ class ContactForm extends ApiRoute
      */
     public static function resolve(object $args, object $body_args) 
     {
+        echo $args->id;
         echo $body_args->name;
         echo $body_args->email;
         echo $body_args->phone;
@@ -178,78 +180,38 @@ ObjectPress manage the API routes initialisation out of the box for you. You sim
 
 ## Validation
 
-On your API class, you can setup 2 parameters variables.  
-- The `$args` property define the expected api route parameters  
+ObjectPress offers the possibility to automatically apply validation over your endpoint arguments.
+- The `$args` property define the expected URL parameters  
 - The `$body_args` property define the expected JSON body parameters  
 
-#### Validation Rules
+ObjectPress relies on the [Laravel validation](https://laravel.com/docs/8.x/validation) package, and therefore shares the exact same functionalities. Please have a look at the Laravel documentation to get a listing of available [validation rules](https://laravel.com/docs/8.x/validation#available-validation-rules).
 
-Setup your validation parameters inside the key value.    
-All validation parameters are optional.  
+> The `rules` key can be an array of rules, or a string containing all rules separated by `|`, exactly as in Laravel.
 
-| Name  | Type  |  Description |
-|:-:|:-:|---|
-| 'required'  |  `boolean` |  Weither the field is mandatory or not. |
-| 'type'  | `string`  |  The field type, to be validated by ObjectPress. Default to 'String'. |
-| 'validate_callback'  |  `callable` | The validation callback. If specified, it will skip the type validation.   |
-
+If you wish to use a custom validation logic, you can specify your validation method (as a `callable` type) using the `validate_callback` parameter.
 
 ```php
 public static $body_args = [
     'custom' => [
-        'required'          => true,    // Boolean
-        'validate_callback' => [        // Define a custom validation method, inside the API class
+        'validate_callback' => [           // Define a custom validation method, inside the API class.
             static::class, 
             'class_method'
         ]  
     ],
-    'string' => [
-        'required' => false,      // Boolean
-        'type'     => 'String',   // String 
+    'email' => [
+        'rules' => ['required', 'email']   // Check that the parameter exists and is an email.
     ],
-    'without_validation' => [],
+    'without_validation' => [],            // No validation rule will be applied to this parameter.
 ];
 ```
 
 
-#### Default types
+After the validation passes, the `resolve()` method is called. If any paramer doesn't pass validation, a 400 (Bad Request) response is thrown.
 
-When you setup a `type`, ObjectPress will automatically validate it for you.  
-
-| Type  | Method  |  Validation |
-|:-:|:-:|---|
-| 'String'  |  validateString() |  `is_string($param);` |
-| 'Integer'  | validateInteger()  |  `preg_match("/^\d+$/", $param);` |
-| 'Email'  |  validateEmail() | `is_string($param) && filter_var($param, FILTER_VALIDATE_EMAIL);`  |
-
-#### Custom types
-
-To create a custom type, create a validation method inside your API class. It must respect the camel case convention and start with `validate`. 
-
-```php
-public static $arg = [
-    'parameter_key' => [
-        'type' => 'Id',
-    ],
-];
-
-/**
- * Validate the param as an Id type
- *
- * @return bool
- */
-protected static validateId($param, $request = null, $key = null)
-{
-    return is_int($param) && $param > 0 && $param < 1000;
-}
-```
 
 ## Resolve
 
 Inside your `resolve()` method, you have access to `$args` and `$body_args`, which both contains the request parameters **after validation**. 
-
-!> Please note that fields that are not defined in class variables `$args` and `$body_args` **WILL NOT**  be returned in your `resolve()` method. If you need to get unspecified fields, use `static::$request->get_param()` or `static::$request->get_body()`.
-
 
 > You can retreive the wordpress `WP_REST_Request` instance using the `static::$request` property.
 

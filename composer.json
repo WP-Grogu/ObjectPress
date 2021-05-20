@@ -17,11 +17,19 @@
     },
     "require": {
         "php": "^7.2|^8.0",
-        "illuminate/config": "^7.15",
+        "illuminate/config": " ~5.6",
         "as247/wp-eloquent": "^1.0",
         "phpfastcache/phpfastcache": "^7.0",
-        "symfony/finder": "^5.1",
-        "nesbot/carbon": "^2.45"
+        "symfony/finder": " ^4.0",
+        "nesbot/carbon": "^2.45",
+        "laravel/helpers": " ^1.0",
+        "illuminate/contracts": " ~5.6",
+        "illuminate/support": " ~5.6",
+        "illuminate/translation": " ~5.6",
+        "illuminate/filesystem": " ~5.6",
+        "illuminate/validation": " ~5.6",
+        "illuminate/http": " ~5.6",
+        "doctrine/inflector": " ^1.1"
     },
     "require-dev": {
         "symfony/var-dumper": "^5.2"
