@@ -10,9 +10,9 @@ use Illuminate\Validation\Factory as Validator;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.5
+ * @version  1.0.6
  * @access   public
- * @since    1.0.5
+ * @since    1.0.6
  */
 class ValidatorFactory
 {

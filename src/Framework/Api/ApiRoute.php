@@ -10,9 +10,9 @@ use OP\Framework\Exceptions\FailedInitializationException;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.4
+ * @version  1.0.5
  * @access   public
- * @since    1.0.4
+ * @since    1.0.3
  */
 abstract class ApiRoute implements IApiRoute
 {
