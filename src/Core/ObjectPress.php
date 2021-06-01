@@ -13,7 +13,7 @@ use As247\WpEloquent\Capsule\Manager as Capsule;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.5
+ * @version  2.0
  * @access   public
  * @since    1.0.3
  */
@@ -84,41 +84,31 @@ final class ObjectPress
         // Initiate capsule (wpEloquent, https://github.com/as247/wp-eloquent)
         Capsule::bootWp();
 
-        // Setup cache folder
-        $cache_rel_path = Config::get('object-press.cache')['path'];
+        // Setup cache system
+        $this->setupCache();
 
-        if (!realpath($cache_rel_path)) {
-            throw new FileNotFoundException(
-                "ObjectPress error : The specified cache folder $cache_rel_path doesn't exists. Please create it or check your configuration file ({theme}/config/object-press.php)."
-            );
-        } else {
-            CacheManager::setDefaultConfig(new ConfigurationOption([
-                'path' => realpath($cache_rel_path),
-            ]));
-        }
-
-        $priority = Config::get('app.init-priority') ?: 9;
+        $priority = Config::get('setup.init-priority') ?: 9;
 
         // Init Custom post types & Taxonomies
         Theme::on('init', function () {
-            $this->initClasses(Config::get('app.cpts') ?: []);
-            $this->initClasses(Config::get('app.taxonomies') ?: []);
+            $this->initClasses(Config::get('setup.cpts') ?: []);
+            $this->initClasses(Config::get('setup.taxonomies') ?: []);
         }, $priority);
 
         // Init User roles
         Theme::on('init', function () {
-            $this->initClasses(Config::get('app.user-roles') ?: []);
+            $this->initClasses(Config::get('setup.user-roles') ?: []);
         }, $priority);
 
         // Init GQL Types & Fields
         Theme::on('graphql_register_types', function () {
-            $this->initClasses(Config::get('app.gql-types') ?: []);
-            $this->initClasses(Config::get('app.gql-fields') ?: []);
+            $this->initClasses(Config::get('setup.gql-types') ?: []);
+            $this->initClasses(Config::get('setup.gql-fields') ?: []);
         });
         
         // Init Api routes
         Theme::on('rest_api_init', function () {
-            $this->initClasses(Config::get('app.apis') ?: []);
+            $this->initClasses(Config::get('setup.apis') ?: []);
         });
     }
 
@@ -200,5 +190,31 @@ final class ObjectPress
     public function isInitiated()
     {
         return isset(static::$_instance) && !is_null(static::$_instance);
+    }
+
+
+    /**
+     * Setup the cache parameters in order to use cache at needs.
+     *
+     * @return void
+     */
+    private function setupCache()
+    {
+        if (!Config::get('object-press.cache.active')) {
+            return;
+        }
+
+        // Setup cache folder
+        $cache_rel_path = Config::get('object-press.cache.path');
+
+        if (!realpath($cache_rel_path)) {
+            throw new FileNotFoundException(
+                "ObjectPress error : The specified cache folder $cache_rel_path doesn't exists. Please create it or check your configuration file ({theme}/config/object-press.php)."
+            );
+        }
+
+        CacheManager::setDefaultConfig(new ConfigurationOption([
+            'path' => realpath($cache_rel_path),
+        ]));
     }
 }

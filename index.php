@@ -1,5 +1,15 @@
 <?php
 
+/*
+Plugin Name: ObjectPress
+Plugin URI: https://hydrat.agency
+Description: A micro-frameworks providing OOP tools (such as models) for WordPress development.
+Author: Hydrat agency
+Version: dev-2.0
+Author URI: https://hydrat.agency
+*/
+
+
 /**
  * Software is like sex: It’s better when it’s free.
  *

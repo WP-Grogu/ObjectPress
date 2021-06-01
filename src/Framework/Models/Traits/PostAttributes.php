@@ -64,7 +64,11 @@ trait PostAttributes
 
         $fillable = $this->attributes;
 
-        unset($fillable['id'], $fillable['type']);
+        unset(
+            $fillable['id'],
+            $fillable['type'],
+            $fillable['comment_count']
+        );
 
         $this->fillable = $fillable;
     }

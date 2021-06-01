@@ -8,16 +8,33 @@ use OP\Support\Facades\Config;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.5
+ * @version  2.0
  * @access   public
  * @since    1.0.4
  */
 class Cache extends Psr16Adapter
 {
-    protected static $_instance = null;
+    /**
+     * The instance
+     *
+     * @access private
+     */
+    private static $_instance;
 
+
+    /**
+     * Get the Cache instance.
+     *
+     * @return self
+     */
     public static function getInstance()
     {
+        if (!Config::get('object-press.cache.active')) {
+            throw new \RuntimeException(
+                "ObjectPress : You must enable cache in order to use the Cache system."
+            );
+        }
+
         if (static::$_instance === null) {
             $driver = Config::get('object-press.cache.driver') ?: 'Files';
             static::$_instance = new static($driver);

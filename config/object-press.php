@@ -11,6 +11,7 @@ return [
     |
     */
     'cache' => [
+        'active' => true,
         'driver' => 'Files',
         'path'   => wp_upload_dir()['basedir'] . '/../cache',
     ],
@@ -47,6 +48,37 @@ return [
         // Path to flexible content thumbnails directory.
         // Relative path from theme folder root (get_template_directory()).
         'flex-thumb-relative-path' => '/static/flexible_thumbnails',
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Theme options
+    |--------------------------------------------------------------------------
+    |
+    | Insert here your theme/app configurations so ObjectPress can handle your theme.
+    |
+    */
+    'theme' => [
+        'psr-prefix' => 'App',
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Templating options options
+    |--------------------------------------------------------------------------
+    |
+    | Insert here your theme/app configurations so ObjectPress can handle your theme.
+    |
+    */
+    'template' => [
+        'blade' => [
+            'inputs' => [
+                get_template_directory() . '/resources/views',
+            ],
+            'output' => wp_upload_dir()['basedir'] . '/cache/blade',
+        ],
     ],
 
 ];

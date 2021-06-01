@@ -29,7 +29,7 @@ trait PostQuery
             $id = $post->ID ?? false;
         }
 
-        if (!$id) {
+        if (!$id || !static::belongsToModel($id)) {
             return null;
         }
 

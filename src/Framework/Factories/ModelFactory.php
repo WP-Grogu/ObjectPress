@@ -2,13 +2,14 @@
 
 namespace OP\Framework\Factories;
 
-use Exception;
+use OP\Support\Facades\Config;
 use OP\Framework\Helpers\PostHelper;
+use OP\Framework\Exceptions\ClassNotFoundException;
 
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.4
+ * @version  2.0.0
  * @access   public
  * @since    1.0.0
  */
@@ -26,35 +27,37 @@ class ModelFactory
     public static function post($post)
     {
         $post  = PostHelper::getPostFromUndefined($post);
+        $psr   = Config::get('object-press.theme.psr-prefix') ?: 'App';
+        $conf  = Config::get('setup.models') ?: [];
         $model = null;
 
         if (!$post) {
             return null;
         }
 
-        // Search for model in ICpts array
-        if (
-            interface_exists('\App\Interfaces\ICpts')
-            && defined('\App\Interfaces\ICpts::MODELS')
-            && is_array(\App\Interfaces\ICpts::MODELS)
-            && array_key_exists($post->post_type, \App\Interfaces\ICpts::MODELS)
-        ) {
-            $supposed_model = \App\Interfaces\ICpts::MODELS[$post->post_type];
+        // Search for model in configuration array.
+        if (!empty($conf) && array_key_exists($post->post_type, $conf)) {
+            $supposed_class_name = $conf[$post->post_type];
 
-            if (class_exists($supposed_model)) {
-                $model = $supposed_model;
+            if (class_exists($supposed_class_name)) {
+                $model = $supposed_class_name;
             } else {
-                throw new Exception(
-                    "ObjectPress: The `$supposed_model` model does not exists for post type `$post->post_type`. Please checkup your MODELS binding in you ICpts Interface."
+                throw new ClassNotFoundException(
+                    "ObjectPress: The `$supposed_class_name` model does not exists for post type `$post->post_type`. Please checkup your setup.php configuration file."
                 );
             }
         } else {
             // Try to guess class model name (eg: 'custom-post-type' => 'App\Models\CustomPostType')
             $supposed_class_name = str_replace('-', '', ucwords($post->post_type, '-'));
-            $full_supposed_class = "\App\Models\\$supposed_class_name";
+            $full_supposed_class = sprintf('%s\Models\%s', $psr, $supposed_class_name);
+            $op_supposed_class   = sprintf('OP\Framework\Models\%s', $supposed_class_name);
 
             if (class_exists($full_supposed_class)) {
                 $model = $full_supposed_class;
+            }
+
+            if (!$model && class_exists($op_supposed_class)) {
+                $model = $op_supposed_class;
             }
         }
 

@@ -2,7 +2,7 @@
 
 namespace OP\Thirdparty\WooCommerce\Models;
 
-use OP\Framework\Models\Post;
+use OP\Framework\Models\PostModel;
 use OP\Framework\Exceptions\MethodNotFoundException;
 use OP\Thirdparty\WooCommerce\Exceptions\WcProductNotFoundException;
 use \WooCommerce;
@@ -17,7 +17,7 @@ use \WooCommerce;
  * @access   public
  * @since    1.0.5
  */
-class Product extends Post
+class Product extends PostModel
 {
     /**
      * Wordpress post_type associated to the current model
@@ -44,17 +44,6 @@ class Product extends Post
     {
         $this->wc = WooCommerce::instance();
 
-        $this->getWcProductClass();
-    }
-
-
-    /**
-     * Get the WC_Product associated to this model.
-     *
-     * @return WC_Product|WC_Product_Simple
-     */
-    public function getWcProductClass()
-    {
         if (!$this->wc_product) {
             $this->wc_product = $this->wc->product_factory->get_product($this->id);
 
@@ -64,8 +53,19 @@ class Product extends Post
                 );
             }
         }
+    }
 
-        return $this->wc_product;
+
+    /**
+     * Get the WC_Product associated to this model.
+     *
+     * @param string|array $class — One or more classes to add to the class list.
+     *
+     * @return WC_Product|WC_Product_Simple
+     */
+    public function getWcProductClass($class = '')
+    {
+        return wc_product_class($class, $this->id);
     }
 
 

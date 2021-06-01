@@ -30,7 +30,8 @@
         "illuminate/validation": " ^8.0",
         "illuminate/http": " ^8.0",
         "doctrine/inflector": " ^1.1",
-        "illuminate/container": " ^8.0"
+        "illuminate/container": " ^8.0",
+        "jenssegers/blade": "^1.4"
     },
     "require-dev": {
         "symfony/var-dumper": "^5.2"

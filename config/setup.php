@@ -8,11 +8,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | Insert here you app/theme custom post types
-    | Format : 'cpt-identifier' => 'Path\To\CustomPostType\Class'
+    | Format : Path\To\CustomPostType\ClassName::class
     |
     */
     'cpts' => [
-        //
+        // App\Wordpress\PostTypes\Article::class,
     ],
 
 
@@ -22,11 +22,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | Insert here you app/theme taxonomies
-    | Format : 'taxonomy-identifier' => 'Path\To\Taxonomy\Class'
+    | Format : Path\To\Taxonomy\ClassName::class
     |
     */
     'taxonomies' => [
-        //
+        // App\Wordpress\Taxonomies\Category::class,
     ],
 
 
@@ -36,11 +36,11 @@ return [
     |--------------------------------------------------------------------------
     |
     | Insert here you app/theme api routes
-    | Format : 'namespace/route' => 'Path\To\Api\Class'
+    | Format : Path\To\Api\ClassName::class
     |
     */
     'apis' => [
-        // 'city/all' => 'App\Api\City\All',
+        // App\Api\GetCategories::class,
     ],
 
 
@@ -50,10 +50,30 @@ return [
     |--------------------------------------------------------------------------
     |
     | Insert here your user roles
-    | Format: 'identifier' => 'Path\To\User\Role\Class'
+    | Format: Path\To\User\Role\ClassName::class
     |
     */
-    'user-roles' => [],
+    'user-roles' => [
+        // App\Wordpress\Roles\Administrator::class,
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | App Models declaration
+    |--------------------------------------------------------------------------
+    |
+    | Insert here your app Models.
+    | Please note that declaring model is not needed if you're respecting the naming convention.
+    |
+    | @doc http://docs.objectpress.hydrat.agency/#/the-basics/models
+    |
+    | @format [ 'custom-post-type-name' => Namespace\Models\MyCustomPostType::class ]
+    |
+    */
+    'models' => [
+        // 'my-invoice' => App\Models\Invoice::class,
+    ],
 
 
     /*
@@ -62,10 +82,12 @@ return [
     |--------------------------------------------------------------------------
     |
     | Insert here your GraphQL Types
-    | Format: 'TypeIdentifier' => 'Path\To\GQL\Type\Class'
+    | Format: Path\To\GQL\Type\ClassName::class
     |
     */
-    'gql-types' => [],
+    'gql-types' => [
+        // App\Graphql\Types\MediaGallery,
+    ],
 
 
     /*
@@ -74,8 +96,10 @@ return [
     |--------------------------------------------------------------------------
     |
     | Insert here your GraphQL Fields
-    | Format: 'fieldIdentifier' => 'Path\To\GQL\Field\Class'
+    | Format: Path\To\GQL\Field\ClassName::class
     |
     */
-    'gql-fields' => [],
+    'gql-fields' => [
+        // App\Graphql\Fields\MediaGallery,
+    ],
 ];
