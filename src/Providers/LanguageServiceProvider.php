@@ -41,7 +41,7 @@ class LanguageServiceProvider extends ServiceProvider
         $driver = apply_filters('op/providers/language/default_driver', $driver);
 
         if ($driver) {
-            $this->app->instance(LanguageDriver::class, $driver);
+            $this->app->bind(LanguageDriver::class, $driver);
             $this->app->alias(LanguageDriver::class, 'language');
         }
     }

@@ -25,7 +25,9 @@ final class ObjectPress
 {
     use SingletonPattern;
 
-    private $asset_path;
+    private ?string $asset_path;
+
+    private bool $booted = false;
 
     /**
      * @var OP\Core\Container
@@ -105,15 +107,22 @@ final class ObjectPress
      */
     public function boot()
     {
+        if ($this->booted) {
+            return;
+        }
+
         // Initiate capsule (wpEloquent, https://github.com/as247/wp-eloquent)
         // Capsule::bootWp();
 
         (new AppSetupServiceProvider)->register();
         (new LanguageServiceProvider)->register();
-        (new HookProvider)->boot();
+        
+        (new HookProvider)->boot(); // TODO: HookIgnition
 
         // Setup cache system
         $this->bootCache();
+
+        $this->booted = true;
     }
 
 
