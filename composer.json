@@ -31,7 +31,7 @@
         "illuminate/http": " ^8.0",
         "illuminate/database": " ^8.0",
         "illuminate/container": " ^8.0",
-        "doctrine/inflector": " ^1.1",
+        "doctrine/inflector": " ^2.0",
         "jenssegers/blade": "^1.4",
         "amphibee/hookable": " dev-main",
         "hautelook/phpass": " 0.3.*",
