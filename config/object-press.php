@@ -4,6 +4,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application(s) containers.
+    |--------------------------------------------------------------------------
+    |
+    | Add your app/frameworks container here to support them with ObjectPress.
+    |
+    | @see https://php-di.org/doc/container-configuration.html
+    | @see https://github.com/AcclimateContainer/acclimate-container
+    |
+    */
+    'containers' => [
+        //
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Cache options
     |--------------------------------------------------------------------------
     |
@@ -47,7 +63,7 @@ return [
 
         // Path to flexible content thumbnails directory.
         // Relative path from theme folder root (get_template_directory()).
-        'flex-thumb-relative-path' => '/static/flexible_thumbnails',
+        'flex-thumb-relative-path' => '',
     ],
 
 
@@ -66,19 +82,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Templating options options
+    | Templating engines options
     |--------------------------------------------------------------------------
     |
-    | Insert here your theme/app configurations so ObjectPress can handle your theme.
+    | Manage here your templating engine options.
+    | ObjectPress support the Laravel Blade engine out of the box.
     |
     */
     'template' => [
+
         'blade' => [
             'inputs' => [
                 get_template_directory() . '/resources/views',
             ],
             'output' => wp_upload_dir()['basedir'] . '/cache/blade',
         ],
+
     ],
 
 ];

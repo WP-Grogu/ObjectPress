@@ -172,9 +172,19 @@ class PostHelper
      *
      * @return array of Page
      */
-    public static function getTemplatePages(string $tmpl, ?int $limit = 0)
+    public static function getFullTemplatePath(string $tmpl)
     {
-        $structure = Config::get('object-press.wp.template-files-structure');
+        // Skip replacement for default template name
+        if ($tmpl === 'default') {
+            return $tmpl;
+        }
+
+        // Skip replacement for template name starting with `:`
+        if (strpos($tmpl, ':') === 0) {
+            return trim(substr($tmpl, 1));
+        }
+
+        $structure = Config::getFirst('object-press.wp.template-files-structure');
 
         // Check if there is a %s inside the string, otherwise throw exception.
         if (substr_count($structure, '%s') !== 1) {
@@ -187,7 +197,7 @@ class PostHelper
         $regex = sprintf(
             '%s' . str_replace('/', '\/', preg_quote($structure)) . '%s',
             '/^',
-            '[a-zA-Z0-9_.-]',
+            '[a-zA-Z0-9_.-]+',
             '$/'
         );
 
@@ -195,6 +205,22 @@ class PostHelper
         if (!preg_match($regex, $tmpl)) {
             $tmpl = sprintf($structure, $tmpl);
         }
+
+        return $tmpl;
+    }
+
+
+    /**
+     * Get pages associated to a template.
+     *
+     * @param  string    $tpml   Template name (eg: 'blog' for 'template-blog.php')
+     * @param  int|null  $limit  If set, only return this number of page(s). 0 for all posts.
+     *
+     * @return array of Page
+     */
+    public static function getTemplatePages(string $tmpl, ?int $limit = 0)
+    {
+        $tmpl = static::getFullTemplatePath($tmpl);
 
         $params = [
             'meta_key'     => '_wp_page_template',

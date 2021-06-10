@@ -219,7 +219,7 @@ abstract class PostModel
     {
         return LanguageHelper::getPostPermalinkIn(
             $this->post,
-            $force_current_lang ? LanguageHelper::currentLang() : $this->lang()
+            $force_current_lang ? LanguageHelper::getCurrentLang() : $this->lang()
         );
     }
 

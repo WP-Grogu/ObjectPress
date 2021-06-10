@@ -20,7 +20,7 @@ class AcfManager
      *
      * @return void
      * @since 1.0.0
-     * @version 1.0.5
+     * @version 2.0
      */
     public static function setThumbnails()
     {
@@ -46,14 +46,14 @@ class AcfManager
      *
      * @return void
      * @since 1.0.0
-     * @version 1.0.5
+     * @version 2.0
      */
     private static function registerThumbnail(string $flexible_name, string $layout_name): void
     {
         Theme::on("acfe/flexible/thumbnail/name={$flexible_name}&layout={$layout_name}", function ($thumbnail, $field, $layout) {
-            $rel_path = trim(Config::get('object-press.acf.flex-thumb-relative-path'), '/');
+            $rel_paths = array_filter(Config::get('object-press.acf.flex-thumb-relative-path'));
 
-            if (!$rel_path) {
+            if (empty($rel_paths)) {
                 return;
             }
 
@@ -64,12 +64,15 @@ class AcfManager
                 '.gif',
             ];
 
-            $furl  = sprintf('%s/%s/%s', \get_template_directory_uri(), $rel_path, $layout['name']);  // url to get from
-            $fpath = sprintf('%s/%s/%s', \get_template_directory(), $rel_path, $layout['name']);      // real server path of the img
-
-            foreach ($exts as $ext) {
-                if (file_exists($fpath . $ext)) {
-                    return $furl . $ext;
+            foreach ($rel_paths as $rel_path) {
+                $rel_path = trim($rel_path, '/');
+                $furl     = sprintf('%s/%s/%s', \get_template_directory_uri(), $rel_path, $layout['name']);  // url to get from
+                $fpath    = sprintf('%s/%s/%s', \get_template_directory(), $rel_path, $layout['name']);      // real server path of the img
+    
+                foreach ($exts as $ext) {
+                    if (file_exists($fpath . $ext)) {
+                        return $furl . $ext;
+                    }
                 }
             }
 

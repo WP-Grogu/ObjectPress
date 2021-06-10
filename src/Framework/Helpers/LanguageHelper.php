@@ -185,7 +185,7 @@ class LanguageHelper
             $infos = wpml_get_language_information(null, $id);
             if (is_array($infos) && array_key_exists('language_code', $infos)) {
                 $infos['language_code'] = $lang;
-                do_action('wpml_set_element_language_details', $set_language_args);
+                do_action('wpml_set_element_language_details', $infos);
             }
             return true;
         }
@@ -243,11 +243,11 @@ class LanguageHelper
      * Get Taxonomy Term in desired $lang
      *
      * @param string $lang Language slug to get the term in
-     * @param int    $t_id Thge term id
+     * @param int    $t_id The term id
      *
      * @return int
      */
-    public static function getTermIn(string $lang, string $t_id)
+    public static function getTermIn(string $lang, string $t_id): int
     {
         // PolyLang
         if (function_exists('pll_get_term')) {
@@ -266,7 +266,7 @@ class LanguageHelper
     {
         // WPML
         if (function_exists('wpml_get_language_information')) {
-            $base_lang = static::currentLang();
+            $base_lang = static::getCurrentLang();
             $string = __($string, $domain);
 
             if ($lang !== $base_lang) {
@@ -281,9 +281,9 @@ class LanguageHelper
 
 
     /**
-     * Get a i18n translated string in desired lang
+     * Get the post permalink in desired language.
      *
-     * @param
+     * @param $post
      * @return string|null
      */
     public static function getPostPermalinkIn($post, ?string $lang)
@@ -296,7 +296,7 @@ class LanguageHelper
 
         // WPML
         if (function_exists('wpml_get_language_information')) {
-            $base_lang = static::currentLang();
+            $base_lang = static::getCurrentLang();
 
             if ($lang !== $base_lang) {
                 do_action('wpml_switch_language', $lang);

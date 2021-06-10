@@ -28,8 +28,10 @@ final class Config
     {
         $_theme = get_template_directory() . '/config';
         $_base  = __DIR__ . '/../../config/';
-
-        $this->addPath([$_theme, $_base]);
+        
+        $this->addPath(
+            (realpath($_theme) !== false) ? [$_theme, $_base] : $_base
+        );
     }
 
 
@@ -38,7 +40,7 @@ final class Config
      * Recursively look into arrays.
      *
      * eg, for : auth.encryption.name
-     * Config/auth.php => ['encryption' => ['name' => 'abc]]  => returns 'abc'
+     * config/auth.php => ['encryption' => ['name' => 'abc]]  => returns 'abc'
      *
      * @param string $key
      *
@@ -61,6 +63,52 @@ final class Config
         }
 
         return $this->getItemRecursive($items, $keys);
+    }
+    
+    
+    /**
+     * Get a single config item from it's full key path
+     * Recursively look into arrays.
+     *
+     * eg, for : auth.encryption.name
+     * config/auth.php => ['encryption' => ['name' => 'abc]]  => returns 'abc'
+     *
+     * This only gets the first config found (by priority).
+     * To avoid boolean values filtered, use getFirstBool() instead.
+     *
+     * @param string $key
+     *
+     * @return string|null Returns null if the key is not found
+     * @since 2.0
+     * @version 2.0
+     */
+    public function getFirst(string $key)
+    {
+        return collect($this->get($key))
+                ->filter()
+                ->first();
+    }
+    
+    
+    /**
+     * Get a single config item from it's full key path
+     * Recursively look into arrays.
+     *
+     * eg, for : auth.encryption.name
+     * config/auth.php => ['encryption' => ['name' => 'abc]]  => returns 'abc'
+     *
+     * This only gets the first config found (by priority).
+     *
+     * @param string $key
+     *
+     * @return string|null Returns null if the key is not found
+     * @since 2.0
+     * @version 2.0
+     */
+    public function getFirstBool(string $key)
+    {
+        return collect($this->get($key))
+                ->first();
     }
 
 
@@ -107,19 +155,20 @@ final class Config
      */
     public function getDomain(string $domain)
     {
-        $relative_path = $this->domainToRelPath($domain);
-        $full_paths    = $this->relativeToFullPath($relative_path);
-        
-        if (empty($full_paths)) {
+        $paths_relative = $this->domainToRelPath($domain);
+        $paths_real     = $this->relativeToFullPath($paths_relative);
+        $paths_real     = array_unique($paths_real);
+
+        if (empty($paths_real)) {
             return false;
         }
 
         $conf_arrays = $result = [];
 
-        foreach ($full_paths as $full_path) {
+        foreach ($paths_real as $full_path) {
             $conf_arrays[] = include $full_path;
         }
-        
+
         foreach ($conf_arrays as $conf_array) {
             foreach ($conf_array as $key => $val) {
                 if (!array_key_exists($key, $result)) {
@@ -128,7 +177,7 @@ final class Config
                 }
 
                 if (is_array($result[$key]) && is_array($val)) {
-                    $result[$key] = $result[$key] + $val;
+                    $result[$key] = array_merge_recursive($result[$key], $val);
                 }
                 if (is_array($result[$key]) && (is_string($val))) {
                     $result[$key][] = $val;

@@ -379,7 +379,7 @@ abstract class UserModel
     /**
      * Get current loggedin user's class object
      *
-     * @return int 0 on not found
+     * @return User|false
      * @since 1.0.0
      */
     public static function current()

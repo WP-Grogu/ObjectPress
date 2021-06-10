@@ -2,13 +2,17 @@
 
 namespace OP\Core;
 
-use OP\Core\Patterns\SingletonPattern;
+use OP\Providers\HookProvider;
 use OP\Support\Facades\Config;
-use OP\Support\Facades\Theme;
 use Phpfastcache\CacheManager;
+use OP\Providers\LanguageProvider;
+use OP\Core\Patterns\SingletonPattern;
+use OP\Providers\AppSetupServiceProvider;
+use OP\Providers\LanguageServiceProvider;
 use Phpfastcache\Config\ConfigurationOption;
-use OP\Framework\Exceptions\FileNotFoundException;
 use As247\WpEloquent\Capsule\Manager as Capsule;
+use OP\Framework\Exceptions\FileNotFoundException;
+use Illuminate\Contracts\Container\Container as ContainerContract;
 
 /**
  * @package  ObjectPress
@@ -24,11 +28,18 @@ final class ObjectPress
     private $asset_path;
 
     /**
+     * @var OP\Core\Container
+     */
+    private Container $app;
+
+    /**
      * Is not allowed to call from outside to prevent from creating multiple instances,
      * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
      */
     private function __construct()
     {
+        $this->app = Container::getInstance();
+
         $this->asset_path = realpath(__DIR__ . '/../../assets');
 
         $this->includeHelpers();
@@ -77,59 +88,32 @@ final class ObjectPress
      * Initiate app/theme instance
      * Init CPTs, taxos, apis.. using config/app.php config file
      *
+     * @deprecated Use boot() instead.
      * @return void
      */
     public function init()
     {
-        // Initiate capsule (wpEloquent, https://github.com/as247/wp-eloquent)
-        Capsule::bootWp();
-
-        // Setup cache system
-        $this->setupCache();
-
-        $priority = Config::get('setup.init-priority') ?: 9;
-
-        // Init Custom post types & Taxonomies
-        Theme::on('init', function () {
-            $this->initClasses(Config::get('setup.cpts') ?: []);
-            $this->initClasses(Config::get('setup.taxonomies') ?: []);
-        }, $priority);
-
-        // Init User roles
-        Theme::on('init', function () {
-            $this->initClasses(Config::get('setup.user-roles') ?: []);
-        }, $priority);
-
-        // Init GQL Types & Fields
-        Theme::on('graphql_register_types', function () {
-            $this->initClasses(Config::get('setup.gql-types') ?: []);
-            $this->initClasses(Config::get('setup.gql-fields') ?: []);
-        });
-        
-        // Init Api routes
-        Theme::on('rest_api_init', function () {
-            $this->initClasses(Config::get('setup.apis') ?: []);
-        });
+        return $this->boot();
     }
 
 
     /**
-     * Initiale ObjectPress hooks
+     * Initiate app/theme instance
+     * Init CPTs, taxos, apis.. using config/app.php config file
+     *
+     * @return void
      */
-    private function initHooks()
+    public function boot()
     {
-        // TODO: force term selection in metaboxes
-        // // Enable jQuery
-        // Theme::on('admin_init', function () {
-        //     wp_enqueue_script('jquery');
-        // });
-        
-        // // Enable Add force taxonomy selection
-        // Theme::on('edit_form_advanced', function () {
-        //     if (file_exists(($path = $this->asset_path . '/html/taxonomies.html'))) {
-        //         echo file_get_contents($path);
-        //     }
-        // });
+        // Initiate capsule (wpEloquent, https://github.com/as247/wp-eloquent)
+        // Capsule::bootWp();
+
+        (new AppSetupServiceProvider)->register();
+        (new LanguageServiceProvider)->register();
+        (new HookProvider)->boot();
+
+        // Setup cache system
+        $this->bootCache();
     }
 
 
@@ -157,12 +141,12 @@ final class ObjectPress
 
     
     /**
-     * Given an array of classes, will try to init them thru init() method
+     * Given an array of classes, will try to init them uning bootup method
      *
      * @param array $classes Array of classes to initiate
      * @return void
      */
-    private function initClasses(array $classes, string $method = 'init')
+    public function initClasses(array $classes, string $method = 'init')
     {
         if (empty($classes)) {
             return;
@@ -170,11 +154,11 @@ final class ObjectPress
         
         foreach ($classes as $class) {
             if (! class_exists($class)) {
-                throw new \Exception("OP : Init : Class `$class` does not exists.");
+                throw new \Exception("ObjectPress initialisation : Class `$class` does not exists.");
             }
 
             if (! method_exists($class, $method)) {
-                throw new \Exception("OP : Init : Class `$class` does not have an `$method()` method.");
+                throw new \Exception("ObjectPress initialisation : Class `$class` does not have an `$method()` method.");
             }
 
             $class::$method();
@@ -198,7 +182,7 @@ final class ObjectPress
      *
      * @return void
      */
-    private function setupCache()
+    private function bootCache()
     {
         if (!Config::get('object-press.cache.active')) {
             return;
@@ -207,7 +191,7 @@ final class ObjectPress
         // Setup cache folder
         $cache_rel_path = Config::get('object-press.cache.path');
 
-        if (!realpath($cache_rel_path)) {
+        if (!realpath($cache_rel_path) && !mkdir($cache_rel_path, 0700, true)) {
             throw new FileNotFoundException(
                 "ObjectPress error : The specified cache folder $cache_rel_path doesn't exists. Please create it or check your configuration file ({theme}/config/object-press.php)."
             );
@@ -216,5 +200,29 @@ final class ObjectPress
         CacheManager::setDefaultConfig(new ConfigurationOption([
             'path' => realpath($cache_rel_path),
         ]));
+    }
+
+
+    /**
+     * Get ObjectPress app container.
+     *
+     * @return OP\Core\Container
+     */
+    public function app()
+    {
+        return $this->app;
+    }
+
+
+    /**
+     * Set ObjectPress container.
+     *
+     * @param ContainerContract
+     * @return this
+     */
+    public function setContainer(Container $container)
+    {
+        $this->app = $container;
+        return $this;
     }
 }

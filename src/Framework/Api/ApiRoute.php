@@ -3,7 +3,7 @@
 namespace OP\Framework\Api;
 
 use \WP_REST_Request;
-use OP\Framework\Interfaces\IApiRoute;
+use OP\Framework\Contracts\ApiRouteContract;
 use OP\Framework\Factories\ValidatorFactory;
 use OP\Framework\Exceptions\FailedInitializationException;
 
@@ -14,7 +14,7 @@ use OP\Framework\Exceptions\FailedInitializationException;
  * @access   public
  * @since    1.0.3
  */
-abstract class ApiRoute implements IApiRoute
+abstract class ApiRoute implements ApiRouteContract
 {
     /**
      * Api version

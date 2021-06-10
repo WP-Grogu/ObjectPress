@@ -46,6 +46,27 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | App Hooks declaration
+    |--------------------------------------------------------------------------
+    |
+    | This is the place you declare your app hooks & filters.
+    | Based on https://github.com/AmphiBee/hooks package.
+    |
+    */
+    'hooks' => [
+        'actions' => [
+            OP\Core\Hooks\SetupWordpress::class,
+            OP\Core\Hooks\SetupApi::class,
+            OP\Core\Hooks\SetupGraphql::class,
+        ],
+        'filters' => [
+            //
+        ],
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
     | App User roles declaration
     |--------------------------------------------------------------------------
     |

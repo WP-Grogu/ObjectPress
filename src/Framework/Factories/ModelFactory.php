@@ -2,9 +2,13 @@
 
 namespace OP\Framework\Factories;
 
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 use OP\Support\Facades\Config;
+use Illuminate\Support\Collection;
 use OP\Framework\Helpers\PostHelper;
 use OP\Framework\Exceptions\ClassNotFoundException;
+use OP\Lib\WpEloquent\Models\Contracts\WpEloquentPost;
 
 /**
  * @package  ObjectPress
@@ -16,56 +20,91 @@ use OP\Framework\Exceptions\ClassNotFoundException;
 class ModelFactory
 {
     /**
-     * Factory 'post' model, get the post type and initiate a corresponding Model if applicable.
+     * Resolve the class corresponding to the asked post type.
+     * Read `setup.models` configuration, and then tries to guess from Camelized name.
+     * The class MUST implement OP\Lib\WpEloquent\Models\Contracts\WpEloquentPost interface.
      *
-     * @param WP_post|int|string    $post_id   ID of the concerned post
+     * @param string $post_type The subject post type
      *
-     * @return Model|null on failure
-     * @version 1.0.3
-     * @since 1.0.1
+     * @return string
+     * @version 2.0
+     * @since 2.0
      */
-    public static function post($post)
+    public static function resolvePostClass(string $post_type = ''): string
     {
-        $post  = PostHelper::getPostFromUndefined($post);
         $psr   = Config::get('object-press.theme.psr-prefix') ?: 'App';
         $conf  = Config::get('setup.models') ?: [];
-        $model = null;
 
-        if (!$post) {
-            return null;
+        if (!$post_type) {
+            $post_type = 'post';
         }
 
         // Search for model in configuration array.
-        if (!empty($conf) && array_key_exists($post->post_type, $conf)) {
-            $supposed_class_name = $conf[$post->post_type];
+        if (!empty($conf) && array_key_exists($post_type, $conf)) {
+            $class = $conf[$post_type];
 
-            if (class_exists($supposed_class_name)) {
-                $model = $supposed_class_name;
+            if (class_exists($class)) {
+                return $class;
             } else {
                 throw new ClassNotFoundException(
-                    "ObjectPress: The `$supposed_class_name` model does not exists for post type `$post->post_type`. Please checkup your setup.php configuration file."
+                    "ObjectPress: The `$class` model does not exists for post_type `$post_type` or doesn't implements WpEloquentPost. Please checkup your setup.php configuration file."
                 );
             }
         } else {
             // Try to guess class model name (eg: 'custom-post-type' => 'App\Models\CustomPostType')
-            $supposed_class_name = str_replace('-', '', ucwords($post->post_type, '-'));
-            $full_supposed_class = sprintf('%s\Models\%s', $psr, $supposed_class_name);
-            $op_supposed_class   = sprintf('OP\Framework\Models\%s', $supposed_class_name);
+            $post_type_camelized = ucfirst(Str::camel($post_type));
 
-            if (class_exists($full_supposed_class)) {
-                $model = $full_supposed_class;
-            }
+            $guess = [
+                sprintf('%s\Models\%s', $psr, $post_type_camelized),
+                sprintf('OP\Framework\Models\%s', $post_type_camelized)
+            ];
 
-            if (!$model && class_exists($op_supposed_class)) {
-                $model = $op_supposed_class;
+            foreach ($guess as $class) {
+                if (class_exists($class)) {
+                    return $class;
+                }
             }
         }
 
-        if ($model) {
-            return $model::find($post->ID);
+        return '';
+    }
+
+
+    /**
+     * ModelFactory for 'post' types.
+     * Creates and returns the corresponding Model if applicable.
+     * Returns null on failure.
+     *
+     * @param WP_post|int|string|array    $post   Post element. Can be ID, WP_Post or array
+     *
+     * @return Model|null on failure
+     * @version 2.0
+     * @since 1.0.1
+     */
+    public static function post($post)
+    {
+        if (!($post = PostHelper::getPostFromUndefined($post))) {
+            return null;
         }
 
-        return null;
+        $class = static::resolvePostClass($post->type) ?: static::resolvePostClass('post');
+
+        return $class::find($post->ID);
+    }
+    
+    
+    /**
+     * Factory 'taxonomy' model, get the taxonomy name and initiate a corresponding Model if applicable.
+     *
+     * @param WP_post|int|string    $post_id   ID of the concerned post
+     *
+     * @return Model|null on failure
+     * @version 2.0
+     * @since 2.0
+     */
+    public static function taxonomy($tax)
+    {
+        // TODO
     }
 
 
@@ -78,10 +117,11 @@ class ModelFactory
      */
     public static function currentPost()
     {
+        global $post;
+
         $id = get_the_id();
 
         if (!$id) {
-            global $post;
             $id = $post->ID ?? false;
         }
 
@@ -94,15 +134,15 @@ class ModelFactory
 
 
     /**
-     * Factory an array of 'post' model, get the post type and initiate a corresponding Model if applicable.
+     * Factory an iterable of 'post' model, get the post type and initiate a corresponding Model if applicable.
      *
-     * @param array $posts WP_post|int|string of the concerned posts
+     * @param iterable $posts WP_post|int|string of the concerned posts
      *
-     * @return array
-     * @version 1.0.4
+     * @return Collection
+     * @version 2.0
      * @since 1.0.4
      */
-    public static function posts(array $posts)
+    public static function posts(iterable $posts)
     {
         $results = [];
 
@@ -110,6 +150,27 @@ class ModelFactory
             $results[] = static::post($post);
         }
         
-        return $results;
+        return new Collection($results);
+    }
+    
+    
+    /**
+     * Factory an iterable of 'taxonomy' type model, get the post type and initiate a corresponding Model if applicable.
+     *
+     * @param iterable $posts WP_post|int|string of the concerned posts
+     *
+     * @return Collection
+     * @version 2.0
+     * @since 2.0
+     */
+    public static function taxonomies(iterable $posts)
+    {
+        $results = [];
+
+        foreach ($posts as $post) {
+            $results[] = static::taxonomy($post);
+        }
+        
+        return new Collection($results);
     }
 }
