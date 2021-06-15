@@ -9,7 +9,7 @@ namespace OP\Support\Language\Drivers;
  * @access   public
  * @since    2.0
  */
-class PolylangDriver extends LanguageDriver
+class PolylangDriver extends AbstractDriver
 {
     /**
      * Return the current language

@@ -124,7 +124,7 @@ abstract class PostType
             'attributes'            => __(sprintf($i18n_labels['attributes'], $singular), $domain),
             'parent_item_colon'     => __(sprintf($i18n_labels['parent_item_colon'], $singular), $domain),
             'all_items'             => __(sprintf($i18n_labels['all_items'], ucfirst($words['all']), $plural), $domain),
-            'add_new_item'          => __(sprintf($i18n_labels['add_new_item'], $words['all'], $singular), $domain),
+            'add_new_item'          => __(sprintf($i18n_labels['add_new_item'], $words['new'], $singular), $domain),
             'add_new'               => __($i18n_labels['add_new'], $domain),
             'new_item'              => __(sprintf($i18n_labels['new_item'], ucfirst($words['new']), $singular), $domain),
             'edit_item'             => __(sprintf($i18n_labels['edit_item'], $singular), $domain),

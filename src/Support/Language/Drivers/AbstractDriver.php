@@ -11,7 +11,7 @@ use OP\Framework\Contracts\LanguageDriver as LanguageDriverContract;
  * @access   public
  * @since    2.0
  */
-abstract class LanguageDriver implements LanguageDriverContract
+abstract class AbstractDriver implements LanguageDriverContract
 {
     /**
      * Get all front page ids (in all translations)
