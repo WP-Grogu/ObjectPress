@@ -58,18 +58,6 @@ abstract class PostType
     /********************************/
 
 
-
-    /**
-     * Prevent class initialisation
-     *
-     * @access private
-     * @since 1.0.3
-     */
-    public function __construct()
-    {
-    }
-
-
     /**
      * Class constructor, register CTP to wordpress
      *

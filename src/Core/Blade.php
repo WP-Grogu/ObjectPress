@@ -37,8 +37,11 @@ final class Blade extends BladeCore
      */
     private function __construct()
     {
-        $inputs = Config::get('object-press.template.blade.inputs');
-        $output = Config::get('object-press.template.blade.output');
+        $inputs = collect(Config::get('object-press.template.blade.inputs'));
+        $output = collect(Config::get('object-press.template.blade.output'));
+
+        $inputs = $inputs->filter()->unique()->toArray();
+        $output = $output->filter()->unique()->first();
 
         if (!is_dir($output)) {
             mkdir($output, 0770, true);

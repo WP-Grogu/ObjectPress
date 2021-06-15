@@ -24,13 +24,13 @@ class AppSetupServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Bootup ObjectPress
+        // Link ObjectPress instance
         $this->app->instance('object-press', ObjectPress::getInstance());
         
-        // Bootup request
+        // Link request instance
         $this->app->instance(Request::class, Request::createFromGlobals());
 
-        // Add Blade.
+        // Link Blade instance
         $this->app->instance(ViewFactory::class, Blade::getInstance());
         $this->app->alias(ViewFactory::class, 'view');
         $this->app->alias(ViewFactory::class, 'blade');

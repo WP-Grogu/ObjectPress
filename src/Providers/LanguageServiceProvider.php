@@ -4,7 +4,9 @@ namespace OP\Providers;
 
 use OP\Framework\Contracts\LanguageDriver;
 use OP\Support\Language\Drivers\WPMLDriver;
+use OP\Framework\Factories\TranslatorFactory;
 use OP\Support\Language\Drivers\PolylangDriver;
+use Illuminate\Contracts\Translation\Translator as TranslatorContract;
 
 /**
  * @package  ObjectPress
@@ -22,6 +24,26 @@ class LanguageServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $driver = $this->getLanguageDriver();
+
+        if ($driver) {
+            $this->app->bind(LanguageDriver::class, $driver);
+            $this->app->alias(LanguageDriver::class, 'language');
+        }
+        
+        $this->app->bind(TranslatorContract::class, TranslatorFactory::class);
+        $this->app->alias(TranslatorContract::class, 'translator');
+    }
+
+
+    /**
+     * Find out which driver to use based on activated plugin.
+     * Supports WPML & Polylang.
+     *
+     * @return string|null The class to use
+     */
+    private function getLanguageDriver()
+    {
         $driver = null;
 
         // PolyLang
@@ -36,13 +58,8 @@ class LanguageServiceProvider extends ServiceProvider
 
         /**
          * Allow driver modification from filter.
-         * The driver MUST implements the LanguageDriverContract contract.
+         * The driver MUST implements the LanguageDriver contract.
          */
-        $driver = apply_filters('op/providers/language/default_driver', $driver);
-
-        if ($driver) {
-            $this->app->bind(LanguageDriver::class, $driver);
-            $this->app->alias(LanguageDriver::class, 'language');
-        }
+        return apply_filters('op/providers/language/default_driver', $driver);
     }
 }

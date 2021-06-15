@@ -168,4 +168,38 @@ trait Common
     {
         return $this->graphqlFormatName($this->plural);
     }
+
+
+    /**
+     * Make sure the required properties are defined
+     *
+     * @return void
+     * @throws \InvalidArgumentException
+     */
+    private function validateProperties()
+    {
+        $mandatory = [
+            'name',
+            'singular',
+            'plural',
+        ];
+
+        foreach ($mandatory as $property) {
+            if (!$this->{$property}) {
+                throw new \InvalidArgumentException(
+                    sprintf('The `%s` property is mandatory on class `%s`.', $property, )
+                );
+            }
+        }
+    }
+
+    /**
+     * @access public
+     * @since 1.0.3
+     * @version 2.0
+     */
+    public function __construct()
+    {
+        $this->validateProperties();
+    }
 }

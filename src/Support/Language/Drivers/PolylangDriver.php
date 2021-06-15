@@ -71,10 +71,12 @@ class PolylangDriver extends AbstractDriver
     /**
      * Return the primary language
      *
+     * @param string $as The return format. (can be: slug, local, name)
+     *
      * @return string|null
      * @since 2.0
      */
-    public function primaryLang(): ?string
+    public function primaryLang(string $as = 'slug'): ?string
     {
         return $this->getPrimaryLang();
     }
@@ -83,10 +85,12 @@ class PolylangDriver extends AbstractDriver
     /**
      * Return the primary language
      *
+     * @param string $as The return format. (can be: slug, local, name)
+     *
      * @return string|null
      * @since 2.0
      */
-    public function getPrimaryLang(): ?string
+    public function getPrimaryLang(string $as = 'slug'): ?string
     {
         return (string) pll_default_language('slug');
     }

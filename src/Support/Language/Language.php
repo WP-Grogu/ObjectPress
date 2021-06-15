@@ -69,19 +69,19 @@ class Language
     {
         switch (count($args)) {
             case 0:
-                return $this->$method();
+                return $this->driver->$method();
 
             case 1:
-                return $this->$method($args[0]);
+                return $this->driver->$method($args[0]);
 
             case 2:
-                return $this->$method($args[0], $args[1]);
+                return $this->driver->$method($args[0], $args[1]);
 
             case 3:
-                return $this->$method($args[0], $args[1], $args[2]);
+                return $this->driver->$method($args[0], $args[1], $args[2]);
 
             case 4:
-                return $this->$method($args[0], $args[1], $args[2], $args[3]);
+                return $this->driver->$method($args[0], $args[1], $args[2], $args[3]);
 
             default:
                 return call_user_func_array([$this, $method], $args);

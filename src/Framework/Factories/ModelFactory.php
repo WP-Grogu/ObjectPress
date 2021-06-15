@@ -32,7 +32,7 @@ class ModelFactory
      */
     public static function resolvePostClass(string $post_type = ''): string
     {
-        $psr   = Config::get('object-press.theme.psr-prefix') ?: 'App';
+        $psr   = collect(Config::get('object-press.theme.psr-prefix'))->first() ?: 'App';
         $conf  = Config::get('setup.models') ?: [];
 
         if (!$post_type) {
@@ -87,7 +87,7 @@ class ModelFactory
             return null;
         }
 
-        $class = static::resolvePostClass($post->type) ?: static::resolvePostClass('post');
+        $class = static::resolvePostClass($post->post_type) ?: static::resolvePostClass('post');
 
         return $class::find($post->ID);
     }

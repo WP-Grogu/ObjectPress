@@ -16,15 +16,17 @@ class Container
     /**
      * The instance
      *
+     * @var Container
      * @access private
      */
     private static $_instance;
 
-
     /**
+     * The Container instance
+     *
      * @var Illuminate\Container\Container
      */
-    private IlluminateContainer $app;
+    private IlluminateContainer $container;
 
     /**
      * Gets the instance via lazy initialization (created on first usage)
@@ -43,7 +45,7 @@ class Container
      */
     private function __construct()
     {
-        $this->app = new IlluminateContainer;
+        $this->container = new IlluminateContainer;
     }
 
     /**
@@ -61,7 +63,7 @@ class Container
     }
 
     /**
-     * Handle dynamic, calls to the object.
+     * Handle dynamic, calls to the container instance thru class calling.
      *
      * @param  string  $method
      * @param  array   $args
@@ -71,22 +73,22 @@ class Container
     {
         switch (count($args)) {
             case 0:
-                return $this->app->$method();
+                return $this->container->$method();
 
             case 1:
-                return $this->app->$method($args[0]);
+                return $this->container->$method($args[0]);
 
             case 2:
-                return $this->app->$method($args[0], $args[1]);
+                return $this->container->$method($args[0], $args[1]);
 
             case 3:
-                return $this->app->$method($args[0], $args[1], $args[2]);
+                return $this->container->$method($args[0], $args[1], $args[2]);
 
             case 4:
-                return $this->app->$method($args[0], $args[1], $args[2], $args[3]);
+                return $this->container->$method($args[0], $args[1], $args[2], $args[3]);
 
             default:
-                return call_user_func_array([$this, $method], $args);
+                return call_user_func_array([$this->container, $method], $args);
         }
     }
 }

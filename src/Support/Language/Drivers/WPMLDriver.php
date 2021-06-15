@@ -58,7 +58,7 @@ class WPMLDriver extends AbstractDriver
      */
     public function getAvailableLanguages(): array
     {
-        return icl_get_languages();
+        return apply_filters('wpml_active_languages', null);
     }
 
 
@@ -68,7 +68,7 @@ class WPMLDriver extends AbstractDriver
      * @return string|null
      * @since 2.0
      */
-    public function primaryLang(): ?string
+    public function primaryLang(string $as = 'slug'): ?string
     {
         return $this->getPrimaryLang();
     }
@@ -80,11 +80,9 @@ class WPMLDriver extends AbstractDriver
      * @return string|null
      * @since 2.0
      */
-    public function getPrimaryLang(): ?string
+    public function getPrimaryLang(string $as = 'slug'): ?string
     {
-        $wpml_options = get_option('icl_sitepress_settings');
-
-        return (string) $wpml_options['default_language'] ?: '';
+        return (string) apply_filters('wpml_default_language', null);
     }
 
 

@@ -5,11 +5,11 @@ namespace OP\Framework\Contracts;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.4
+ * @version  2.0
  * @access   public
  * @since    1.0.4
  */
-interface ApiRouteContract
+interface ApiRoute
 {
-    public static function resolve(object $args, object $body_args);
+    public function resolve(object $args, object $body_args);
 }

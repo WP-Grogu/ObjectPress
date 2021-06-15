@@ -104,18 +104,6 @@ abstract class Taxonomy
     /********************************/
 
 
-
-    /**
-     * Prevent class initialisation thru 'new Class'
-     *
-     * @access private
-     * @since 1.0.3
-     */
-    public function __construct()
-    {
-    }
-
-
     /**
      * Class constructor, register Taxonomy to wordpress
      *

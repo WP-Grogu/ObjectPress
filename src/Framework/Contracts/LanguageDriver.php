@@ -45,6 +45,7 @@ interface LanguageDriver
      *
      * @return array
      * @since 2.0
+     * @todo Refacto to use a Normalizer
      */
     public function getAvailableLanguages(): array;
 
@@ -52,20 +53,23 @@ interface LanguageDriver
     /**
      * Return the primary language
      *
+     * @param string $as The return format. (can be: slug, local, name)
+     *
      * @return string|null
      * @since 2.0
      */
-    public function primaryLang(): ?string;
+    public function primaryLang(string $as = 'slug'): ?string;
 
 
     /**
      * Return the primary language
      *
+     * @param string $as The return format. (can be: slug, local, name)
+     *
      * @return string|null
      * @since 2.0
      */
-    public function getPrimaryLang(): ?string;
-
+    public function getPrimaryLang(string $as = 'slug'): ?string;
 
     /**
      * Get a post language

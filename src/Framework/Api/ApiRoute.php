@@ -3,14 +3,14 @@
 namespace OP\Framework\Api;
 
 use \WP_REST_Request;
-use OP\Framework\Contracts\ApiRouteContract;
+use OP\Framework\Contracts\ApiRoute as ApiRouteContract;
 use OP\Framework\Factories\ValidatorFactory;
 use OP\Framework\Exceptions\FailedInitializationException;
 
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.5
+ * @version  2.0
  * @access   public
  * @since    1.0.3
  */
@@ -21,7 +21,7 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @var string
      */
-    public static $version = 'v1';
+    protected $version = 'v1';
 
 
     /**
@@ -29,7 +29,7 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @var string
      */
-    public static $namespace;
+    protected $namespace;
 
 
     /**
@@ -37,7 +37,7 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @var string
      */
-    public static $route;
+    protected $route;
     
 
     /**
@@ -45,7 +45,7 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @var string|array (GET|POST|PUT|DELETE|UPDATE)
      */
-    public static $methods = 'GET';
+    protected $methods = 'GET';
 
 
     /**
@@ -53,7 +53,7 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @var \WP_REST_Request
      */
-    protected static $request;
+    protected $request;
 
 
     /**
@@ -61,7 +61,7 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @var array
      */
-    public static $args = [];
+    protected $args = [];
 
 
     /**
@@ -69,7 +69,7 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @var array
      */
-    public static $body_args = [];
+    protected $body_args = [];
 
 
     /**
@@ -77,9 +77,9 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @return void
      */
-    public static function init()
+    public function boot()
     {
-        extract(static::getRegisterParams());
+        extract($this->getRegisterParams());
 
         if (! register_rest_route($namespace, $route, $parameters)) {
             throw new FailedInitializationException(
@@ -94,20 +94,20 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @return array
      */
-    protected static function getRegisterParams()
+    protected function getRegisterParams()
     {
-        $namespace = static::$namespace . '/' . static::$version;
-        $route     = (strpos(static::$route, '/') === 0) ? static::$route : '/' . static::$route;
-        $args      = static::__getArgs();
+        $namespace = $this->namespace . '/' . $this->version;
+        $route     = (strpos($this->route, '/') === 0) ? $this->route : '/' . $this->route;
+        $args      = $this->__getArgs();
 
         return [
             'namespace'  => $namespace,
             'route'      => $route,
             'parameters' => [
-                'methods'             => static::$methods,
+                'methods'             => $this->methods,
                 'callback'            => [static::class, '__setup'],
                 'args'                => $args,
-                'permission_callback' => '__return_true',
+                'permission_callback' => '__return_true', // TODO: permissions
             ],
         ];
     }
@@ -120,16 +120,27 @@ abstract class ApiRoute implements ApiRouteContract
      */
     public static function __setup(\WP_REST_Request $request)
     {
-        static::$request = $request;
+        return (new static())->__boot($request);
+    }
 
-        $args      = (object) static::__getComputedArgs();
-        $body_args = (object) static::__getComputedBodyArgs();
+
+    /**
+     * Construct the class after an API call
+     *
+     * @return mixed
+     */
+    public function __boot(\WP_REST_Request $request)
+    {
+        $this->request = $request;
+
+        $args      = (object) $this->__getComputedArgs();
+        $body_args = (object) $this->__getComputedBodyArgs();
 
         if (is_a($body_args, 'WP_Error')) {
             return new \WP_REST_Response($body_args, 400);
         }
 
-        return static::resolve($args, $body_args);
+        return $this->resolve($args, $body_args);
     }
 
 
@@ -138,9 +149,9 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @return array
      */
-    private static function __getArgs()
+    private function __getArgs()
     {
-        $args       = static::$args;
+        $args       = $this->args;
         $formated   = [];
 
         if (empty($args)) {
@@ -174,18 +185,13 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @return object
      */
-    protected static function __getComputedArgs()
+    protected function __getComputedArgs()
     {
-        $vars   = array_keys(static::$args);
-        $params = [];
-        
-        foreach ($vars as $var) {
-            $params[$var] = static::$request->get_param($var);
-        }
+        $params = $this->request->get_params();
 
         $params = json_decode(json_encode($params));
 
-        return apply_filters('op_api_get_computed_args', $params);
+        return apply_filters('op/f/api/get-computed-args', $params);
     }
 
 
@@ -194,16 +200,18 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @return object
      */
-    protected static function __getComputedBodyArgs()
+    protected function __getComputedBodyArgs()
     {
-        $vars   = static::$body_args;
-        $body   = json_decode(static::$request->get_body(), ARRAY_A);
+        $vars   = $this->body_args;
+        $body   = json_decode($this->request->get_body(), ARRAY_A);
 
         // Validate the specified fields.
         foreach ($vars as $var => $args) {
-            $value = $body[$var] ?? null;
+            if (!array_key_exists($var, $body)) {
+                continue;
+            }
 
-            $validate = static::__validateBodyParam($var, $value, $args);
+            $validate = $this->__validateBodyParam($var, $body[$var], $args);
 
             // If there is an error, abort
             if ($validate !== true) {
@@ -211,9 +219,11 @@ abstract class ApiRoute implements ApiRouteContract
             }
         }
 
-        do_action('op_api_get_computed_body_args', $vars, $body);
+        $body = json_decode(json_encode($body));
+
+        do_action('op/a/api/get-computed-body-args', $vars, $body);
         
-        return json_decode(json_encode($body));
+        return apply_filters('op/f/api/get-computed-body-args', $body);
     }
 
 
@@ -232,7 +242,7 @@ abstract class ApiRoute implements ApiRouteContract
      */
     public static function __validate($param, $request, $key)
     {
-        $list  = (static::$args ?: []) + (static::$body_args ?: []);
+        $list = (new static())->getMergedArgs();
 
         $rules = $list[$key]['rules'] ?? null;
 
@@ -263,46 +273,38 @@ abstract class ApiRoute implements ApiRouteContract
      *
      * @return WP_REST_Response|bool
      */
-    protected static function __validateBodyParam($field, $value, $args)
+    protected function __validateBodyParam($field, $value, $args)
     {
         if (isset($args['validate_callback'])) {
             $call = $args['validate_callback'];
 
-            return $call($value, static::$request, $field);
+            return $call($value, $this->request, $field);
         }
 
-        return static::__validate($value, static::$request, $field);
+        return $this->__validate($value, $this->request, $field);
     }
 
 
 
     /**************************/
     /*                        */
-    /*        Helpers         */
+    /*        Getters         */
     /*                        */
     /**************************/
 
 
-    /**
-     * Returns register_rest_route parameters
-     *
-     * @return array
-     */
-    public static function debugParams()
+    public function getArgs(): array
     {
-        return static::getRegisterParams();
+        return (array) $this->args;
     }
     
-
-    /**
-     * Get ApiRoute base url
-     *
-     * @return string
-     */
-    public static function getBaseUrl(string $path = '')
+    public function getBodyArgs(): array
     {
-        $params = static::getRegisterParams();
+        return (array) $this->body_args;
+    }
 
-        return get_rest_url() . $params['namespace'] . $params['route'] . $path;
+    public function getMergedArgs()
+    {
+        return $this->getArgs() + $this->getBodyArgs();
     }
 }

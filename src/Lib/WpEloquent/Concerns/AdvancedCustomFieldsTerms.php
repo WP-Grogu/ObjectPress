@@ -31,7 +31,7 @@ trait AdvancedCustomFields
      */
     public function getFields(bool $format_value = true)
     {
-        return get_fields($this->id, $format_value);
+        return get_fields('term_' . $this->id, $format_value);
     }
 
 
@@ -47,7 +47,7 @@ trait AdvancedCustomFields
      */
     public function getField(string $key, bool $format_value = true)
     {
-        return get_field($key, $this->id, $format_value);
+        return get_field($key, 'term_' . $this->id, $format_value);
     }
 
 
@@ -62,7 +62,7 @@ trait AdvancedCustomFields
      */
     public function setField(string $key, $value)
     {
-        return update_field($key, $value, $this->id);
+        return update_field($key, $value, 'term_' . $this->id);
     }
     
     
@@ -78,7 +78,7 @@ trait AdvancedCustomFields
     public function setFields(array $fields)
     {
         foreach ($fields as $key => $value) {
-            update_field($key, $value, $this->id);
+            update_field($key, $value, 'term_' . $this->id);
         }
         return $this;
     }
