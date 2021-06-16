@@ -17,7 +17,7 @@ interface LanguageDriver
      * @return string
      * @since 2.0
      */
-    public function getCurrentLang();
+    public function getCurrentLang(string $as = 'slug');
 
 
     /**

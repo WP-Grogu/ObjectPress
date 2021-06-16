@@ -17,9 +17,9 @@ class PolylangDriver extends AbstractDriver
      * @return string
      * @since 2.0
      */
-    public function getCurrentLang()
+    public function getCurrentLang(string $as = 'slug')
     {
-        return pll_current_language('slug');
+        return pll_current_language($as);
     }
 
 
@@ -78,7 +78,7 @@ class PolylangDriver extends AbstractDriver
      */
     public function primaryLang(string $as = 'slug'): ?string
     {
-        return $this->getPrimaryLang();
+        return $this->getPrimaryLang($as);
     }
 
 
@@ -92,7 +92,7 @@ class PolylangDriver extends AbstractDriver
      */
     public function getPrimaryLang(string $as = 'slug'): ?string
     {
-        return (string) pll_default_language('slug');
+        return (string) pll_default_language($as);
     }
 
 

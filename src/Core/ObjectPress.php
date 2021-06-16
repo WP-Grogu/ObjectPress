@@ -67,7 +67,7 @@ final class ObjectPress
         if (!defined('OP_DEFAULT_I18N_DOMAIN_TAXOS')) {
             define('OP_DEFAULT_I18N_DOMAIN_TAXOS', 'op-theme-taxos');
         }
-        
+
         if (!defined('OP_DEFAULT_I18N_DOMAIN_ROLES')) {
             define('OP_DEFAULT_I18N_DOMAIN_ROLES', 'op-theme-roles');
         }
@@ -75,11 +75,11 @@ final class ObjectPress
         if (!defined('DATERANGE_1_DAY')) {
             define('DATERANGE_1_DAY', 86400);
         }
-        
+
         if (!defined('DATERANGE_1_HOUR')) {
             define('DATERANGE_1_HOUR', 3600);
         }
-        
+
         if (!defined('DATERANGE_1_MINUTE')) {
             define('DATERANGE_1_MINUTE', 60);
         }
@@ -105,8 +105,12 @@ final class ObjectPress
      *
      * @return void
      */
-    public function boot()
+    public function boot($config_dir = null)
     {
+        if ($config_dir) {
+            Config::addPath($config_dir);
+        }
+
         if ($this->booted) {
             return;
         }
@@ -116,7 +120,7 @@ final class ObjectPress
 
         (new AppSetupServiceProvider)->register();
         (new LanguageServiceProvider)->register();
-        
+
         (new HookProvider)->boot(); // TODO: HookIgnition
 
         // Setup cache system
@@ -148,7 +152,7 @@ final class ObjectPress
         }
     }
 
-    
+
     /**
      * Given an array of classes, will try to init them uning bootup method
      *
@@ -160,7 +164,7 @@ final class ObjectPress
         if (empty($classes)) {
             return;
         }
-        
+
         foreach ($classes as $class) {
             if (! class_exists($class)) {
                 throw new \Exception("ObjectPress initialisation : Class `$class` does not exists.");

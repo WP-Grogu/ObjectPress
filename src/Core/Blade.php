@@ -3,6 +3,7 @@
 namespace OP\Core;
 
 use OP\Support\Facades\Config;
+use OP\Support\Facades\ObjectPress;
 use Jenssegers\Blade\Blade as BladeCore;
 
 final class Blade extends BladeCore
@@ -47,7 +48,7 @@ final class Blade extends BladeCore
             mkdir($output, 0770, true);
         }
 
-        parent::__construct($inputs, $output);
+        parent::__construct($inputs, $output, ObjectPress::app());
     }
 
 
