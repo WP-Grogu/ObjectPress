@@ -117,4 +117,17 @@ class PostBuilder extends Builder
             });
         });
     }
+
+    /**
+     * Fix PostgreSQL format causing error on mysql.
+     *
+     * TODO: read configuration to determine the Database engine /!\
+     *
+     * @param  string  $seed
+     * @return $this
+     */
+    public function inRandomOrder($seed = '')
+    {
+        return $this->orderByRaw('RAND()');
+    }
 }

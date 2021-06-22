@@ -2,7 +2,7 @@
 
 namespace OP\Core\Hooks;
 
-use OP\Support\Facades\ObjectPress;
+use OP\Support\Boot;
 use OP\Support\Facades\Config;
 use OP\Framework\Wordpress\Hook;
 
@@ -31,8 +31,6 @@ class SetupApi extends Hook
             Config::get('setup.apis') ?: [],
         ];
 
-        foreach ($listing as $classes) {
-            ObjectPress::initClasses($classes, 'init');
-        }
+        Boot::array(array_merge(...$listing));
     }
 }

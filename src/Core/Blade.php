@@ -48,7 +48,7 @@ final class Blade extends BladeCore
             mkdir($output, 0770, true);
         }
 
-        parent::__construct($inputs, $output, ObjectPress::app());
+        parent::__construct($inputs, $output);
     }
 
 

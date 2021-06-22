@@ -197,7 +197,7 @@ final class ObjectPress
      */
     private function bootCache()
     {
-        if (!Config::get('object-press.cache.active')) {
+        if (!collect(Config::get('object-press.cache.active'))->first()) {
             return;
         }
 

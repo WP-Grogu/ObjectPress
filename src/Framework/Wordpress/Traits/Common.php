@@ -187,7 +187,7 @@ trait Common
         foreach ($mandatory as $property) {
             if (!$this->{$property}) {
                 throw new \InvalidArgumentException(
-                    sprintf('The `%s` property is mandatory on class `%s`.', $property, )
+                    sprintf('The `%s` property is mandatory on class `%s`.', $property, static::class)
                 );
             }
         }
