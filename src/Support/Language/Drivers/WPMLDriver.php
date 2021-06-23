@@ -95,10 +95,11 @@ class WPMLDriver extends AbstractDriver
      * @return string|void
      * @since 2.0
      */
-    public function getPostLang(int $id)
+    public function getPostLang(int $id, string $field = 'slug')
     {
         $infos = wpml_get_language_information(null, $id);
         
+        // TODO: use slug, name, ...
         if (is_array($infos) && array_key_exists('language_code', $infos)) {
             return $infos['language_code'];
         }

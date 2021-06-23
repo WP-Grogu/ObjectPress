@@ -3,7 +3,6 @@
 namespace OP\Core;
 
 use OP\Support\Facades\Config;
-use OP\Support\Facades\ObjectPress;
 use Jenssegers\Blade\Blade as BladeCore;
 
 final class Blade extends BladeCore
@@ -61,8 +60,8 @@ final class Blade extends BladeCore
     {
         return $this->render($view, $data, $mergeData);
     }
-    
-    
+
+
     /**
      * Templates the requested file and print the output.
      *

@@ -2,6 +2,7 @@
 
 namespace OP\Core;
 
+use OP\Support\Facades\Theme;
 use OP\Providers\HookProvider;
 use OP\Support\Facades\Config;
 use Phpfastcache\CacheManager;
@@ -119,9 +120,11 @@ final class ObjectPress
         // Capsule::bootWp();
 
         (new AppSetupServiceProvider)->register();
-        (new LanguageServiceProvider)->register();
-
         (new HookProvider)->boot(); // TODO: HookIgnition
+
+        Theme::on('plugins_loaded', function () {
+            (new LanguageServiceProvider)->register();
+        });
 
         // Setup cache system
         $this->bootCache();

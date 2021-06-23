@@ -50,4 +50,35 @@ abstract class AbstractDriver implements LanguageDriverContract
 
         return $posts;
     }
+
+
+    /**
+     * Transfom given locale into slug.
+     *
+     * @return string
+     */
+    public function localeToSlug(string $locale): string
+    {
+        $matches = [];
+
+        if (preg_match('/^[a-z]{2}$/', $locale)) {
+            return $locale;
+        }
+        if (preg_match('/^([a-z]{2})_[A-Z]{2}$/', $locale, $matches)) {
+            return $matches[1];
+        }
+
+        return '';
+    }
+
+
+    /**
+     * Transfom given locales into slugs.
+     *
+     * @return array
+     */
+    public function localesToSlugs(array $locales): array
+    {
+        return collect($locales)->map([$this, 'localeToSlug'])->filter()->toArray();
+    }
 }

@@ -3,8 +3,10 @@
 namespace OP\Lib\WpEloquent\Model;
 
 use OP\Lib\WpEloquent\Concerns\AdvancedCustomFields;
+use OP\Lib\WpEloquent\Concerns\Aliases;
 use OP\Lib\WpEloquent\Concerns\MetaFields;
 use OP\Lib\WpEloquent\Model;
+use OP\Lib\WpEloquent\Model\Builder\TermBuilder;
 
 /**
  * Class Term.
@@ -14,6 +16,7 @@ use OP\Lib\WpEloquent\Model;
  */
 class Term extends Model
 {
+    use Aliases;
     use MetaFields;
     use AdvancedCustomFields;
 
@@ -33,10 +36,89 @@ class Term extends Model
     public $timestamps = false;
 
     /**
+     * @var array
+     */
+    protected static $aliases = [
+        'id' => 'term_id',
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function taxonomy()
     {
         return $this->hasOne(Taxonomy::class, 'term_id');
+    }
+
+    /**
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return TermBuilder
+     */
+    public function newEloquentBuilder($query)
+    {
+        return new TermBuilder($query);
+    }
+
+
+
+    /******************************************/
+    /*                                        */
+    /*        WordPress related methods       */
+    /*                                        */
+    /******************************************/
+
+
+    /**
+     * Automatically fetch the permalink when trying to acces this attribute.
+     *
+     * @return string
+     */
+    public function getPermalinkAttribute()
+    {
+        return $this->getPermaLink();
+    }
+
+
+    /**
+     * Get the thumbnail id
+     *
+     * @return int|null
+     */
+    public function getThumbnailIdAttribute(): ?int
+    {
+        return ((int) $this->thumbnail->meta_value) ?: null;
+    }
+
+    
+
+    /******************************************/
+    /*                                        */
+    /*        WordPress methods aliases       */
+    /*                                        */
+    /******************************************/
+
+
+    /**
+     * Get the post permalink
+     *
+     * @param bool $leavename (Optional) Whether to keep post name or page name. Default value: false
+     *
+     * @return string|false
+     */
+    public function getPermaLink()
+    {
+        return call_user_func('get_term_link', $this->term_id, $this->taxonomy->taxonomy);
+    }
+
+    /**
+     * Get the post permalink
+     *
+     * @param bool $leavename (Optional) Whether to keep post name or page name. Default value: false
+     *
+     * @return string|false
+     */
+    public function permalink()
+    {
+        return $this->getPermaLink();
     }
 }

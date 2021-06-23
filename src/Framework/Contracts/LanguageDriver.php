@@ -80,7 +80,7 @@ interface LanguageDriver
      * @return string|void
      * @since 2.0
      */
-    public function getPostLang(int $id);
+    public function getPostLang(int $id, string $field = 'slug');
 
 
     /**

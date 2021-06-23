@@ -2,6 +2,8 @@
 
 namespace OP\Support\Language\Drivers;
 
+use OP\Framework\Helpers\PostHelper;
+
 /**
  * @package  ObjectPress
  * @author   tgeorgel
@@ -96,18 +98,26 @@ class PolylangDriver extends AbstractDriver
     }
 
 
+
+    /**************************************/
+    /*                                    */
+    /*               Posts                */
+    /*                                    */
+    /**************************************/
+
+
+
     /**
      * Get a post language
      *
      * @param int    $id
-     * @param string $lang
      *
      * @return string|void
      * @since 2.0
      */
-    public function getPostLang(int $id)
+    public function getPostLang(int $id, string $field = 'slug')
     {
-        return (string) pll_get_post_language($id, 'slug');
+        return (string) pll_get_post_language($id, $field);
     }
 
 
@@ -125,21 +135,7 @@ class PolylangDriver extends AbstractDriver
         pll_set_post_language($id, $lang);
     }
 
-
-    /**
-     * Synchronize 2 posts as translation of each other
-     *
-     * @param array $assoc Post association, as ['fr' => $post_id, 'en' => $post_id]
-     *
-     * @return void
-     * @since 2.0
-     */
-    public function syncPosts(array $assoc): void
-    {
-        pll_save_post_translations($assoc);
-    }
-
-
+    
     /**
      * Get post in desired $lang
      *
@@ -162,6 +158,82 @@ class PolylangDriver extends AbstractDriver
 
 
     /**
+     * Synchronize multiple posts as translation of each other
+     *
+     * @param array $assoc Post association, as ['fr' => $post_id, 'en' => $post_id]
+     *
+     * @return void
+     * @since 2.0
+     */
+    public function syncPosts(array $assoc): void
+    {
+        pll_save_post_translations($assoc);
+    }
+
+
+
+    /**************************************/
+    /*                                    */
+    /*               Terms                */
+    /*                                    */
+    /**************************************/
+
+
+
+    /**
+     * Get a term language
+     *
+     * @param int    $id
+     *
+     * @return string|void
+     * @since 2.0
+     */
+    public function getTermLang(int $id, string $field = 'slug')
+    {
+        return (string) pll_get_post_language($id, $field);
+    }
+
+
+    /**
+     * Set a term language
+     *
+     * @param int    $id The term id
+     * @param string $lang
+     *
+     * @return void
+     * @since 2.0
+     */
+    public function setTermLang(int $id, string $lang): void
+    {
+        pll_set_term_language($id, $lang);
+    }
+
+
+    /**
+     * Get a term translations in array_a
+     * [locale => id]
+     *
+     * @param int    $id
+     *
+     * @return string|void
+     * @since 2.0
+     */
+    public function getTermTranslations(int $id)
+    {
+        $langs        = $this->getAvailableLanguages();
+        $translations = [];
+
+        dd($langs);
+
+        foreach ($langs as $lang) {
+            $translations[$lang->name] = $this->getTermIn($id, $lang->name) ?: null;
+        }
+
+        return $translations;
+    }
+
+
+    /**
      * Get Taxonomy Term in desired $lang
      *
      * @param string $lang Language slug to get the term in
@@ -177,6 +249,29 @@ class PolylangDriver extends AbstractDriver
 
 
     /**
+     * Synchronize multiple terms as translation of each other
+     *
+     * @param array $assoc Post association, as ['fr' => $term_id, 'en' => $term_id]
+     *
+     * @return void
+     * @since 2.0
+     */
+    public function syncTerms(array $assoc): void
+    {
+        pll_save_term_translations($assoc);
+    }
+
+
+
+    /**************************************/
+    /*                                    */
+    /*              Strings               */
+    /*                                    */
+    /**************************************/
+
+
+
+    /**
      * Get a i18n translated string in desired language.
      *
      * @param string $string String to translate
@@ -188,8 +283,57 @@ class PolylangDriver extends AbstractDriver
      */
     public function getStringIn(string $string, string $domain, string $lang)
     {
-        // @todo
-        return '';
+        return pll_translate_string($string, $this->localeToSlug($lang));
+    }
+
+
+    /**
+     * Set a registred string translation in given language.
+     *
+     * @param string $string       String to translate
+     * @param string $translation  The translation
+     * @param string $lang         The language locale/slug
+     *
+     * @return bool
+     * @since 2.0
+     */
+    public function setStringIn(string $string, string $translation, string $lang)
+    {
+        $lang      = $this->localeToSlug($lang);
+        $available = $this->getAvailableLanguages();
+        $mo_id     = 0;
+        $found     = false;
+
+        // Get mo_id
+        foreach ($available as $av) {
+            if ($av->slug === $lang) {
+                $mo_id = $av->mo_id;
+                break;
+            }
+        }
+
+        if (!$mo_id) {
+            return false;
+        }
+
+        $strings = get_post_meta($mo_id, '_pll_strings_translations', true) ?: [];
+
+        // Look for the string inside the translation array
+        foreach ($strings as $i => $entry) {
+            if (is_array($entry) && $entry[0] === $string) {
+                $strings[$i][1] = $translation;
+                $found = true;
+                break;
+            }
+        }
+
+        if (!$found) {
+            $strings[] = [$string, $translation];
+        }
+
+        $strings = wp_slash($strings);
+
+        return (bool) update_post_meta($mo_id, '_pll_strings_translations', $strings);
     }
 
 
@@ -206,5 +350,20 @@ class PolylangDriver extends AbstractDriver
     {
         // @todo
         return null;
+    }
+
+
+    /**
+     * Register a string for translation.
+     *
+     * @param string $string   The string to register
+     * @param string $name     A unique name for the string
+     * @param string $group    (Optional) The group in which the string is registered
+     *
+     * @return
+     */
+    public function registerString(string $string, string $name, string $group = 'op-theme'): void
+    {
+        pll_register_string($name, $string, $group);
     }
 }
