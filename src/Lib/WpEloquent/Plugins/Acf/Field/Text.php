@@ -28,8 +28,8 @@ class Text extends BasicField implements FieldInterface
     /**
      * @return string
      */
-    public function get()
+    public function get(): string
     {
-        return $this->value;
+        return $this->value ?: '';
     }
 }

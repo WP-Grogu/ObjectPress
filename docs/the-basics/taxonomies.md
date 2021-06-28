@@ -1,13 +1,11 @@
-# Custom post types
+# Taxonomies
 
 Taxonomies are Wordpesss posts categories.
 With ObjectPress, you want to optimise this taxonomy creation, to gain time and easily enable/disable taxonomies in your theme.
-
-This class is inspired by [generate wordpress](https://generatewp.com/taxonomy/) style, you can checkup overwritable `labels` and `args` on their website. 
  
 ## Defining your taxonomy properties
 
-Define your taxonomies inside the `app/Taxonomies/` folder. 
+Define your taxonomies inside the `app/Wordpress/Taxonomies/` folder. 
 The class defined inside the `Minimal` tab is all you need to quickly initiate a Taxonomy with ObjectPress. 
 You can adjust some properties properties, showed in the `Full` tab (shown values are ObjectPress defaults).
 
@@ -19,34 +17,35 @@ You can adjust some properties properties, showed in the `Full` tab (shown value
 
 ```php
 <?php
-namespace App\Taxonomies;
 
-use OP\Framework\Boilerplates\Taxonomy;
+namespace App\Wordpress\Taxonomies;
 
-class ExampleTaxonomy extends Taxonomy
+use OP\Framework\Wordpress\Taxonomy;
+
+class StoreType extends Taxonomy
 {
     /**
      * Taxonomy identifier
      *
      * @var string
      */
-    protected static $taxonomy = 'custom-taxonomy';
+    protected $name = 'store-type';
 
     /**
      * Singular and plural names of Taxonomy
      *
      * @var string
      */
-    public static $singular = 'Custom Taxonomy';
-    public static $plural   = 'Custom Taxonomies';
+    public $singular = 'Store type';
+    public $plural   = 'Store types';
 
     /**
-     * Register this taxonomy on thoses post types
+     * On which post types this taxonomy will be registred
      *
      * @var array
      */
-    protected static $post_types = [
-        'Post',
+    protected $post_types = [
+        'Store',
     ];
 }
 ```
@@ -56,56 +55,52 @@ class ExampleTaxonomy extends Taxonomy
 
 ```php
 <?php
-namespace App\Taxonomies;
 
-use OP\Framework\Boilerplates\Taxonomy;
+namespace App\Wordpress\Taxonomies;
 
-class ExampleTaxonomy extends Taxonomy
+use OP\Framework\Wordpress\Taxonomy;
+
+class StoreType extends Taxonomy
 {
     /**
-     * Taxonomy name
+     * Taxonomy identifier
      *
      * @var string
-     * @since 1.0.0
      */
-    protected static $taxonomy = 'example-taxonomy';
-
+    protected $name = 'store-type';
 
     /**
      * Singular and plural names of Taxonomy
      *
      * @var string
-     * @since 1.0.0
      */
-    public static $singular = 'Example Taxonomy';
-    public static $plural   = 'Example Taxonomies';
-
+    public $singular = 'Store type';
+    public $plural   = 'Store types';
 
     /**
-     * Register this taxonomy on thoses post types
+     * On which post types this taxonomy will be registred
      *
      * @var array
-     * @since 1.0.0
      */
-    protected static $post_types = [];
+    protected $post_types = [
+        'Store',
+    ];
 
 
     /**
      * Activate 'single term' mode on this taxonomy
      *
      * @var bool
-     * @since 1.0.3
      */
-    public static $single_term = false;
+    public $single_term = false;
 
 
     /**
      * 'single term' mode params 
      * 
      * @var array
-     * @since 1.0.3
      */
-    public static $single_term_params = [
+    public $single_term_params = [
         'default_term' => 'my-category',
     ];
 
@@ -113,36 +108,32 @@ class ExampleTaxonomy extends Taxonomy
      * CPT/Taxonomy argument to overide over boilerplate
      *
      * @var array
-     * @since 1.0.3
      */
-    public static $args_override = [];
+    public $args_override = [];
 
 
     /**
      * CPT/Taxonomy labels to overide over boilerplate
      *
      * @var array
-     * @since 1.0.3
      */
-    public static $labels_override = [];
+    public $labels_override = [];
 
 
     /**
      * Enable graphql on this CPT/Taxonomy
      *
      * @var bool
-     * @since 1.0.0
      */
-    public static $graphql_enabled = false;
+    public $graphql_enabled = false;
 
 
     /**
      * i18n translation domain
      *
      * @var string
-     * @since 1.0.0
      */
-    protected static $i18n_domain = 'theme-cpts';
+    protected $i18n_domain = 'theme-cpts';
 
 
     /**
@@ -152,9 +143,8 @@ class ExampleTaxonomy extends Taxonomy
      *
      *
      * @var string
-     * @since 1.0.3
      */
-    protected static $i18n_base_lang = '';
+    protected $i18n_base_lang = '';
 
 
     /**
@@ -162,9 +152,8 @@ class ExampleTaxonomy extends Taxonomy
      * Set true if should use female pronoun for this cpt
      *
      * @var bool
-     * @since 1.0.3
      */
-    public static $i18n_is_female = false;
+    public $i18n_is_female = false;
 }
 ```
 
@@ -179,6 +168,8 @@ class ExampleTaxonomy extends Taxonomy
 
 ObjectPress manage the custom post types initialisation out of the box for you. You simply need to add your Taxonomy inside the `taxonomies` key, inside the `config/app.php` config file :
 
+> The taxonomies are going to be initialized after custom post types and in the order they appears in the configuration array.
+
 ```php
     /*
     |--------------------------------------------------------------------------
@@ -186,15 +177,13 @@ ObjectPress manage the custom post types initialisation out of the box for you. 
     |--------------------------------------------------------------------------
     |
     | Insert here you app/theme taxonomies
-    | Format : 'taxonomy-identifier' => 'Path\To\Taxonomy\Class'
+    | Format : Path\To\Taxonomy\ClassName::class
     |
     */
     'taxonomies' => [
-        'example-taxonomy' => 'App\Taxonomies\ExampleTaxonomy',
+        App\Wordpress\Taxonomies\StoreType::class,
     ],
 ```
-
-> The taxonomiess are going to be initialized after custom post types and in the order they appears in the configuration array.
 
 Alternatively, you can initiate your taxonomies manually :  
 
@@ -204,19 +193,8 @@ Alternatively, you can initiate your taxonomies manually :
 use OP\Support\Facades\Theme;
 
 Theme::on('init', function () {
-    App\Taxonomies\ExampleTaxonomy::init();
+    (new App\Wordpress\Taxonomies\StoreType)->boot();
 });
-```
-
-## Helper methods
-
-You can get some Taxonomy properties from it's class :
-
-```php
-use App\Taxonomies\ExampleTaxonomy;
-
-ExampleTaxonomy::getDomain();      // => i18n translation domain
-ExampleTaxonomy::getIdentifier();  // => WP Taxonomy identifier, eg: 'example-taxonomy'
 ```
 
 ## Single Term Taxonomy
@@ -227,11 +205,12 @@ Sometimes you may wish to allow only one term selection on a taxonomy. Thanks to
 
 ```php
 <?php
-namespace App\Taxonomies;
 
-use OP\Framework\Boilerplates\Taxonomy;
+namespace App\Wordpress\Taxonomies;
 
-class ExampleTaxonomy extends Taxonomy
+use OP\Framework\Wordpress\Taxonomy;
+
+class StoreType extends Taxonomy
 {
     /** Previous settings.. **/
 
@@ -240,27 +219,24 @@ class ExampleTaxonomy extends Taxonomy
      * Activate 'single term' mode on this taxonomy 
      * 
      * @var bool
-     * @since 1.0.3
      */
-    public static $single_term = true;
+    public $single_term = true;
 
 
     /**
      * Single term box type ('select' or 'radio', default to radio)
      *
      * @var string
-     * @since 1.0.4
      */
-    public static $single_term_type = 'radio';
+    public $single_term_type = 'radio';
 
 
     /**
      * 'single term' mode params (optional)
      * 
      * @var array
-     * @since 1.0.3
      */
-    public static $single_term_params = [
+    public $single_term_params = [
         'default_term' => 'my-default-value',
         'priority'     => 'high',
     ];

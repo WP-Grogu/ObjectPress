@@ -3,10 +3,9 @@
 namespace OP\Providers;
 
 use OP\Core\Blade;
-use OP\Core\Container;
 use OP\Core\ObjectPress;
-use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Support\ServiceProvider;
 
 /**
  * @package  ObjectPress
@@ -26,9 +25,6 @@ class AppSetupServiceProvider extends ServiceProvider
     {
         // Link ObjectPress instance
         $this->app->instance('object-press', ObjectPress::getInstance());
-        
-        // Link request instance
-        $this->app->instance(Request::class, Request::createFromGlobals());
 
         // Link Blade instance
         $this->app->instance(ViewFactory::class, Blade::getInstance());

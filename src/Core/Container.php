@@ -3,6 +3,8 @@
 namespace OP\Core;
 
 use Illuminate\Container\Container as IlluminateContainer;
+use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Support\Facades\Facade;
 
 /**
  * @package  ObjectPress
@@ -45,7 +47,27 @@ class Container
      */
     private function __construct()
     {
-        $this->container = new IlluminateContainer;
+        $app = new IlluminateContainer;
+
+        // Tell facade about the application instance.
+        // Facade::setFacadeApplication($app);
+
+        // Register application instance with container
+        $app['app'] = $app;
+
+        // Set environment.
+        $app['env'] = defined('WP_ENV') ? WP_ENV : 'production';
+
+        // Enable HTTP Method Override.
+        Request::enableHttpMethodParameterOverride();
+
+        // Create the request.
+        $app['request'] = Request::createFromGlobals();
+
+        // Link request instance.
+        $app->instance(Request::class, $app['request']);
+
+        $this->container = $app;
     }
 
     /**
@@ -60,6 +82,11 @@ class Container
      */
     private function __wakeup()
     {
+    }
+
+    public function getContainerInstance()
+    {
+        return $this->container;
     }
 
     /**

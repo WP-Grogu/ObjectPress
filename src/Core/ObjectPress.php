@@ -6,14 +6,14 @@ use OP\Support\Facades\Theme;
 use OP\Providers\HookProvider;
 use OP\Support\Facades\Config;
 use Phpfastcache\CacheManager;
-use OP\Providers\LanguageProvider;
 use OP\Core\Patterns\SingletonPattern;
 use OP\Providers\AppSetupServiceProvider;
 use OP\Providers\LanguageServiceProvider;
 use Phpfastcache\Config\ConfigurationOption;
-use As247\WpEloquent\Capsule\Manager as Capsule;
 use OP\Framework\Exceptions\FileNotFoundException;
 use Illuminate\Contracts\Container\Container as ContainerContract;
+use Illuminate\Events\EventServiceProvider;
+use Illuminate\Routing\RoutingServiceProvider;
 
 /**
  * @package  ObjectPress
@@ -116,11 +116,15 @@ final class ObjectPress
             return;
         }
 
-        // Initiate capsule (wpEloquent, https://github.com/as247/wp-eloquent)
-        // Capsule::bootWp();
+        // TODO: HookIgnition
+        (new HookProvider)->boot();
 
-        (new AppSetupServiceProvider)->register();
-        (new HookProvider)->boot(); // TODO: HookIgnition
+        // Register services.
+        with(new AppSetupServiceProvider($this->app))->register();
+        // with(new EventServiceProvider($this->app))->register();
+        // with(new RoutingServiceProvider($this->app))->register();
+
+        // new Router;
 
         Theme::on('plugins_loaded', function () {
             (new LanguageServiceProvider)->register();

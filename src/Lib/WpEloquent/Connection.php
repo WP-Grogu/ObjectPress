@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 class Connection implements ConnectionInterface
 {
     public $db;
+    public $pdo;
 
     public $schemaGrammar;
 
@@ -86,6 +87,7 @@ class Connection implements ConnectionInterface
             'name' => 'wp-eloquent-mysql2',
         ];
         $this->db = $wpdb;
+        $this->pdo = new WpdbPdo($wpdb);
     }
 
     /**
@@ -109,7 +111,9 @@ class Connection implements ConnectionInterface
     {
         $processor = $this->getPostProcessor();
 
-        $table = $this->db->prefix . $table;
+        if (strpos($table, $this->db->prefix) !== 0) {
+            $table = $this->db->prefix . $table;
+        }
 
         $query = new Builder($this, $this->getQueryGrammar(), $processor);
 
@@ -182,6 +186,7 @@ class Connection implements ConnectionInterface
         $result = $this->db->get_results($query);
 
         if ($result === false || $this->db->last_error) {
+            dd($query);
             throw new QueryException($query, $bindings, new \Exception($this->db->last_error));
         }
 

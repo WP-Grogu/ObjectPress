@@ -7,9 +7,10 @@
   <!-- - [Starter Themes](starters.md) -->
 
 - The basics
-  - [Custom Post Types](the-basics/custom-post-types.md)
+  - [Post Types](the-basics/custom-post-types.md)
   - [Taxonomies](the-basics/taxonomies.md)
   - [Models](the-basics/models.md)
+  - [Hooks](the-basics/hooks.md)
   - [API](the-basics/api.md)
   - [Languages Support (i18n)](the-basics/i18n.md)
   - [Theme Configuration](the-basics/theme-class.md)

@@ -1,11 +1,12 @@
 # Configuration
 
-## Config folder
+## Configuration folder
 
-All of the configuration files for the ObjectPress framework are stored in the `config/` directory, at theme's folder root. You can duplicate the ObjectPress config files from [the official repository](https://gitlab.com/tgeorgel/object-press/-/tree/dev/config). Each option is documented, so feel free to look through the files and get familiar with the options available to you.
+ObjectPress reads `.php` configuration files, to setup the app (initiate post types, taxonomies...) and configure your development env. By default, ObjectPress will look for a `config/` directory, at your theme root folder. You can duplicate the ObjectPress config files from [the official repository](https://gitlab.com/tgeorgel/object-press/-/tree/dev/config). Each option is documented, so feel free to look through the files and get familiar with the options available to you.
 
 
 If you wish to use custom config folder location, you can append your own path(s). Adding paths this way will always priorize the latest added path.
+
 
 ```php
 use OP\Support\Facades\Config;
@@ -15,13 +16,16 @@ Config::addPath([
 ]);
 ```
 
-## Configuration files
+## Files
 
 | File  | Usage
 |:---:|---|
-| `config/app.php` | Your app/theme configuration. This is where you enable your CPTs, taxonomies, API routes.. |
+| `config/setup.php` | Your app/theme configuration. This is where you enable your CPTs, taxonomies, API routes.. |
+| `config/object-press.php` | ObjectPress configuration. This is the place you configure how the frameworks handles things for you |
 
 ## Constants
+
+You can also define constants for a couple of things : 
 
 | Constant  | Description  | Default value  |
 |:---:|---|:---:|

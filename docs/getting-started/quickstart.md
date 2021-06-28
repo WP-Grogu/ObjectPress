@@ -1,7 +1,7 @@
 # Quick start
 
 ## Installation
-#### via composer
+#### using composer
 
 The best practice to manage your dependancy is to use [composer](https://getcomposer.org).  
 
@@ -14,19 +14,19 @@ To install ObjectPress, add it to your composer dependancies :
 composer require tgeorgel/objectpress
 
 # Get a specific version
-composer require "tgeorgel/objectpress ~v1.0.4"
+composer require "tgeorgel/objectpress ~v2.0"
 ```
 
-> You can check available versions on [Packagist](https://packagist.org/packages/tgeorgel/objectpress), or directly on the [Gitlab repository](https://gitlab.com/tgeorgel/object-press/-/tags).
+> You can check out available versions on [Packagist](https://packagist.org/packages/tgeorgel/objectpress), or directly on the [Gitlab repository](https://gitlab.com/tgeorgel/object-press/-/tags).
 
 #### manually
 
-If you don't want to use composer, you can instead download or clone the repository, and put the ObjectPress folder wherever you wish, in your wordpress theme folder.
-Don't forget to run a `composer install` inside the ObjectPress folder, otherwise it won't have the required dependancies.
+If you don't want to use composer, you can instead download or clone the repository, and put the ObjectPress folder wherever you wish, in your wordpress theme folder or as a mu-plugin.
+Don't forget to run the `composer install` command inside ObjectPress folder, otherwise it won't load the required dependancies.
 
 You should then include ObjectPress's `index.php` file within your app, at top of your `functions.php` file for example.
 
-!> You'll need at [autoload](quickstart.md?id=setup-autoload) logic in order to ObjectPress to work properly
+!> You will need to setup an [autoload](quickstart.md?id=setup-autoload) logic in order to make ObjectPress work properly
 
 > If you're using bedrock/sage stack, you could also decide to put ObjectPress as a mu-plugin, althrought you would loose the magic of composer :)
 
@@ -36,7 +36,7 @@ You should then include ObjectPress's `index.php` file within your app, at top o
 
 ### Setup autoload
 
-You can use composer to setup a psr-4 autoloading logic. Add the following configuration to your `composer.json` file :
+If you're not using one yet, you can use composer to fastly setup a psr-4 autoload. Add the following configuration to your `composer.json` file at root of your theme dir :
 
 
 ```json
@@ -47,17 +47,17 @@ You can use composer to setup a psr-4 autoloading logic. Add the following confi
         }
     },
     "require": {
-        "tgeorgel/objectpress": "^1.0"
+        "tgeorgel/objectpress": "^2.0"
         ... whatever dependancies
     }
 }
 ```
 
-!> ObjectPress assume your theme is using the `App` namespace, and will look into this namespace. 
-
 Alternatively, you can use a custom autoload logic.   
 
-You can now create an `app` folder in your theme directory. This is the place where belongs all your classes, you'll setup from here your Custom post types, your taxonomies, your models, and so on.
+You can now create an `app` folder in your theme directory. This is the place where belongs all your classes, you'll setup from here your Post types, your Taxonomies, your Models, and so on.
+
+!> ObjectPress assume your theme is using the `App` namespace, and will look into this namespace. However, you can change this thru `config/object-press.php` conf file. 
 
 ### Minimal app folder structure
 
@@ -67,22 +67,23 @@ A typical app folder has the following structure :
 
 ```json
 app/
-   CustomPostTypes/
-      Example.php             // Define the `example` wordpress custom post type
-   Taxonomies/
-      ExampleTaxonomy.php     // Define the `example_taxonomy` wordpress taxonomy
+   Wordpress/
+      PostTypes/
+        Service.php           // Define the `service` wordpress custom post type
+      Taxonomies/
+        ServiceType.php       // Define the `service_type` wordpress taxonomy
+      Hooks/
+        ThemeSetup.php        // Setup the theme, hooking on a wordpress action
    Models/
-      Post.php                // Your post model
-      Page.php                // Your page model
       User.php                // Your user model
-      Example.php             // Your example model
+      Post.php                // Your post model (manages all post types)
+      Page.php                // Your `page` post type model
+      Service.php             // Your `service` post type model
 
    // Some more folders you should expect in the `app/` directory
    Helpers/
-   Controllers/
-   Utils/
    Api/
-   GraphQL/
+   Controllers/
    ...
 ```
 
@@ -91,12 +92,14 @@ You can find a starter theme folder using this `app/` folder structure [here](ht
 
 ## Initiate ObjectPress
 
-In your `function.php`, you need to initiate the frameworks, and so define necessary constants, load config files, initiate Custom post types, taxonomies, API routes and so on.
+In your `function.php`, you need to initiate the frameworks, and so define necessary constants, load config files, initiate Custom post types, taxonomies, API routes and so on. 
+
+!> You must not call the ObjectPress inizialisation inside a hook, as ObjectPress does this in the background. 
 
 ```php
 <?php
 
-use OP\Support\ObjectPress;
+use OP\Support\Facades\ObjectPress;
 
-ObjectPress::init();
+ObjectPress::init('/optionnal/path/to/config/folder');
 ```
