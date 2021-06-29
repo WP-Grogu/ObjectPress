@@ -36,7 +36,7 @@ class PolylangDriver extends AbstractDriver
     public function setCurrentLang(string $lang)
     {
         try {
-            PLL()->curlang = PLL()->model->get_language($lang);
+            PLL()->curlang = PLL()->model->get_language($this->localeToSlug($lang));
             return true;
         } catch (\Exception $e) {
             return false;
@@ -132,10 +132,10 @@ class PolylangDriver extends AbstractDriver
      */
     public function setPostLang(int $id, string $lang): void
     {
-        pll_set_post_language($id, $lang);
+        pll_set_post_language($id, $this->localeToSlug($lang));
     }
 
-    
+
     /**
      * Get post in desired $lang
      *
@@ -153,7 +153,7 @@ class PolylangDriver extends AbstractDriver
             return false;
         }
 
-        return pll_get_post($post->ID, $lang);
+        return pll_get_post($post->ID, $this->localeToSlug($lang));
     }
 
 
@@ -205,7 +205,7 @@ class PolylangDriver extends AbstractDriver
      */
     public function setTermLang(int $id, string $lang): void
     {
-        pll_set_term_language($id, $lang);
+        pll_set_term_language($id, $this->localeToSlug($lang));
     }
 
 
@@ -222,8 +222,6 @@ class PolylangDriver extends AbstractDriver
     {
         $langs        = $this->getAvailableLanguages();
         $translations = [];
-
-        dd($langs);
 
         foreach ($langs as $lang) {
             $translations[$lang->name] = $this->getTermIn($id, $lang->name) ?: null;
@@ -244,7 +242,7 @@ class PolylangDriver extends AbstractDriver
      */
     public function getTermIn(string $lang, string $t_id): int
     {
-        return (int) pll_get_term($t_id, $lang);
+        return (int) pll_get_term($t_id, $this->localeToSlug($lang));
     }
 
 
