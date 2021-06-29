@@ -165,25 +165,12 @@ class PostHelper
 
 
     /**
-     * Get pages associated to a template.
+     * Get the application template files name structure.
      *
-     * @param  string    $tpml   Template name (eg: 'blog' for 'template-blog.php')
-     * @param  int|null  $limit  If set, only return this number of page(s). 0 for all posts.
-     *
-     * @return array of Page
+     * @return array
      */
-    public static function getFullTemplatePath(string $tmpl)
+    public static function getTemplateFileStructure(): array
     {
-        // Skip replacement for default template name
-        if ($tmpl === 'default') {
-            return $tmpl;
-        }
-
-        // Skip replacement for template name starting with `:`
-        if (strpos($tmpl, ':') === 0) {
-            return trim(substr($tmpl, 1));
-        }
-
         $structure = Config::getFirst('object-press.wp.template-files-structure');
 
         // Check if there is a %s inside the string, otherwise throw exception.
@@ -197,13 +184,75 @@ class PostHelper
         $regex = sprintf(
             '%s' . str_replace('/', '\/', preg_quote($structure)) . '%s',
             '/^',
-            '[a-zA-Z0-9_.-]+',
+            '([a-zA-Z0-9_.-]+)',
             '$/'
         );
 
+        return compact('structure', 'regex');
+    }
+
+
+    /**
+     * Get full template path from short template name.
+     *
+     * @param string $tpml Template name (eg: 'blog' for 'template-blog.php')
+     *
+     * @return string
+     */
+    public static function getFullTemplateName(string $tmpl): string
+    {
+        // Skip replacement for default template name
+        if ($tmpl === 'default') {
+            return $tmpl;
+        }
+
+        // Skip replacement for template name starting with `:`
+        if (strpos($tmpl, ':') === 0) {
+            return trim(substr($tmpl, 1));
+        }
+
+        // Build up regex, based on the structural configuration.
+        $conf = static::getTemplateFileStructure();
+
         // Replace 'example' by 'template-example.php'
-        if (!preg_match($regex, $tmpl)) {
-            $tmpl = sprintf($structure, $tmpl);
+        if (!preg_match($conf['regex'], $tmpl)) {
+            $tmpl = sprintf($conf['structure'], $tmpl);
+        }
+
+        return $tmpl;
+    }
+    
+
+    /**
+     * Get full template path from short template name.
+     *
+     * @param string $tpml Template name (eg: 'blog' for 'template-blog.php')
+     *
+     * @return string
+     */
+    public static function getFullTemplatePath(string $tmpl): string
+    {
+        return static::getFullTemplateName($tmpl);
+    }
+    
+    
+    /**
+     * Get short template name from full template path.
+     *
+     * @param string $tpml Template name (eg:'template-blog.php' for 'blog')
+     *
+     * @return string
+     */
+    public static function getShortTemplateName(string $tmpl)
+    {
+        // Build up regex, based on the structural configuration.
+        $conf = static::getTemplateFileStructure();
+
+        $matches = [];
+
+        // Replace 'example' by 'template-example.php'
+        if (preg_match($conf['regex'], $tmpl, $matches) && isset($matches[1])) {
+            $tmpl = $matches[1];
         }
 
         return $tmpl;

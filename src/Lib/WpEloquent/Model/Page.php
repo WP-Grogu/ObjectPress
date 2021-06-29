@@ -51,4 +51,17 @@ class Page extends Post
     
         return $this->scopeHasMeta($query, '_wp_page_template', 'default', '!=');
     }
+    
+    
+    /**
+     * Get the page template
+     *
+     * @return string
+     */
+    public function getTemplateAttribute(): string
+    {
+        $tmpl = $this->meta->_wp_page_template ?: '';
+
+        return $tmpl ? PostHelper::getShortTemplateName($tmpl) : '';
+    }
 }
