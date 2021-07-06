@@ -4,9 +4,8 @@ namespace OP\Providers;
 
 use OP\Framework\Contracts\LanguageDriver;
 use OP\Support\Language\Drivers\WPMLDriver;
-use OP\Framework\Factories\TranslatorFactory;
 use OP\Support\Language\Drivers\PolylangDriver;
-use Illuminate\Contracts\Translation\Translator as TranslatorContract;
+use Illuminate\Support\ServiceProvider;
 
 /**
  * @package  ObjectPress
@@ -30,9 +29,6 @@ class LanguageServiceProvider extends ServiceProvider
             $this->app->bind(LanguageDriver::class, $driver);
             $this->app->alias(LanguageDriver::class, 'language');
         }
-        
-        $this->app->bind(TranslatorContract::class, TranslatorFactory::class);
-        $this->app->alias(TranslatorContract::class, 'translator');
     }
 
 

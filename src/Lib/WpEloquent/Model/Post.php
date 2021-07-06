@@ -50,6 +50,8 @@ class Post extends Model implements WpEloquentPost
     protected $dates = ['post_date', 'post_date_gmt', 'post_modified', 'post_modified_gmt'];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
      * @var array
      */
     protected $with = ['meta'];

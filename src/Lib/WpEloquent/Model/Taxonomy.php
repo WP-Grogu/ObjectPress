@@ -3,7 +3,7 @@
 namespace OP\Lib\WpEloquent\Model;
 
 use OP\Lib\WpEloquent\Model;
-use OP\Lib\WpEloquent\Model\Factories\PostFactory;
+use OP\Lib\WpEloquent\Concerns\Aliases;
 use OP\Lib\WpEloquent\Model\Builder\TaxonomyBuilder;
 use OP\Lib\WpEloquent\Model\Meta\TermMeta;
 
@@ -15,6 +15,8 @@ use OP\Lib\WpEloquent\Model\Meta\TermMeta;
  */
 class Taxonomy extends Model
 {
+    use Aliases;
+
     /**
      * @var string
      */
@@ -34,6 +36,13 @@ class Taxonomy extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * @var array
+     */
+    protected static $aliases = [
+        'name' => 'taxonomy',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

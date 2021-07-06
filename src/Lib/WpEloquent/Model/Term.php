@@ -2,7 +2,7 @@
 
 namespace OP\Lib\WpEloquent\Model;
 
-use OP\Lib\WpEloquent\Concerns\AdvancedCustomFields;
+use OP\Lib\WpEloquent\Concerns\AdvancedCustomFieldsTerms;
 use OP\Lib\WpEloquent\Concerns\Aliases;
 use OP\Lib\WpEloquent\Concerns\MetaFields;
 use OP\Lib\WpEloquent\Model;
@@ -18,7 +18,7 @@ class Term extends Model
 {
     use Aliases;
     use MetaFields;
-    use AdvancedCustomFields;
+    use AdvancedCustomFieldsTerms;
 
     /**
      * @var string

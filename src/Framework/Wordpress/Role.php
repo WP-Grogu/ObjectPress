@@ -84,7 +84,7 @@ abstract class Role
             
             if (!$extends) {
                 throw new RoleNotFoundException(
-                    sprintf("OP :: Role :: The extended role `%s` was not found.", $this->extends)
+                    sprintf("ObjectPress : The extended role `%s` was not found.", $this->extends)
                 );
             }
 

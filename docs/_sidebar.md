@@ -12,6 +12,7 @@
   - [Models](the-basics/models.md)
   - [Hooks](the-basics/hooks.md)
   - [API](the-basics/api.md)
+  - [User Roles](the-basics/roles.md)
   - [Languages Support (i18n)](the-basics/i18n.md)
   - [Theme Configuration](the-basics/theme-class.md)
 

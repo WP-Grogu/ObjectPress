@@ -1,6 +1,8 @@
 # ObjectPress
 *Develop fabulous Wordpress websites using modern development tools. Yet another Wordpress frameworks..*
 
+![](/_images/op-bcknd.jpg)
+
 ## What is this ?
 
 You're a single **freelance developer** or working in a **web agency**, and you're using Wordpress daily. Wordpress back-office is easy to use for yout client, and you can add some plugins that brings time-consuming functionnalities into our project. **Great.**  
