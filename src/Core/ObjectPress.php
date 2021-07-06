@@ -122,8 +122,8 @@ final class ObjectPress
 
         // Register services.
         with(new AppSetupServiceProvider($this->app))->register();
-        with(new TranslatorServiceProvider($this->app))->register();
         with(new LanguageServiceProvider($this->app))->register();
+        with(new TranslatorServiceProvider($this->app))->register();
         // with(new EventServiceProvider($this->app))->register();
         // with(new RoutingServiceProvider($this->app))->register();
 
