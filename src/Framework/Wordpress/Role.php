@@ -2,6 +2,7 @@
 
 namespace OP\Framework\Wordpress;
 
+use InvalidArgumentException;
 use OP\Framework\Models\User;
 use OP\Support\Facades\Theme;
 use OP\Framework\Exceptions\RoleNotFoundException;
@@ -16,21 +17,32 @@ use OP\Framework\Exceptions\RoleNotFoundException;
 abstract class Role
 {
     /**
-     * The role to extend caps from.
+     * The role options.
      *
-     * @var string
-     * @since 1.0.4
+     * @var array
      */
-    protected $extends = '';
+    protected array $options = [];
 
 
     /**
-     * i18n translation domain.
+     * The role options.
      *
-     * @var string
-     * @since 1.0.4
+     * @var array
      */
-    protected $i18n_domain = '';
+    private array $defaults = [
+        'name'       => '',
+        'label'      => '',
+        'extends'    => false,
+        'backoffice' => false,
+    ];
+
+
+    /**
+     * The computed role options.
+     *
+     * @var object
+     */
+    private $conf;
 
 
     /**
@@ -39,7 +51,16 @@ abstract class Role
      * @var array
      * @since 1.0.4
      */
-    protected $hidden_menues = [];
+    protected array $hidden_menues = [];
+
+
+    /**
+     * i18n translation domain.
+     *
+     * @var string
+     * @since 1.0.4
+     */
+    protected string $i18n_domain = '';
 
 
     /**
@@ -50,19 +71,23 @@ abstract class Role
      * @var string
      * @since 1.0.4
      */
-    protected $i18n_base_lang = '';
+    protected string $i18n_base_lang = '';
 
 
     /**
-     * Base permissions needed to access back-office
+     * Role constructor. Ensure mandatory options are set.
      *
-     * @var array
-     * @since 1.0.4
+     * @return void
+     * @since 2.0
      */
-    private $backoffice_caps = [
-        'read' => true,
-    ];
+    public function __construct()
+    {
+        $this->conf = (object) ($this->options + $this->defaults);
 
+        if (! $this->conf->label || ! $this->conf->name) {
+            throw new InvalidArgumentException("ObjectPress : The `label` and `name` options are mandatory.");
+        }
+    }
 
 
     /**
@@ -75,16 +100,14 @@ abstract class Role
     {
         $caps = [];
 
-        if ($this->access_bo) {
-            $caps = $caps + self::$backoffice_caps;
-        }
+        $caps = $caps + ['read' => ((bool) ($this->conf->backoffice))];
 
-        if ($this->extends) {
-            $extends = get_role($this->extends);
+        if ($this->conf->extends && is_string($this->conf->extends)) {
+            $extends = get_role($this->conf->extends);
             
             if (!$extends) {
                 throw new RoleNotFoundException(
-                    sprintf("ObjectPress : The extended role `%s` was not found.", $this->extends)
+                    sprintf("ObjectPress : The extended role `%s` was not found.", $this->conf->extends)
                 );
             }
 
@@ -96,7 +119,7 @@ abstract class Role
 
 
     /**
-     * Class constructor, register Role to wordpress
+     * Register Role to wordpress
      *
      * @return void
      * @version 1.0.4
@@ -106,11 +129,11 @@ abstract class Role
     {
         $caps = $this->generateCaps();
 
-        if (get_role($this->identifier)) {
-            remove_role($this->identifier);
+        if (get_role($this->conf->name)) {
+            remove_role($this->conf->name);
         }
 
-        add_role($this->identifier, __($this->name, $this->i18n_domain), $caps);
+        add_role($this->conf->name, __($this->conf->label, $this->i18n_domain), $caps);
 
         $this->removeAdminMenuItems();
     }
@@ -130,7 +153,7 @@ abstract class Role
         }
 
         $slugs = $this->hidden_menues;
-        $role  = $this->identifier;
+        $role  = $this->conf->name;
 
         Theme::on('admin_menu', function () use ($slugs, $role) {
             $u = User::current();
@@ -174,6 +197,11 @@ abstract class Role
 
     public function getName()
     {
-        return $this->name;
+        return $this->conf->name;
+    }
+    
+    public function getLabel()
+    {
+        return $this->conf->label;
     }
 }

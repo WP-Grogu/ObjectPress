@@ -16,8 +16,9 @@ final class Config
     use SingletonPattern;
 
     private static $paths = [];
+    private static $confs = [];
 
-    
+
     /**
      * is not allowed to call from outside to prevent from creating multiple instances,
      * to use the singleton, you have to obtain the instance from Singleton::getInstance() instead
@@ -28,7 +29,7 @@ final class Config
     {
         $_theme = get_template_directory() . '/config';
         $_base  = __DIR__ . '/../../config/';
-        
+
         $this->addPath(
             (realpath($_theme) !== false) ? [$_theme, $_base] : $_base
         );
@@ -64,8 +65,8 @@ final class Config
 
         return $this->getItemRecursive($items, $keys);
     }
-    
-    
+
+
     /**
      * Get a single config item from it's full key path
      * Recursively look into arrays.
@@ -88,8 +89,8 @@ final class Config
                 ->filter()
                 ->first();
     }
-    
-    
+
+
     /**
      * Get a single config item from it's full key path
      * Recursively look into arrays.
@@ -134,7 +135,7 @@ final class Config
                 $key = array_shift($keys);
                 return $this->getItemRecursive($items[$key], $keys);
             }
-            
+
             // No more keys to find, return result.
             if (count($keys) == 1) {
                 return $items[$keys[0]];
@@ -163,13 +164,16 @@ final class Config
             return false;
         }
 
-        $conf_arrays = $result = [];
-
-        foreach ($paths_real as $full_path) {
-            $conf_arrays[] = include $full_path;
+        if (!isset(static::$confs[$domain]) || empty(static::$confs[$domain])) {
+            static::$confs[$domain] = [];
+            foreach ($paths_real as $full_path) {
+                static::$confs[$domain][] = include $full_path;
+            }
         }
 
-        foreach ($conf_arrays as $conf_array) {
+        $result = [];
+
+        foreach (static::$confs[$domain] as $conf_array) {
             foreach ($conf_array as $key => $val) {
                 if (!array_key_exists($key, $result)) {
                     $result[$key] = $val;
