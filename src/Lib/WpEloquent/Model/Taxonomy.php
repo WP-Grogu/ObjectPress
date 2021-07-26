@@ -116,4 +116,29 @@ class Taxonomy extends Model
 
         return parent::__get($key);
     }
+
+    
+    /******************************************/
+    /*                                        */
+    /*             Query builders             */
+    /*                                        */
+    /******************************************/
+
+
+    /**
+     * Get current taxonomy using wordpress magic function
+     *
+     * @return Model null on failure
+     * @since 1.0.0
+     */
+    public static function current()
+    {
+        $id = get_queried_object_id();
+
+        if (!$id) {
+            return null;
+        }
+
+        return static::find($id);
+    }
 }
