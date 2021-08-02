@@ -61,7 +61,11 @@ class ModelFactory
 
             foreach ($guess as $class) {
                 if (class_exists($class)) {
-                    return $class;
+                    $imlp = class_implements($class);
+
+                    if (is_array($imlp) && in_array(WpEloquentPost::class, $imlp)) {
+                        return $class;
+                    }
                 }
             }
         }

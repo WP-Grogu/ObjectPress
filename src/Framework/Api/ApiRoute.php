@@ -307,4 +307,13 @@ abstract class ApiRoute implements ApiRouteContract
     {
         return $this->getArgs() + $this->getBodyArgs();
     }
+
+    public function getBaseUrl(bool $slug_only = false)
+    {
+        $s = $this->getRegisterParams();
+
+        $slug = sprintf('/%s/%s', trim($s['namespace'], '/'), trim($s['route'], '/'));
+
+        return $slug_only ? $slug : home_url('/wp-json' . $slug);
+    }
 }

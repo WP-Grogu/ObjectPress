@@ -181,7 +181,7 @@ class Post extends Model implements WpEloquentPost
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function thumbnail()
+    public function thumbnail_meta()
     {
         return $this->hasOne(ThumbnailMeta::class, 'post_id')
             ->where('meta_key', '_thumbnail_id');
@@ -479,6 +479,23 @@ class Post extends Model implements WpEloquentPost
     // }
 
 
+    /**
+     * Get a collection of posts from their ids, keeping the given ids ordering.
+     *
+     * Eg: Post::ids([10,12,11])->get()
+     *
+     * @param Builder $query
+     * @param array   $ids
+     */
+    public function scopeIds(Builder $query, array $ids)
+    {
+        $ids_imp = implode(',', $ids);
+
+        return $query->whereIn('ID', $ids)
+                    ->orderByRaw("FIELD(ID, $ids_imp)");
+    }
+
+
     /******************************************/
     /*                                        */
     /*        WordPress related methods       */
@@ -502,9 +519,34 @@ class Post extends Model implements WpEloquentPost
      *
      * @return int|null
      */
+    public function getThumbnailAttribute()
+    {
+        return Attachment::find(
+            $this->getThumbnailIdAttribute()
+        );
+    }
+
+
+    /**
+     * Get the thumbnail id
+     *
+     * @return int|null
+     */
     public function getThumbnailIdAttribute(): ?int
     {
-        return ((int) $this->thumbnail->meta_value) ?: 0;
+        return ((int) $this->thumbnail_meta->meta_value) ?: 0;
+    }
+    
+
+    /**
+     * Get the thumbnail alt.
+     * If null, returns the post title instead.
+     *
+     * @return string
+     */
+    public function getThumbnailAltAttribute(): string
+    {
+        return ($this->thumbnail->alt ?: $this->title) ?: '';
     }
 
 

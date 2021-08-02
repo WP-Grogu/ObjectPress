@@ -36,11 +36,16 @@ class Attachment extends Post
      * @var array
      */
     protected static $aliases = [
-        'title' => 'post_title',
-        'url' => 'guid',
-        'type' => 'post_mime_type',
+        'title'       => 'post_title',
+        'url'         => 'guid',
+        'type'        => 'post_mime_type',
         'description' => 'post_content',
-        'caption' => 'post_excerpt',
-        'alt' => ['meta' => '_wp_attachment_image_alt'],
+        'caption'     => 'post_excerpt',
     ];
+
+
+    public function getAltAttribute(): string
+    {
+        return $this->meta->_wp_attachment_image_alt ?: '';
+    }
 }
