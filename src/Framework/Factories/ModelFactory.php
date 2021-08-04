@@ -8,7 +8,7 @@ use OP\Support\Facades\Config;
 use Illuminate\Support\Collection;
 use OP\Framework\Helpers\PostHelper;
 use OP\Framework\Exceptions\ClassNotFoundException;
-use OP\Lib\WpEloquent\Models\Contracts\WpEloquentPost;
+use OP\Lib\WpEloquent\Model\Contract\WpEloquentPost;
 
 /**
  * @package  ObjectPress
@@ -56,7 +56,7 @@ class ModelFactory
 
             $guess = [
                 sprintf('%s\Models\%s', $psr, $post_type_camelized),
-                sprintf('OP\Framework\Models\%s', $post_type_camelized)
+                sprintf('OP\Lib\WpEloquent\Model\%s', $post_type_camelized),
             ];
 
             foreach ($guess as $class) {
@@ -93,7 +93,7 @@ class ModelFactory
 
         $class = static::resolvePostClass($post->post_type) ?: static::resolvePostClass('post');
 
-        return $class::find($post->ID);
+        return $class ? $class::find($post->ID) : null;
     }
     
     

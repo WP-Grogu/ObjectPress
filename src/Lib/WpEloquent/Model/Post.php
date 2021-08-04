@@ -439,7 +439,7 @@ class Post extends Model implements WpEloquentPost
             return null;
         }
 
-        return Post::find($id);
+        return static::find($id);
     }
 
 

@@ -32,9 +32,8 @@ class Page extends Post
 
     /**
      * @param Builder $query
-     * @param string|array $meta
-     * @param mixed $value
-     * @param string $operator
+     * @param string|array $template
+     * @param string $operator (=, !=, in, not in..)
      * @return Builder
      */
     public function scopeHasTemplate(Builder $query, $template = null, string $operator = '=')

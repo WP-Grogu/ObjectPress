@@ -97,15 +97,7 @@ class Product extends PostModel
      */
     public function getDatas(): array
     {
-        $method_name = "get_data";
-
-        if (!method_exists($this->wc_product, $method_name)) {
-            throw new MethodNotFoundException(
-                "Could not get WC Product properties : method $method_name not found."
-            );
-        }
-
-        return $this->wc_product->$method_name() ?: [];
+        return $this->getData('data');
     }
 
 
