@@ -3,6 +3,7 @@
 namespace OP\Lib\WpEloquent\Model\Builder;
 
 use Illuminate\Database\Eloquent\Builder;
+use OP\Lib\WpEloquent\Connection;
 
 /**
  * Class TermBuilder
@@ -13,13 +14,39 @@ use Illuminate\Database\Eloquent\Builder;
 class TermBuilder extends Builder
 {
     /**
-     * @param string $name
+     * Get terms where taxonomy name is/in $names
+     *
+     * @param string|string[]  $names
+     *
      * @return TermBuilder
      */
-    public function whereTaxonomy($name)
+    public function whereTaxonomy($names)
     {
-        return $this->whereHas('taxonomy', function ($query) use ($name) {
-            $query->where('taxonomy', $name);
+        return $this->whereHas('taxonomy', function ($q) use ($names) {
+            $q->whereIn('taxonomy', is_array($names) ? $names : [$names]);
         });
+    }
+
+
+    /**
+     * Order the results using a custom meta key.
+     *
+     * eg. : $query->orderByMeta('meta_key', 'DESC')
+     *
+     * @param string   $meta_key
+     * @param string   $order
+     *
+     * @return TermBuilder
+     */
+    public function orderByMeta(string $meta_key, string $order = 'ASC')
+    {
+        $db     = Connection::instance();
+        $prefix = $db->getPdo()->prefix();
+
+        return $this->select([
+                    $prefix.'terms.*',
+                    $db->raw("(select meta_value from {$prefix}termmeta where {$prefix}termmeta.meta_key = '{$meta_key}' and {$prefix}terms.term_id = {$prefix}termmeta.term_id limit 1) as meta_ordering")
+                ])
+                ->orderBy('meta_ordering', $order);
     }
 }

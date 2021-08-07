@@ -4,14 +4,13 @@ namespace OP\Thirdparty\ACF;
 
 use OP\Support\Facades\Theme;
 use OP\Support\Facades\Config;
-use OP\Thirdparty\ACF\Classes\JsonReader;
 
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.5
+ * @version  2.0
+ * @since    1.0
  * @access   public
- * @since    1.0.0
  */
 class AcfManager
 {
@@ -24,33 +23,7 @@ class AcfManager
      */
     public static function setThumbnails()
     {
-        $acfjson = new JsonReader;
-
-        foreach ($acfjson->getGroups() as $group) {
-            foreach ($group->fields as $field) {
-                if (isset($field->type) && $field->type === 'flexible_content') {
-                    foreach ($field->layouts as $layout) {
-                        self::registerThumbnail($field->name, $layout->name);
-                    }
-                }
-            }
-        }
-    }
-
-
-    /**
-     * Register a filter for a given layout
-     *
-     * @param string $flexible_name Name of the flexible content field
-     * @param string $layout_name Name of the layout
-     *
-     * @return void
-     * @since 1.0.0
-     * @version 2.0
-     */
-    private static function registerThumbnail(string $flexible_name, string $layout_name): void
-    {
-        Theme::on("acfe/flexible/thumbnail/name={$flexible_name}&layout={$layout_name}", function ($thumbnail, $field, $layout) {
+        Theme::on("acfe/flexible/thumbnail", function ($thumbnail, $field, $layout) {
             $rel_paths = array_filter(Config::get('object-press.acf.flex-thumb-relative-path'));
 
             if (empty($rel_paths)) {

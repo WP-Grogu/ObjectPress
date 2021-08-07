@@ -2,11 +2,11 @@
 
 namespace OP\Lib\WpEloquent\Model;
 
-use OP\Lib\WpEloquent\Concerns\AdvancedCustomFieldsTerms;
+use OP\Lib\WpEloquent\Model;
 use OP\Lib\WpEloquent\Concerns\Aliases;
 use OP\Lib\WpEloquent\Concerns\MetaFields;
-use OP\Lib\WpEloquent\Model;
 use OP\Lib\WpEloquent\Model\Builder\TermBuilder;
+use OP\Lib\WpEloquent\Concerns\AdvancedCustomFieldsTerms;
 
 /**
  * Class Term.
@@ -57,6 +57,31 @@ class Term extends Model
     public function newEloquentBuilder($query)
     {
         return new TermBuilder($query);
+    }
+
+
+    /******************************************/
+    /*                                        */
+    /*             Query builders             */
+    /*                                        */
+    /******************************************/
+
+
+    /**
+     * Get current term using wordpress magic function
+     *
+     * @return Model null on failure
+     * @since 1.0.0
+     */
+    public static function current()
+    {
+        $id = get_queried_object_id();
+
+        if (!$id) {
+            return null;
+        }
+
+        return static::find($id);
     }
 
 
