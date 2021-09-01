@@ -177,9 +177,12 @@ abstract class Taxonomy
         $args = [
             'hierarchical'      => true,
             'labels'            => $labels,
+            'query_var'         => true,
+            'public'            => true,
             'show_ui'           => true,
             'show_admin_column' => true,
-            'query_var'         => true,
+            'show_in_nav_menus' => true,
+            'show_tagcloud'     => true,
         ];
 
         // If graphql is enabled, we need to setup some more params

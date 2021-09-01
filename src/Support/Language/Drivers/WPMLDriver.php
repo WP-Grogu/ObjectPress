@@ -2,6 +2,8 @@
 
 namespace OP\Support\Language\Drivers;
 
+use OP\Framework\Helpers\PostHelper;
+
 /**
  * @package  ObjectPress
  * @author   tgeorgel
@@ -17,7 +19,7 @@ class WPMLDriver extends AbstractDriver
      * @return string
      * @since 2.0
      */
-    public function getCurrentLang()
+    public function getCurrentLang(string $as = 'slug')
     {
         return ICL_LANGUAGE_CODE;
     }
@@ -98,7 +100,7 @@ class WPMLDriver extends AbstractDriver
     public function getPostLang(int $id, string $field = 'slug')
     {
         $infos = wpml_get_language_information(null, $id);
-        
+
         // TODO: use slug, name, ...
         if (is_array($infos) && array_key_exists('language_code', $infos)) {
             return $infos['language_code'];
@@ -120,7 +122,7 @@ class WPMLDriver extends AbstractDriver
     public function setPostLang(int $id, string $lang): void
     {
         $infos = wpml_get_language_information(null, $id);
-        
+
         if (is_array($infos) && array_key_exists('language_code', $infos)) {
             $infos['language_code'] = $lang;
             do_action('wpml_set_element_language_details', $infos);
@@ -224,7 +226,7 @@ class WPMLDriver extends AbstractDriver
         } else {
             $permalink = get_permalink($post);
         }
-        
+
         return $permalink;
     }
 }
