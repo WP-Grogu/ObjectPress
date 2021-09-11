@@ -176,4 +176,15 @@ class PostBuilder extends Builder
                   ->whereRaw("{$table}.language_code = '{$lang}'");
         });
     }
+
+    /**
+     * Query without filtering by the current language.
+     * Please note that this function only remove the related global scope.
+     *
+     * @return PostBuilder
+     */
+    public function allLangs()
+    {
+        return $this->withoutGlobalScope(CurrentLangScope::class);
+    }
 }

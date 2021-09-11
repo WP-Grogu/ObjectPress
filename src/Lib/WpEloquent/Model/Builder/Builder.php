@@ -12,14 +12,4 @@ use Illuminate\Database\Eloquent\Builder as BaseBuilder;
  */
 class Builder extends BaseBuilder
 {
-    /**
-     * Query without filtering by the current language.
-     * Please note that this function only remove the related global scope.
-     *
-     * @return PostBuilder
-     */
-    public function allLangs()
-    {
-        return $this->withoutGlobalScope(CurrentLangScope::class);
-    }
 }
