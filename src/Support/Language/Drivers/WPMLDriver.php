@@ -229,4 +229,21 @@ class WPMLDriver extends AbstractDriver
 
         return $permalink;
     }
+
+
+    /**
+     * Determine if a taxonomy is translatable from it'n name
+     *
+     * @return bool
+     */
+    public function isTaxonomyTranslatable(string $tax_name)
+    {
+        $settings = get_option('icl_sitepress_settings');
+
+        if ($settings && isset($settings['taxonomies_sync_option']) && $settings['taxonomies_sync_option'][$tax_name]) {
+            return $settings['taxonomies_sync_option'][$tax_name];
+        }
+
+        return false;
+    }
 }

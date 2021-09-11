@@ -44,8 +44,44 @@ class Attachment extends Post
     ];
 
 
+
+    /******************************************/
+    /*                                        */
+    /*        WordPress related methods       */
+    /*                                        */
+    /******************************************/
+
+
+    /**
+     * Get the alt attribute for the attachment.
+     */
     public function getAltAttribute(): string
     {
         return $this->meta->_wp_attachment_image_alt ?: '';
+    }
+
+    /**
+     * Get the attachment URL
+     */
+    public function getPermalinkAttribute()
+    {
+        return $this->getAttachmentUrl();
+    }
+    
+    /**
+     * Get the attachment URL
+     */
+    public function getUrlAttribute()
+    {
+        return $this->getAttachmentUrl();
+    }
+
+
+    /**
+     * Get the attachment URL
+     */
+    public function getAttachmentUrl(): string
+    {
+        return wp_get_attachment_url($this->id) ?: '';
     }
 }

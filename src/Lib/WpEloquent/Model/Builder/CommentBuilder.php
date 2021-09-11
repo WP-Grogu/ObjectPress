@@ -2,8 +2,6 @@
 
 namespace OP\Lib\WpEloquent\Model\Builder;
 
-use Illuminate\Database\Eloquent\Builder;
-
 /**
  * Class CommentBuilder
  *

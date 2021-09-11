@@ -2,7 +2,6 @@
 
 namespace OP\Lib\WpEloquent\Model\Builder;
 
-use Illuminate\Database\Eloquent\Builder;
 use OP\Lib\WpEloquent\Connection;
 
 /**

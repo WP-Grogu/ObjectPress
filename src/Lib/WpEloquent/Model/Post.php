@@ -2,10 +2,10 @@
 
 namespace OP\Lib\WpEloquent\Model;
 
-use Illuminate\Database\Eloquent\Builder;
 use OP\Lib\WpEloquent\Model;
 use OP\Lib\WpEloquent\Concerns\Aliases;
 use OP\Framework\Factories\ModelFactory;
+use Illuminate\Database\Eloquent\Builder;
 use OP\Lib\WpEloquent\Concerns\MetaFields;
 use OP\Lib\WpEloquent\Concerns\Shortcodes;
 use OP\Lib\WpEloquent\Concerns\OrderScopes;
@@ -14,6 +14,7 @@ use OP\Lib\WpEloquent\Concerns\CustomTimestamps;
 use OP\Lib\WpEloquent\Model\Builder\PostBuilder;
 use OP\Lib\WpEloquent\Concerns\AdvancedCustomFields;
 use OP\Lib\WpEloquent\Model\Contract\WpEloquentPost;
+use OP\Lib\WpEloquent\Model\Scopes\CurrentLangScope;
 
 /**
  * Class Post
@@ -157,6 +158,17 @@ class Post extends Model implements WpEloquentPost
         }
 
         return new $class();
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        # TODO : if Config... =>
+        static::addGlobalScope(new CurrentLangScope);
     }
 
     /**
