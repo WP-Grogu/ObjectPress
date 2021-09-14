@@ -209,4 +209,18 @@ class User extends Model implements Authenticatable, CanResetPassword
     {
         //
     }
+
+    /**
+     * Get the currently logged in user, return null if no user is logged.
+     *
+     * @return User|null
+     */
+    public static function current()
+    {
+        if (($id = get_current_user_id())) {
+            return static::find($id);
+        }
+
+        return null;
+    }
 }
