@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34f0a419f11b0bb72786a07cc700eb5d",
+    "content-hash": "91fb2e3da5fbdbf2c7d27151d5faa381",
     "packages": [
         {
             "name": "amphibee/hookable",
@@ -611,54 +611,6 @@
                 "source": "https://github.com/guzzle/psr7/tree/2.0.0"
             },
             "time": "2021-06-30T20:03:07+00:00"
-        },
-        {
-            "name": "hautelook/phpass",
-            "version": "0.3.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hautelook/phpass.git",
-                "reference": "b4cbd9b67ed3ef5672ec79d8e0c46d24bd844abd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hautelook/phpass/zipball/b4cbd9b67ed3ef5672ec79d8e0c46d24bd844abd",
-                "reference": "b4cbd9b67ed3ef5672ec79d8e0c46d24bd844abd",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Hautelook": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Public Domain"
-            ],
-            "authors": [
-                {
-                    "name": "Solar Designer",
-                    "email": "solar@openwall.com",
-                    "homepage": "http://openwall.com/phpass/"
-                }
-            ],
-            "description": "Portable PHP password hashing framework",
-            "homepage": "http://github.com/hautelook/phpass/",
-            "keywords": [
-                "blowfish",
-                "crypt",
-                "password",
-                "security"
-            ],
-            "support": {
-                "issues": "https://github.com/hautelook/phpass/issues",
-                "source": "https://github.com/hautelook/phpass/tree/0.3.x"
-            },
-            "time": "2012-08-31T00:00:00+00:00"
         },
         {
             "name": "illuminate/config",

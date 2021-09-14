@@ -34,7 +34,6 @@
         "doctrine/inflector": " ^2.0",
         "jenssegers/blade": "^1.4",
         "amphibee/hookable": " dev-main",
-        "hautelook/phpass": " 0.3.*",
         "thunderer/shortcode": " ^0.7.3",
         "illuminate/view": " ^7.0",
         "illuminate/routing": " ^7.0",
