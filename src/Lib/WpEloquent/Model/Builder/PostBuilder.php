@@ -7,6 +7,8 @@ use OP\Lib\WpEloquent\Connection;
 use OP\Support\Facades\ObjectPress;
 use OP\Framework\Contracts\LanguageDriver;
 use OP\Lib\WpEloquent\Model\Scopes\CurrentLangScope;
+use OP\Support\Language\Drivers\PolylangDriver;
+use OP\Support\Language\Drivers\WPMLDriver;
 
 /**
  * Class PostBuilder
@@ -166,15 +168,32 @@ class PostBuilder extends Builder
         }
 
         # WPML Support
-        return $this->whereExists(function ($query) use ($db, $prefix, $lang) {
-            $table = $prefix . 'icl_translations';
+        if (is_a($driver, WPMLDriver::class)) {
+            return $this->whereExists(function ($query) use ($db, $prefix, $lang) {
+                $table = $prefix . 'icl_translations';
+    
+                $query->select($db->raw(1))
+                      ->from($table)
+                      ->whereRaw("{$table}.element_id = {$prefix}posts.ID")
+                      ->whereRaw("{$table}.element_type LIKE 'post_%'")
+                      ->whereRaw("{$table}.language_code = '{$lang}'");
+            });
+        }
+        
+        # Polylang Support
+        if (is_a($driver, PolylangDriver::class)) {
+            // return $this->whereExists(function ($query) use ($db, $prefix, $lang) {
+            //     $table = $prefix . 'term_taxonomy';
+    
+            //     $query->select($db->raw(1))
+            //           ->from($table)
+            //           ->where('taxonomy', 'post_translations')
+            //           ->whereRaw("description regexp CONCAT('\"{$lang}\";i:', {$prefix}posts.ID, ';')");
+            // });
 
-            $query->select($db->raw(1))
-                  ->from($table)
-                  ->whereRaw("{$table}.element_id = {$prefix}posts.ID")
-                  ->whereRaw("{$table}.element_type LIKE 'post_%'")
-                  ->whereRaw("{$table}.language_code = '{$lang}'");
-        });
+            # TMP / TODO : see why " char get replaced by ` char
+            return $this->whereIn('ID', $driver->postsInLang($lang));
+        }
     }
 
     /**

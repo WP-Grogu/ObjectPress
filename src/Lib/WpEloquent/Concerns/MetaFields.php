@@ -214,10 +214,6 @@ trait MetaFields
      */
     public function getMeta($attribute)
     {
-        if ($meta = $this->meta->{$attribute}) {
-            return $meta;
-        }
-
-        return null;
+        return $this->meta->{$attribute} ?: null;
     }
 }

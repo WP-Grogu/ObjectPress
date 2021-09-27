@@ -17,6 +17,7 @@ use Illuminate\Contracts\Auth\CanResetPassword;
  * @author Ashwin Sureshkumar <ashwin.sureshkumar@gmail.com>
  * @author Mickael Burguet <www.rundef.com>
  * @author Junior Grossi <juniorgro@gmail.com>
+ * @author Thomas Georgel <thomas@hydrat.agency>
  */
 class User extends Model implements Authenticatable, CanResetPassword
 {
@@ -57,15 +58,16 @@ class User extends Model implements Authenticatable, CanResetPassword
      * @var array
      */
     protected static $aliases = [
-        'login' => 'user_login',
-        'email' => 'user_email',
-        'slug' => 'user_nicename',
-        'url' => 'user_url',
-        'nickname' => ['meta' => 'nickname'],
-        'first_name' => ['meta' => 'first_name'],
-        'last_name' => ['meta' => 'last_name'],
+        'id'          => 'ID',
+        'login'       => 'user_login',
+        'email'       => 'user_email',
+        'slug'        => 'user_nicename',
+        'url'         => 'user_url',
+        'nickname'    => ['meta' => 'nickname'],
+        'first_name'  => ['meta' => 'first_name'],
+        'last_name'   => ['meta' => 'last_name'],
         'description' => ['meta' => 'description'],
-        'created_at' => 'user_registered',
+        'created_at'  => 'user_registered',
     ];
 
     /**

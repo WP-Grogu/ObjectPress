@@ -36,6 +36,17 @@ abstract class Role
         'backoffice' => false,
     ];
 
+    
+    /**
+     * The role capabilities.
+     * If the role extends another role, it will copy it's caps first,
+     * then override with this array.
+     *
+     * @var array
+     * @since 1.0.4
+     */
+    protected array $caps = [];
+
 
     /**
      * The computed role options.
@@ -46,7 +57,8 @@ abstract class Role
 
 
     /**
-     * The admin menu items the current role SHOULD NOT see.
+     * Hidden admin menu items for this role.
+     * (the items will be not be seen by this roles)
      *
      * @var array
      * @since 1.0.4

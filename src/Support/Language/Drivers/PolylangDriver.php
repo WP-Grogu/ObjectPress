@@ -2,6 +2,7 @@
 
 namespace OP\Support\Language\Drivers;
 
+use OP\Lib\WpEloquent\Connection;
 use OP\Framework\Helpers\PostHelper;
 
 /**
@@ -13,6 +14,13 @@ use OP\Framework\Helpers\PostHelper;
  */
 class PolylangDriver extends AbstractDriver
 {
+    /**
+     * The instance cache to avoid repeating databse queries.
+     *
+     * @var array
+     */
+    private $cache = [];
+
     /**
      * Return the current language
      *
@@ -363,5 +371,41 @@ class PolylangDriver extends AbstractDriver
     public function registerString(string $string, string $name, string $group = 'op-theme'): void
     {
         pll_register_string($name, $string, $group);
+    }
+
+
+    /**
+     * Get all ids from posts in the asked language
+     *
+     * @param string $lang The language slug
+     *
+     * @return array
+     */
+    public function postsInLang(string $lang)
+    {
+        global $wpdb;
+
+        if (isset($this->cache['ids'][$lang])) {
+            return $this->cache['ids'][$lang];
+        }
+
+        $db     = Connection::instance();
+        $prefix = $db->getPdo()->prefix();
+
+        $ids = $wpdb->get_results("
+            SELECT SUBSTRING_INDEX(SUBSTRING_INDEX(description, '\"{$lang}\";i:', -1), ';',1) as id
+            FROM `{$prefix}term_taxonomy`
+            WHERE `taxonomy` = 'post_translations'
+        ");
+
+        $ids = collect($ids)->groupBy('id')->keys()->toArray();
+
+        if (!isset($this->cache['ids'])) {
+            $this->cache['ids'] = [];
+        }
+
+        $this->cache['ids'][$lang] = $ids;
+
+        return $ids;
     }
 }

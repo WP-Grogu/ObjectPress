@@ -100,4 +100,22 @@ return [
 
     ],
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Database options
+    |--------------------------------------------------------------------------
+    |
+    | Manage here your database options.
+    | ObjectPress supports the Eloquent ORM.
+    |
+    */
+    'database' => [
+        /**
+         * Should we apply a filter (scope) to all your Eloquent queries,
+         * to only get items in the current language ?
+         */
+        'global_scope_language' => false,
+    ],
+
 ];

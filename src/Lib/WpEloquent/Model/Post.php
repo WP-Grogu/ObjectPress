@@ -3,6 +3,7 @@
 namespace OP\Lib\WpEloquent\Model;
 
 use OP\Lib\WpEloquent\Model;
+use OP\Support\Facades\Config;
 use OP\Lib\WpEloquent\Concerns\Aliases;
 use OP\Framework\Factories\ModelFactory;
 use Illuminate\Database\Eloquent\Builder;
@@ -167,8 +168,9 @@ class Post extends Model implements WpEloquentPost
      */
     protected static function booted()
     {
-        # TODO : if Config... =>
-        static::addGlobalScope(new CurrentLangScope);
+        if (Config::getFirstBool('object-press.database.global_scope_language')) {
+            static::addGlobalScope(new CurrentLangScope);
+        }
     }
 
     /**
