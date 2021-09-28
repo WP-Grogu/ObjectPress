@@ -36,17 +36,6 @@ abstract class Role
         'backoffice' => false,
     ];
 
-    
-    /**
-     * The role capabilities.
-     * If the role extends another role, it will copy it's caps first,
-     * then override with this array.
-     *
-     * @var array
-     * @since 1.0.4
-     */
-    protected array $caps = [];
-
 
     /**
      * The computed role options.
@@ -57,8 +46,7 @@ abstract class Role
 
 
     /**
-     * Hidden admin menu items for this role.
-     * (the items will be not be seen by this roles)
+     * The admin menu items the current role SHOULD NOT see.
      *
      * @var array
      * @since 1.0.4
@@ -140,12 +128,20 @@ abstract class Role
     protected function register()
     {
         $caps = $this->generateCaps();
+        $role = get_role($this->conf->name);
 
-        if (get_role($this->conf->name)) {
-            remove_role($this->conf->name);
+        if (!$role) {
+            add_role($this->conf->name, __($this->conf->label, $this->i18n_domain), $caps);
+        } else {
+            if ($role->capabilities !== $caps) {
+                foreach ($role->capabilities as $name => $value) {
+                    $role->remove_cap($name);
+                }
+                foreach ($caps as $name => $value) {
+                    $role->add_cap($name, $value);
+                }
+            }
         }
-
-        add_role($this->conf->name, __($this->conf->label, $this->i18n_domain), $caps);
 
         $this->removeAdminMenuItems();
     }
