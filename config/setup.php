@@ -56,6 +56,7 @@ return [
     'hooks' => [
         'actions' => [
             OP\Core\Hooks\SetupWordpress::class,
+            OP\Core\Hooks\SetupCli::class,
             OP\Core\Hooks\SetupApi::class,
             OP\Core\Hooks\SetupGraphql::class,
         ],
@@ -76,6 +77,19 @@ return [
     */
     'user-roles' => [
         // App\Wordpress\Roles\Administrator::class,
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | App CLI Commands
+    |--------------------------------------------------------------------------
+    |
+    | Insert here your WP-CLI commands.
+    |
+    */
+    'commands' => [
+        // App\Wordpress\Commands\UpdateUsers::class,
     ],
 
 
