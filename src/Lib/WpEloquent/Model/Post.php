@@ -503,10 +503,8 @@ class Post extends Model implements WpEloquentPost
      */
     public function scopeIds(Builder $query, array $ids)
     {
-        $ids_imp = implode(',', $ids);
-
         return $query->whereIn('ID', $ids)
-                    ->orderByRaw("FIELD(ID, $ids_imp)");
+                    ->orderByRaw(sprintf('FIELD(ID, %s)', implode(',', $ids)));
     }
 
 
