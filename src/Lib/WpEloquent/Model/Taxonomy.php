@@ -125,7 +125,27 @@ class Taxonomy extends Model
         return parent::__get($key);
     }
 
+
     
+    /******************************************/
+    /*                                        */
+    /*               WP methods               */
+    /*                                        */
+    /******************************************/
+
+
+    /**
+     * Get the taxonomy labels.
+     *
+     * @return stdObject The labels
+     */
+    public function getLabelsAttribute()
+    {
+        return (get_taxonomy($this->name))->labels;
+    }
+
+
+
     /******************************************/
     /*                                        */
     /*             Query builders             */
