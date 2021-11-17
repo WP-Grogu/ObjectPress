@@ -3,9 +3,10 @@
 namespace OP\Lib\WpEloquent\Model;
 
 use OP\Lib\WpEloquent\Model;
+use OP\Lib\WpEloquent\Connection;
 use OP\Lib\WpEloquent\Concerns\Aliases;
-use OP\Lib\WpEloquent\Model\Builder\TaxonomyBuilder;
 use OP\Lib\WpEloquent\Model\Meta\TermMeta;
+use OP\Lib\WpEloquent\Model\Builder\TaxonomyBuilder;
 
 /**
  * Class Taxonomy
@@ -83,7 +84,7 @@ class Taxonomy extends Model
     {
         return $this->belongsToMany(
             Post::class,
-            'wp_term_relationships',
+            (new Connection)->pdo->prefix() . 'term_relationships',
             'term_taxonomy_id',
             'object_id'
         );
