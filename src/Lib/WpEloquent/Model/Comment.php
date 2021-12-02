@@ -2,9 +2,10 @@
 
 namespace OP\Lib\WpEloquent\Model;
 
-use OP\Lib\WpEloquent\Concerns\CustomTimestamps;
-use OP\Lib\WpEloquent\Concerns\MetaFields;
 use OP\Lib\WpEloquent\Model;
+use OP\Lib\WpEloquent\Concerns\Aliases;
+use OP\Lib\WpEloquent\Concerns\MetaFields;
+use OP\Lib\WpEloquent\Concerns\CustomTimestamps;
 use OP\Lib\WpEloquent\Model\Builder\CommentBuilder;
 
 /**
@@ -15,8 +16,9 @@ use OP\Lib\WpEloquent\Model\Builder\CommentBuilder;
  */
 class Comment extends Model
 {
-    use MetaFields;
-    use CustomTimestamps;
+    use MetaFields,
+        CustomTimestamps,
+        Aliases;
 
     const CREATED_AT = 'comment_date';
     const UPDATED_AT = null;
@@ -35,6 +37,26 @@ class Comment extends Model
      * @var array
      */
     protected $dates = ['comment_date'];
+
+    /**
+     * @var array
+     */
+    protected static $aliases = [
+        'id'           => 'comment_ID',
+        'post_id'      => 'comment_post_ID',
+        'author'       => 'comment_author',
+        'author_email' => 'comment_author_email',
+        'author_url'   => 'comment_author_url',
+        'author_ip'    => 'comment_author_IP',
+        'created_at'   => 'comment_date',
+        'date_gmt'     => 'comment_date_gmt',
+        'content'      => 'comment_content',
+        'karma'        => 'comment_karma',
+        'approved'     => 'comment_approved',
+        'agent'        => 'comment_agent',
+        'type'         => 'comment_type',
+        'parent'       => 'comment_parent',
+    ];
 
     /**
      * Find a comment by post ID.

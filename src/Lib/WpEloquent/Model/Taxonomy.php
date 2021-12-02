@@ -125,6 +125,22 @@ class Taxonomy extends Model
 
         return parent::__get($key);
     }
+    
+    /**
+     * Creates a query builder which get the term neighbors
+     * in hierarchy for this term (same parent).
+     *
+     * @return QueryBuilder
+     */
+    public function neighbors()
+    {
+        $parent  = $this->parent;
+        $exclude = $this->term_id;
+
+        $query = static::where('term_id', '!=', $exclude);
+
+        return $parent ? $query->where('parent', $parent) : $query->whereNull('parent');
+    }
 
 
     

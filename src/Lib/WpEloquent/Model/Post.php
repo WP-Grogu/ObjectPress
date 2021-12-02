@@ -26,12 +26,12 @@ use OP\Lib\WpEloquent\Model\Scopes\CurrentLangScope;
  */
 class Post extends Model implements WpEloquentPost
 {
-    use Aliases;
-    use AdvancedCustomFields;
-    use MetaFields;
-    use Shortcodes;
-    use OrderScopes;
-    use CustomTimestamps;
+    use Aliases,
+        AdvancedCustomFields,
+        MetaFields,
+        Shortcodes,
+        OrderScopes,
+        CustomTimestamps;
 
     const CREATED_AT = 'post_date';
     const UPDATED_AT = 'post_modified';

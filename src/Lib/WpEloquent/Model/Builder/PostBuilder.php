@@ -196,6 +196,7 @@ class PostBuilder extends Builder
         }
     }
 
+
     /**
      * Query without filtering by the current language.
      * Please note that this function only remove the related global scope.
@@ -205,5 +206,26 @@ class PostBuilder extends Builder
     public function allLangs()
     {
         return $this->withoutGlobalScope(CurrentLangScope::class);
+    }
+
+
+    /**
+     * Order the results using a custom meta key.
+     *
+     * eg. : $query->orderByMeta('meta_key', 'DESC')
+     *
+     * @param string   $meta_key
+     * @param string   $order
+     *
+     * @return PostBuilder
+     */
+    public function orderByMeta(string $meta_key, string $order = 'ASC')
+    {
+        $db     = Connection::instance();
+        $prefix = $db->getPdo()->prefix();
+
+        return $this->select([$prefix.'posts.*', $db->raw("(select meta_value from {$prefix}postmeta where {$prefix}postmeta.meta_key = '{$meta_key}' and {$prefix}posts.ID = {$prefix}postmeta.post_id limit 1) as meta_ordering")])
+                ->orderByRaw('LENGTH(meta_ordering)', 'ASC') # alphanum support, avoid this kind of sort : 1, 10, 11, 7, 8
+                ->orderBy('meta_ordering', $order);
     }
 }
