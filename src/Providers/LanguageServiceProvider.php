@@ -43,12 +43,12 @@ class LanguageServiceProvider extends ServiceProvider
         $driver = null;
 
         // PolyLang
-        if (!$driver && function_exists('pll_current_language')) {
+        if (!$driver && (is_plugin_active('polylang/polylang.php') || is_plugin_active('polylang-pro/polylang.php'))) {
             $driver = PolylangDriver::class;
         }
         
         // WPML
-        if (!$driver && defined('ICL_LANGUAGE_CODE')) {
+        if (!$driver && is_plugin_active('sitepress-multilingual-cms/sitepress.php')) {
             $driver = WPMLDriver::class;
         }
 

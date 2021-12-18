@@ -3,8 +3,9 @@
 namespace OP\Framework\Wordpress;
 
 use WP_CLI;
+use OP\Framework\Contracts\WpCliCommand;
 
-abstract class Command
+abstract class Command implements WpCliCommand
 {
     /**
      * The command name called with "wp {name}"
@@ -26,9 +27,9 @@ abstract class Command
 
     /**
      * Returns the arguments to pass to the add_command function.
+     * An associative array with additional registration parameters.
      *
      * $args (array) {
-     *   Optional. An associative array with additional registration parameters.
      *   @type callable $before_invoke Callback to execute before invoking the command.
      *   @type callable $after_invoke Callback to execute after invoking the command.
      *   @type string $shortdesc Short description (80 char or less) for the command.
