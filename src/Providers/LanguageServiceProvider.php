@@ -48,7 +48,7 @@ class LanguageServiceProvider extends ServiceProvider
         }
         
         // WPML
-        if (!$driver && is_plugin_active('sitepress-multilingual-cms/sitepress.php')) {
+        if (!$driver && (is_plugin_active('sitepress-multilingual-cms/sitepress.php') || is_plugin_active('wpml-multilingual-cms/sitepress.php'))) {
             $driver = WPMLDriver::class;
         }
 
