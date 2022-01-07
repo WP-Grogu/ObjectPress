@@ -17,6 +17,20 @@ abstract class Command implements WpCliCommand
 
 
     /**
+     * Bootup Command classes
+     */
+    public function __construct()
+    {
+        # Enable error displaying for debugging on local env or if WP_DEBUG is true
+        if ((defined('WP_DEBUG') && WP_DEBUG) || (defined('WP_ENV') && WP_ENV === 'development')) {
+            ini_set('display_errors', '1');
+            ini_set('display_startup_errors', '1');
+            error_reporting(E_ALL);
+        }
+    }
+
+
+    /**
      * Boot the command into WP-CLI.
      */
     public function boot()
@@ -48,7 +62,27 @@ abstract class Command implements WpCliCommand
 
 
     /**
-     * Output a success message to the console.
+     * Display informational message without prefix, or discarded when --quiet argument is supplied.
+     *
+     * @return void
+     */
+    protected function log($message)
+    {
+        return WP_CLI::log($message);
+    }
+
+    /**
+     * Display informational message without prefix, and ignores --quiet argument.
+     *
+     * @return void
+     */
+    protected function line($message)
+    {
+        return WP_CLI::line($message);
+    }
+
+    /**
+     * Display warning message prefixed with “Warning: “.
      *
      * @return void
      */
@@ -57,14 +91,33 @@ abstract class Command implements WpCliCommand
         return WP_CLI::warning($message);
     }
 
+    /**
+     * Display error message prefixed with “Error: “, and exits script.
+     *
+     * @return void
+     */
+    protected function error($message)
+    {
+        return WP_CLI::error($message);
+    }
 
     /**
-     * Output a success message to the console.
+     * Display success message prefixed with “Success: “.
      *
      * @return void
      */
     protected function success($message)
     {
         return WP_CLI::success($message);
+    }
+
+    /**
+     * Display debug message prefixed with “Debug: ” when --debug argument is supplied.
+     *
+     * @return void
+     */
+    protected function debug($message)
+    {
+        return WP_CLI::debug($message);
     }
 }

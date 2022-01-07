@@ -4,5 +4,5 @@ namespace OP\Framework\Contracts;
 
 interface WpCliCommand
 {
-    public function execute();
+    public function execute(array $args);
 }
