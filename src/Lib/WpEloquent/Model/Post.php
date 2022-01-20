@@ -92,7 +92,6 @@ class Post extends Model implements WpEloquentPost
         'updated_at',
         'excerpt',
         'status',
-        'image',
         'terms',
         'main_category',
         'keywords',
@@ -299,19 +298,6 @@ class Post extends Model implements WpEloquentPost
     public function getExcerptAttribute()
     {
         return $this->stripShortcodes($this->post_excerpt);
-    }
-
-    /**
-     * Gets the featured image if any
-     * Looks in meta the _thumbnail_id field.
-     *
-     * @return string
-     */
-    public function getImageAttribute()
-    {
-        if ($this->thumbnail and $this->thumbnail->attachment) {
-            return $this->thumbnail->attachment->guid;
-        }
     }
 
     /**
