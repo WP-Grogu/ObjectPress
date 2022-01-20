@@ -7,7 +7,7 @@ use OP\Core\Patterns\SingletonPattern;
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.5
+ * @version  2.0
  * @access   public
  * @since    1.0.1
  */
@@ -164,16 +164,14 @@ final class Config
             return false;
         }
 
-        if (!isset(static::$confs[$domain]) || empty(static::$confs[$domain])) {
-            static::$confs[$domain] = [];
-            foreach ($paths_real as $full_path) {
-                static::$confs[$domain][] = include $full_path;
-            }
-        }
-
+        $all    = [];
         $result = [];
 
-        foreach (static::$confs[$domain] as $conf_array) {
+        foreach ($paths_real as $full_path) {
+            $all[] = include $full_path;
+        }
+
+        foreach ($all as $conf_array) {
             foreach ($conf_array as $key => $val) {
                 if (!array_key_exists($key, $result)) {
                     $result[$key] = $val;
