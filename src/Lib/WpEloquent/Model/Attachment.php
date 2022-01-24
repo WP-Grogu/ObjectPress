@@ -80,8 +80,10 @@ class Attachment extends Post
     /**
      * Get the attachment URL
      */
-    public function getAttachmentUrl(): string
+    public function getAttachmentUrl($size = ''): string
     {
-        return wp_get_attachment_url($this->id) ?: '';
+        return (
+            !empty($size) ? wp_get_attachment_image_url($this->id, $size) : wp_get_attachment_url($this->id)
+        ) ?: '';
     }
 }
