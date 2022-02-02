@@ -2,348 +2,69 @@
 
 namespace OP\Framework\Helpers;
 
+use OP\Support\Facades\ObjectPress;
+use OP\Framework\Contracts\LanguageDriver;
+
 /**
  * @package  ObjectPress
  * @author   tgeorgel
- * @version  1.0.5
+ * @version  2.0
  * @access   public
  * @since    1.0.0
  */
 class LanguageHelper
 {
     /**
-     * Return the current language
+     * Get the language driver.
      *
-     * @return string
-     * @deprecated since version 1.0.4
+     * @return LanguageDriver|null
      */
-    public static function currentLang()
+    protected function getDriver()
     {
-        return static::getCurrentLang();
+        $app = ObjectPress::app();
+
+        # No supported lang plugin detected
+        if (!$app->bound(LanguageDriver::class)) {
+            return null;
+        }
+
+        return $app->make(LanguageDriver::class);
     }
 
 
     /**
-     * Return the current language
+     * Handle dynamic, static calls to the object.
      *
-     * @return string
-     * @since 1.0.4
+     * @param  string  $method
+     * @param  array   $args
+     * @return mixed
      */
-    public static function getCurrentLang()
+    public static function __callStatic($method, $args)
     {
-        // PolyLang
-        if (function_exists('pll_current_language')) {
-            return pll_current_language('slug');
+        $driver = (new LanguageHelper)->getDriver();
+
+        if (!$driver) {
+            return null;
         }
 
+        switch (count($args)) {
+            case 0:
+                return $driver->$method();
 
-        // WPML
-        if (defined('ICL_LANGUAGE_CODE')) {
-            return ICL_LANGUAGE_CODE;
+            case 1:
+                return $driver->$method($args[0]);
+
+            case 2:
+                return $driver->$method($args[0], $args[1]);
+
+            case 3:
+                return $driver->$method($args[0], $args[1], $args[2]);
+
+            case 4:
+                return $driver->$method($args[0], $args[1], $args[2], $args[3]);
+
+            default:
+                return call_user_func_array([$driver, $method], $args);
         }
-    }
-
-
-    /**
-     * Return the current language
-     *
-     * @param string $lang the desired language slug.
-     *
-     * @return bool
-     * @since 1.0.4
-     */
-    public static function setCurrentLang(string $lang)
-    {
-        // PolyLang
-        if (function_exists('PLL')) {
-            PLL()->curlang = PLL()->model->get_language($lang);
-            return true;
-        }
-
-        // WPML
-        if (defined('ICL_LANGUAGE_CODE')) {
-            do_action('wpml_switch_language', $lang);
-            return true;
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Get available languages on this app.
-     *
-     * @return array
-     * @since 1.0.4
-     */
-    public static function getLanguages()
-    {
-        return static::getAvailableLanguages();
-    }
-
-
-    /**
-     * Get available languages on this app.
-     *
-     * @return array
-     * @since 1.0.4
-     */
-    public static function getAvailableLanguages()
-    {
-        // Polylang
-        if (function_exists('pll_default_language')) {
-            global $polylang;
-            return $polylang->model->get_languages_list();
-        }
-
-        // WPML
-        if (defined('icl_get_languages')) {
-            return icl_get_languages();
-        }
-    }
-
-
-    /**
-     * Return the primary language
-     *
-     * @return string|null
-     */
-    public static function primaryLang()
-    {
-        return static::getPrimaryLang();
-    }
-
-
-    /**
-     * Return the primary language
-     *
-     * @return string|null
-     */
-    public static function getPrimaryLang()
-    {
-        // PolyLang
-        if (function_exists('pll_default_language')) {
-            return (string) pll_default_language('slug');
-        }
-
-
-        // WPML
-        if (function_exists('wpml_get_language_information')) {
-            $wpml_options = get_option('icl_sitepress_settings');
-            return (string) $wpml_options['default_language'] ?: '';
-        }
-    }
-
-
-    /**
-     * Get a post language
-     *
-     * @param int    $id
-     * @param string $lang
-     *
-     * @return string|void
-     * @since 0.1
-     */
-    public static function getPostLang(int $id)
-    {
-        // PolyLang
-        if (function_exists('pll_get_post_language')) {
-            return (string) pll_get_post_language($id, 'slug');
-        }
-
-
-        // WPML
-        if (function_exists('wpml_get_language_information')) {
-            $infos = wpml_get_language_information(null, $id);
-            if (is_array($infos) && array_key_exists('language_code', $infos)) {
-                return $infos['language_code'];
-            }
-            return '';
-        }
-    }
-
-
-    /**
-     * Set a post language
-     *
-     * @param int    $id
-     * @param string $lang
-     *
-     * @return void
-     * @since 0.1
-     */
-    public static function setPostLang(int $id, string $lang)
-    {
-        // PolyLang
-        if (function_exists('pll_set_post_language')) {
-            pll_set_post_language($id, $lang);
-            return true;
-        }
-
-        // WPML
-        if (function_exists('wpml_get_language_information')) {
-            $infos = wpml_get_language_information(null, $id);
-            if (is_array($infos) && array_key_exists('language_code', $infos)) {
-                $infos['language_code'] = $lang;
-                do_action('wpml_set_element_language_details', $infos);
-            }
-            return true;
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Synchronize 2 posts as translation of each other
-     *
-     * @param array $assoc Post association, as ['fr' => $post_id, 'en' => $post_id]
-     *
-     * @return void
-     * @since 0.1
-     */
-    public static function syncPosts(array $assoc): void
-    {
-        // PolyLang
-        if (function_exists('pll_save_post_translations')) {
-            pll_save_post_translations($assoc);
-        }
-    }
-
-
-    /**
-     * Get post in desired $lang
-     *
-     * @param string $post Post
-     * @param string $lang Language slug to get
-     *
-     * @return int
-     */
-    public static function getPostIn($post, string $lang)
-    {
-        $post = PostHelper::getPostFromUndefined($post);
-
-        if (!$post) {
-            return false;
-        }
-
-        // PolyLang
-        if (function_exists('pll_get_post')) {
-            return pll_get_post($post->ID, $lang);
-        }
-
-        // WPML
-        if (array_key_exists('wpml_object_id', $GLOBALS['wp_filter'])) {
-            return apply_filters('wpml_object_id', $post->ID, $post->post_type, false, $lang);
-        }
-    }
-
-
-    /**
-     * Get Taxonomy Term in desired $lang
-     *
-     * @param string $lang Language slug to get the term in
-     * @param int    $t_id The term id
-     *
-     * @return int
-     */
-    public static function getTermIn(string $lang, string $t_id): int
-    {
-        // PolyLang
-        if (function_exists('pll_get_term')) {
-            return pll_get_term($t_id, $lang);
-        }
-    }
-
-
-    /**
-     * Get a i18n translated string in desired lang
-     *
-     * @param
-     * @return string
-     */
-    public static function getStringIn(string $string, string $domain, string $lang)
-    {
-        // WPML
-        if (function_exists('wpml_get_language_information')) {
-            $base_lang = static::getCurrentLang();
-            $string = __($string, $domain);
-
-            if ($lang !== $base_lang) {
-                do_action('wpml_switch_language', $lang);
-                $string = __($string, $domain);
-                do_action('wpml_switch_language', $base_lang);
-            }
-
-            return $string;
-        }
-    }
-
-
-    /**
-     * Get the post permalink in desired language.
-     *
-     * @param $post
-     * @return string|null
-     */
-    public static function getPostPermalinkIn($post, ?string $lang)
-    {
-        if (!$lang) {
-            return get_permalink($post);
-        }
-        
-        $permalink = false;
-
-        // WPML
-        if (function_exists('wpml_get_language_information')) {
-            $base_lang = static::getCurrentLang();
-
-            if ($lang !== $base_lang) {
-                do_action('wpml_switch_language', $lang);
-                $permalink = get_permalink($post);
-                do_action('wpml_switch_language', $base_lang);
-            } else {
-                $permalink = get_permalink($post);
-            }
-        }
-        
-        return $permalink;
-    }
-
-
-    /**
-     * Get all front page ids (in all translations)
-     *
-     * @return array
-     */
-    public static function getFrontPageIds()
-    {
-        $front_id = absint(get_option('page_on_front', 0));
-
-        if (!$front_id) {
-            return [];
-        }
-
-        return static::getPostTranslations($front_id);
-    }
-
-
-    /**
-     * Get all translation ids of a post given it's id/WP_Post/post.
-     *
-     * @param mixed The post ID / WP_Post
-     *
-     * @return array of ints (post ids)
-     */
-    public static function getPostTranslations($post)
-    {
-        $langs = static::getAvailableLanguages();
-        $posts = [];
-
-        foreach ($langs as $lang) {
-            $posts[] = static::getPostIn($post, $lang->slug);
-        }
-
-        return $posts;
     }
 }

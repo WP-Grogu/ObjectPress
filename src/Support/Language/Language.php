@@ -17,17 +17,16 @@ use OP\Framework\Contracts\LanguageDriver;
 class Language
 {
     /**
-     * The instance
+     * The singleton instance.
      *
-     * @var Language
+     * @var static
      */
     private static $_instance;
-
 
     /**
      * The language driver.
      *
-     * @var
+     * @var LanguageDriver
      */
     protected LanguageDriver $driver;
     
