@@ -43,7 +43,7 @@ class TranslatorFactory
      *
      * @return string
      */
-    protected function getLocale(): string
+    protected function getLocale()
     {
         if (!ObjectPress::app()->bound(LanguageDriver::class)) {
             return explode('_', get_locale())[0] ?? 'en';
