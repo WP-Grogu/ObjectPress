@@ -532,6 +532,9 @@ class Post extends Model implements WpEloquentPost
      */
     public function getThumbnailIdAttribute(): ?int
     {
+        if (!$this->thumbnail_meta) {
+            return 0;
+        }
         return ((int) $this->thumbnail_meta->meta_value) ?: 0;
     }
     
