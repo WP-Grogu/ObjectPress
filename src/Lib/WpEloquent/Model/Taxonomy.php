@@ -2,11 +2,13 @@
 
 namespace OP\Lib\WpEloquent\Model;
 
+use OP\Support\Facades\Config;
 use OP\Lib\WpEloquent\Model;
 use OP\Lib\WpEloquent\Connection;
 use OP\Lib\WpEloquent\Concerns\Aliases;
 use OP\Lib\WpEloquent\Model\Meta\TermMeta;
 use OP\Lib\WpEloquent\Model\Builder\TaxonomyBuilder;
+use OP\Lib\WpEloquent\Model\Scopes\CurrentLangScope;
 
 /**
  * Class Taxonomy
@@ -88,6 +90,18 @@ class Taxonomy extends Model
             'term_taxonomy_id',
             'object_id'
         );
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        if (Config::getFirstBool('object-press.database.global_scope_language')) {
+            static::addGlobalScope(new CurrentLangScope);
+        }
     }
 
     /**

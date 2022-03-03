@@ -513,20 +513,20 @@ class Post extends Model implements WpEloquentPost
 
 
     /**
-     * Get the thumbnail id
+     * Get the thumbnail model.
      *
-     * @return int|null
+     * @return Attachement|null
      */
     public function getThumbnailAttribute()
     {
-        return Attachment::find(
-            $this->getThumbnailIdAttribute()
-        );
+        return $this->thumbnail_id
+                    ? Attachment::withoutGlobalScopes()->find($this->thumbnail_id)
+                    : null;
     }
 
 
     /**
-     * Get the thumbnail id
+     * Get the thumbnail id.
      *
      * @return int|null
      */
