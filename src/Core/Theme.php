@@ -255,4 +255,62 @@ final class Theme
 
         return $this;
     }
+
+
+    /**
+     * Add a new admin column to the desired post type.
+     *
+     * @param string    $title      Column title.
+     * @param string    $post_type  The related post type.
+     * @param callable  $callback   The callback function used to fill the column. Takes post_id as parameter.
+     * @param string    $key        Optional column key to use instead of auto-generated from title.
+     * @param string    $position   Optional position of the column. May be "start", "end" or "after.column_key".
+     *
+     * @return void
+     */
+    public function addAdminColumn(string $title, string $post_type, callable $callback, $key = null, string $position = 'end')
+    {
+        $key          = $key ?: sanitize_title($title);
+        $insert_after = '';
+
+        if (strpos($position, 'after.') === 0) {
+            $method = 'splice';
+            $insert_after  = explode('.', $position)[1] ?? '';
+        } else {
+            $method = in_array($position, ['start', 'end']) ? $position : 'end';
+        }
+
+        # Add $column to $post_type columns list.
+        $this->addFilter('manage_' . $post_type . '_posts_columns', function ($columns) use ($title, $key, $method, $insert_after) {
+            # manage start/end
+            switch ($method) {
+                case 'start':
+                    return collect($columns)->prepend($title, $key)->toArray();
+                case 'end':
+                    return collect($columns)->put($key, $title)->toArray();
+            }
+
+            # manage after
+            $values = [];
+
+            foreach ($columns as $col_key => $col_title) {
+                $values[$col_key] = $col_title;
+
+                if (in_array($insert_after, [$col_key, $col_title]) && !array_key_exists($key, $values)) {
+                    $values[$key] = $title;
+                }
+            }
+
+            if (!array_key_exists($key, $values)) {
+                $values[$key] = $title;
+            }
+
+            return $values;
+        });
+
+        # Fill $column content on $post_type
+        $this->addAction('manage_' . $post_type . '_posts_custom_column', function ($column_key, $post_id) use ($key, $callback) {
+            return $column_key === $key ? $callback($post_id) : null;
+        }, 10, 2);
+    }
 }
