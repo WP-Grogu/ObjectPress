@@ -49,7 +49,7 @@ abstract class Model extends Eloquent
         if (!empty($this->table)) {
             $table = $this->table;
         } else {
-            $table = str_replace('\\', '', snake_case(str_plural(class_basename($this))));
+            $table = str_replace('\\', '', Str::snake(Str::plural(class_basename($this))));
         }
 
         $prefix = $this->getConnection()->db->prefix;
