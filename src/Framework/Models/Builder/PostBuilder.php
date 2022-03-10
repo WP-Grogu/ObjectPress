@@ -1,22 +1,21 @@
 <?php
 
-namespace OP\Lib\WpEloquent\Model\Builder;
+namespace OP\Framework\Models\Builder;
 
-use Carbon\Carbon;
+use OP\Lib\WpEloquent\Model\Builder\PostBuilder as BasePostBuilder;
 use OP\Lib\WpEloquent\Connection;
 use OP\Support\Facades\ObjectPress;
 use OP\Framework\Contracts\LanguageDriver;
-use OP\Lib\WpEloquent\Model\Scopes\CurrentLangScope;
-use OP\Support\Language\Drivers\PolylangDriver;
-use OP\Support\Language\Drivers\WPMLDriver;
 
 /**
- * Class PostBuilder
- *
- * @package Corcel\Model\Builder
- * @author Junior Grossi <juniorgro@gmail.com>
+ * The post model query builder.
+ * 
+ * @package  ObjectPress
+ * @author   tgeorgel <thomas@hydrat.agency>
+ * @access   public
+ * @since    2.1
  */
-class PostBuilder extends Builder
+class PostBuilder extends BasePostBuilder
 {
     /**
      * Filter query by language.
@@ -55,37 +54,13 @@ class PostBuilder extends Builder
     
                 $query->select($db->raw(1))
                       ->from($table)
-                      ->whereRaw("{$table}.element_id = {$prefix}posts.ID")
-                      ->whereRaw("{$table}.element_type LIKE 'post_%'")
+                      ->whereRaw("{$table}.element_id = {$prefix}term_taxonomy.term_id")
+                      ->whereRaw("{$table}.element_type LIKE 'tax_%'")
                       ->whereRaw("{$table}.language_code = '{$lang}'");
             });
         }
         
         # Polylang Support
-        if (is_a($driver, PolylangDriver::class)) {
-            // return $this->whereExists(function ($query) use ($db, $prefix, $lang) {
-            //     $table = $prefix . 'term_taxonomy';
-    
-            //     $query->select($db->raw(1))
-            //           ->from($table)
-            //           ->where('taxonomy', 'post_translations')
-            //           ->whereRaw("description regexp CONCAT('\"{$lang}\";i:', {$prefix}posts.ID, ';')");
-            // });
-
-            # TMP / TODO : see why " char get replaced by ` char
-            return $this->whereIn('ID', $driver->postsInLang($lang));
-        }
-    }
-
-
-    /**
-     * Query without filtering by the current language.
-     * Please note that this function only remove the related global scope.
-     *
-     * @return PostBuilder
-     */
-    public function allLangs()
-    {
-        return $this->withoutGlobalScope(CurrentLangScope::class);
+        // TODO
     }
 }

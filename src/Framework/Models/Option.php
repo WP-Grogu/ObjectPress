@@ -2,16 +2,16 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\User as UserModel;
+use OP\Lib\WpEloquent\Model\Option as OptionModel;
 
 /**
- * The user model.
+ * The option model.
  * 
  * @package  ObjectPress
  * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public
  * @since    2.1
  */
-class User extends UserModel
+class Option extends OptionModel
 {
 }

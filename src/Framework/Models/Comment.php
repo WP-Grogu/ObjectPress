@@ -2,16 +2,16 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\User as UserModel;
+use OP\Lib\WpEloquent\Model\Comment as CommentModel;
 
 /**
- * The user model.
+ * The comment model.
  * 
  * @package  ObjectPress
  * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public
  * @since    2.1
  */
-class User extends UserModel
+class Comment extends CommentModel
 {
 }

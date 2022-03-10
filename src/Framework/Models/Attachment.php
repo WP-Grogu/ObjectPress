@@ -2,16 +2,16 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\User as UserModel;
+use OP\Lib\WpEloquent\Model\Attachment as AttachmentModel;
 
 /**
- * The user model.
+ * The attachement model.
  * 
  * @package  ObjectPress
  * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public
  * @since    2.1
  */
-class User extends UserModel
+class Attachment extends AttachmentModel
 {
 }

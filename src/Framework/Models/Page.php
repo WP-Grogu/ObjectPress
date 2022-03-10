@@ -3,76 +3,56 @@
 namespace OP\Framework\Models;
 
 use OP\Framework\Helpers\PostHelper;
+use Illuminate\Database\Eloquent\Builder;
+use OP\Framework\Models\Builder\PostBuilder;
+use OP\Lib\WpEloquent\Model\Page as PageModel;
 
 /**
+ * The page model.
+ * 
  * @package  ObjectPress
- * @author   tgeorgel
- * @version  1.0.5
+ * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public
- * @since    1.0.3
+ * @since    2.1
  */
-class Page extends Post
+class Page extends PageModel
 {
     /**
-     * Wordpress post_type associated to the current model
+     * Filter page which has template. If $template is provided, check filter pages with this template.
+     * 
+     * @param Builder $query
+     * @param string|array $template
+     * @param string $operator (=, !=, in, not in..)
+     * @return Builder
      */
-    public static $post_type = 'page';
+    public function scopeHasTemplate(Builder $query, $template = null, string $operator = '=')
+    {
+        if ($template !== null) {
+            $template = PostHelper::getFullTemplatePath($template); # build full template path from shotname
+        }
 
-
+        return parent::scopeHasTemplate($query, $template, $operator);
+    }
+    
+    
     /**
-     * Return page's associated template slug
-     *
-     * @param bool $full_path Should retreive full template filepath or slug only
+     * Get the page template.
      *
      * @return string
      */
-    public function getTemplate($full_path = false)
+    public function getTemplateAttribute(): string
     {
-        $func = $full_path ? 'get_page_template' : 'get_page_template_slug';
+        $tmpl = parent::getTemplateAttribute();
 
-        return $func($this->id);
+        return $tmpl ? PostHelper::getShortTemplateName($tmpl) : '';
     }
 
-
     /**
-     * ⚠️ deprecated, please use whereTemplate() instead.
-     *
-     * Find page(s) with specified template.
-     * Template name can be full (eg: 'template-example.php') or simplified (eg: 'example').
-     *
-     * @param string $template  The template name.
-     * @param bool   $unique    If set to true, return only the first page found. Default to false.
-     *
-     * @return array
-     * @since 1.0.4
-     * @deprecated 1.0.5
+     * @param \Illuminate\Database\Query\Builder $query
+     * @return PostBuilder
      */
-    public static function getByTemplate(string $template, bool $unique = false)
+    public function newEloquentBuilder($query)
     {
-        return static::whereTemplate($template, $unique);
-    }
-
-
-    /**
-     * Find page(s) with specified template.
-     * Template name can be full (eg: 'template-home.php') or simplified (eg: 'home').
-     *
-     * ℹ️ You can change your theme templates filenames structure in config, cf. `object-press.wp.template-files-structure`
-     *
-     * @param string $template  The template name.
-     * @param bool   $unique    If set to true, only return the first page found. Default: false.
-     *
-     * @return Page|array|null If $unique set to false, return a collection of pages
-     * @since 1.0.5
-     */
-    public static function whereTemplate(string $template, bool $unique = false)
-    {
-        $wp_pages = PostHelper::getTemplatePages($template, $unique ? 1 : 0);
-
-        if (empty($wp_pages)) {
-            return $unique ? null : [];
-        }
-
-        return $unique ? static::find($wp_pages[0]) : static::collection($wp_pages);
+        return new PostBuilder($query);
     }
 }
