@@ -10,7 +10,7 @@ use OP\Support\Facades\Config;
  * @package  ObjectPress
  * @author   AmphiBee / tgeorgel
  * @access   public
- * @version  2.0
+ * @version  2.1
  * @since    2.0
  */
 class HookProvider
@@ -21,10 +21,9 @@ class HookProvider
      * @var array
      */
     protected $default = [
-        'hook'     => 'init',
+        'hook'     => ['init'],
         'priority' => 12,
     ];
-
 
     /**
      * The booting method.
@@ -41,10 +40,16 @@ class HookProvider
                 $instance   = $reflection->newInstanceWithoutConstructor();
                 $args       = array_merge($this->default, get_class_vars(get_class($instance)));
 
-                if ($type === 'filter') {
-                    Filter::add($args['hook'], $class, $args['priority']);
-                } else {
-                    Action::add($args['hook'], $class, $args['priority']);
+                if (!is_array($args['hook'])) {
+                    $args['hook'] = [$args['hook']];
+                }
+
+                foreach ($args['hook'] as $hook) {
+                    if ($type === 'filter') {
+                        Filter::add($hook, $class, $args['priority']);
+                    } else {
+                        Action::add($hook, $class, $args['priority']);
+                    }
                 }
             }
         }
