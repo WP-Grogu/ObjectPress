@@ -111,9 +111,7 @@ class Connection implements ConnectionInterface
     {
         $processor = $this->getPostProcessor();
 
-        if (strpos($table, $this->db->prefix) !== 0) {
-            $table = $this->db->prefix . $table;
-        }
+        $table = $this->prefixTable($table);
 
         $query = new Builder($this, $this->getQueryGrammar(), $processor);
 
@@ -186,7 +184,6 @@ class Connection implements ConnectionInterface
         $result = $this->db->get_results($query);
 
         if ($result === false || $this->db->last_error) {
-            dd($query);
             throw new QueryException($query, $bindings, new \Exception($this->db->last_error));
         }
 
@@ -764,5 +761,20 @@ class Connection implements ConnectionInterface
     public function getDatabaseName()
     {
         return defined('DB_NAME') ? DB_NAME : '';
+    }
+
+    /**
+     * Make sur that the gven table name has prefix, and return it.
+     *
+     * @param string $table_name
+     * @return string
+     */
+    public function prefixTable($table_name)
+    {
+        if (strpos($table_name, $this->db->prefix) !== 0) {
+            $table_name = $this->db->prefix . $table_name;
+        }
+        
+        return $table_name;
     }
 }
