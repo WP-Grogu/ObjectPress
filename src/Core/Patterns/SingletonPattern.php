@@ -31,11 +31,4 @@ trait SingletonPattern
     private function __clone()
     {
     }
-
-    /**
-     * prevent from being unserialized (which would create a second instance of it)
-     */
-    private function __wakeup()
-    {
-    }
 }
