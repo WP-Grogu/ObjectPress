@@ -93,7 +93,7 @@ return [
 
         'blade' => [
             'inputs' => [
-                get_template_directory() . '/resources/views',
+                get_stylesheet_directory() . '/resources/views',
             ],
             'output' => wp_upload_dir()['basedir'] . '/cache/blade',
         ],
