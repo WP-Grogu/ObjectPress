@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace OP\Framework\Controllers;
 
 use OP\Lib\WpEloquent\Model\Post;
 use OP\Lib\WpEloquent\Model\Contract\WpEloquentPost;

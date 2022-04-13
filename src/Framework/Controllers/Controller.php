@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace OP\Framework\Controllers;
 
 use InvalidArgumentException;
 use OP\Support\Facades\Blade;
