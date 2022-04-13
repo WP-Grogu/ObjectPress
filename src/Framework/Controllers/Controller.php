@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Contracts\Renderable;
 use InvalidArgumentException;
 use OP\Support\Facades\Blade;
+use OP\Framework\Contracts\Renderable;
 
 abstract class Controller implements Renderable
 {

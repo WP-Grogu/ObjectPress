@@ -5,12 +5,15 @@
     "license": "WTFPL",
     "authors": [
         {
-            "name": "thomas",
-            "email": "thom.georgel@gmail.com"
+            "name": "Thomas GEORGEL",
+            "email": "thomas@hydrat.agency"
         }
     ],
     "minimum-stability": "stable",
     "autoload": {
+        "files": [
+            "src/helpers.php"
+        ],
         "psr-4": {
             "OP\\": "src/"
         }
