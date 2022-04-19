@@ -5,7 +5,7 @@ namespace OP\Framework\Models;
 use OP\Support\Facades\Config;
 use OP\Framework\Factories\ModelFactory;
 use OP\Framework\Models\Builder\PostBuilder;
-use OP\Lib\WpEloquent\Model\Post as PostModel;
+use AmphiBee\Eloquent\Model\Post as PostModel;
 use OP\Framework\Models\Scopes\CurrentLangScope;
 
 /**

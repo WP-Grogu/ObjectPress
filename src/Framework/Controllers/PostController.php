@@ -2,8 +2,8 @@
 
 namespace OP\Framework\Controllers;
 
-use OP\Lib\WpEloquent\Model\Post;
-use OP\Lib\WpEloquent\Model\Contract\WpEloquentPost;
+use AmphiBee\Eloquent\Model\Post;
+use AmphiBee\Eloquent\Model\Contract\WpEloquentPost;
 
 abstract class PostController extends Controller
 {

@@ -2,7 +2,7 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\Comment as CommentModel;
+use AmphiBee\Eloquent\Model\Comment as CommentModel;
 
 /**
  * The comment model.

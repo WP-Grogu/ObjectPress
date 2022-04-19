@@ -5,7 +5,7 @@ namespace OP\Framework\Models;
 use OP\Framework\Helpers\PostHelper;
 use Illuminate\Database\Eloquent\Builder;
 use OP\Framework\Models\Builder\PostBuilder;
-use OP\Lib\WpEloquent\Model\Page as PageModel;
+use AmphiBee\Eloquent\Model\Page as PageModel;
 
 /**
  * The page model.

@@ -2,7 +2,7 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\TermRelationship as TermRelationshipModel;
+use AmphiBee\Eloquent\Model\TermRelationship as TermRelationshipModel;
 
 /**
  * The term_taxonomy_relationship model.

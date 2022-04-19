@@ -2,7 +2,7 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\Term as TermModel;
+use AmphiBee\Eloquent\Model\Term as TermModel;
 
 /**
  * The term model.

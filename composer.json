@@ -9,7 +9,7 @@
             "email": "thomas@hydrat.agency"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "autoload": {
         "files": [
             "src/helpers.php"
@@ -48,9 +48,13 @@
         "illuminate/routing": "^7.0|^8.0",
         "illuminate/events": "^7.0|^8.0",
         "illuminate/pagination": "^7.0|^8.0",
-        "guzzlehttp/guzzle": "^7.3"
+        "guzzlehttp/guzzle": "^7.3",
+        "amphibee/wordpress-eloquent-models": "v1.2.x-dev"
     },
     "require-dev": {
         "symfony/var-dumper": "^5.2"
+    },
+    "suggest": {
+        "wp-grogu/acf-manager": "A powerfull Object-Orianted library to help you manage your ACF fields/groups, and also cast returned values in desired classes, such as Eloquent models."
     }
 }

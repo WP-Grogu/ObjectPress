@@ -8,7 +8,7 @@ use OP\Support\Facades\Config;
 use Illuminate\Support\Collection;
 use OP\Framework\Helpers\PostHelper;
 use OP\Framework\Exceptions\ClassNotFoundException;
-use OP\Lib\WpEloquent\Model\Contract\WpEloquentPost;
+use AmphiBee\Eloquent\Model\Contract\WpEloquentPost;
 
 /**
  * @package  ObjectPress
@@ -22,7 +22,7 @@ class ModelFactory
     /**
      * Resolve the class corresponding to the asked post type.
      * Read `setup.models` configuration, and then tries to guess from Camelized name.
-     * The class MUST implement OP\Lib\WpEloquent\Models\Contracts\WpEloquentPost interface.
+     * The class MUST implement AmphiBee\Eloquent\Models\Contracts\WpEloquentPost interface.
      *
      * @param string $post_type The subject post type
      *

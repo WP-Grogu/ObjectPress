@@ -2,11 +2,11 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\Attachment as AttachmentModel;
+use AmphiBee\Eloquent\Model\Attachment as AttachmentModel;
 
 /**
  * The attachement model.
- * 
+ *
  * @package  ObjectPress
  * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public

@@ -2,8 +2,8 @@
 
 namespace OP\Framework\Models\Builder;
 
-use OP\Lib\WpEloquent\Model\Builder\TaxonomyBuilder as BaseTaxonomyBuilder;
-use OP\Lib\WpEloquent\Connection;
+use AmphiBee\Eloquent\Model\Builder\TaxonomyBuilder as BaseTaxonomyBuilder;
+use AmphiBee\Eloquent\Connection;
 use OP\Support\Facades\ObjectPress;
 use OP\Framework\Contracts\LanguageDriver;
 

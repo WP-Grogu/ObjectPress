@@ -2,7 +2,7 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\MenuItem as MenuItemModel;
+use AmphiBee\Eloquent\Model\MenuItem as MenuItemModel;
 
 /**
  * The menu item model.

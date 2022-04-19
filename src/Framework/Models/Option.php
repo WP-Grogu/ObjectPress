@@ -2,7 +2,7 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\Option as OptionModel;
+use AmphiBee\Eloquent\Model\Option as OptionModel;
 
 /**
  * The option model.

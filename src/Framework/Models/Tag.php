@@ -2,7 +2,7 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\Tag as TagModel;
+use AmphiBee\Eloquent\Model\Tag as TagModel;
 
 /**
  * The tag model.

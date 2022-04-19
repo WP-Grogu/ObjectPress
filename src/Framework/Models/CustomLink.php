@@ -2,7 +2,7 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\CustomLink as CustomLinkModel;
+use AmphiBee\Eloquent\Model\CustomLink as CustomLinkModel;
 
 /**
  * The custom link model.

@@ -2,7 +2,7 @@
 
 namespace OP\Support\Language\Drivers;
 
-use OP\Lib\WpEloquent\Connection;
+use AmphiBee\Eloquent\Connection;
 use OP\Framework\Helpers\PostHelper;
 
 /**

@@ -2,14 +2,14 @@
 
 namespace OP\Framework\Models\Builder;
 
-use OP\Lib\WpEloquent\Model\Builder\PostBuilder as BasePostBuilder;
-use OP\Lib\WpEloquent\Connection;
+use AmphiBee\Eloquent\Model\Builder\PostBuilder as BasePostBuilder;
+use AmphiBee\Eloquent\Connection;
 use OP\Support\Facades\ObjectPress;
 use OP\Framework\Contracts\LanguageDriver;
 
 /**
  * The post model query builder.
- * 
+ *
  * @package  ObjectPress
  * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public

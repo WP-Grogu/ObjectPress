@@ -2,7 +2,7 @@
 
 namespace OP\Framework\Models;
 
-use OP\Lib\WpEloquent\Model\User as UserModel;
+use AmphiBee\Eloquent\Model\User as UserModel;
 
 /**
  * The user model.
