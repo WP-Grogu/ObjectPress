@@ -26,7 +26,7 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "tgeorgel/wp-eloquent": "^2.0",
+        "tgeorgel/wp-eloquent": "dev-master",
         "phpfastcache/phpfastcache": "^7.0",
         "symfony/finder": " ^5.1",
         "nesbot/carbon": "^2.45",
