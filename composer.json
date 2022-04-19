@@ -18,9 +18,15 @@
             "OP\\": "src/"
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/tgeorgel/wp-eloquent.git"
+        }
+    ],
     "require": {
-        "php": "^7.2|^8.0",
-        "as247/wp-eloquent": "^1.0",
+        "php": "^7.4|^8.0",
+        "tgeorgel/wp-eloquent": "^1.0",
         "phpfastcache/phpfastcache": "^7.0",
         "symfony/finder": " ^5.1",
         "nesbot/carbon": "^2.45",
