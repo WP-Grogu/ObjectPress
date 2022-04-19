@@ -4,12 +4,13 @@ namespace OP\Framework\Models;
 
 use OP\Framework\Helpers\PostHelper;
 use Illuminate\Database\Eloquent\Builder;
+use AmphiBee\Eloquent\Model\Contract\WpEloquentPost;
 use OP\Framework\Models\Builder\PostBuilder;
 use AmphiBee\Eloquent\Model\Page as PageModel;
 
 /**
  * The page model.
- * 
+ *
  * @package  ObjectPress
  * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public
@@ -19,7 +20,7 @@ class Page extends PageModel
 {
     /**
      * Filter page which has template. If $template is provided, check filter pages with this template.
-     * 
+     *
      * @param Builder $query
      * @param string|array $template
      * @param string $operator (=, !=, in, not in..)

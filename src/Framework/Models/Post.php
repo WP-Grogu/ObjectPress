@@ -10,7 +10,7 @@ use OP\Framework\Models\Scopes\CurrentLangScope;
 
 /**
  * The post model.
- * 
+ *
  * @package  ObjectPress
  * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public

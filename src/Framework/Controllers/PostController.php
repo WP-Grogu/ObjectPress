@@ -2,7 +2,7 @@
 
 namespace OP\Framework\Controllers;
 
-use AmphiBee\Eloquent\Model\Post;
+use OP\Framework\Models\Post;
 use AmphiBee\Eloquent\Model\Contract\WpEloquentPost;
 
 abstract class PostController extends Controller
