@@ -50,7 +50,6 @@ class ViewServiceProvider extends ServiceProvider
     public function attachComposers($view)
     {
         $composers = Config::get('setup.view.composers');
-        $namespace = Config::get('object-press.theme.psr-prefix');
         $paths     = Config::get('object-press.view.paths.composers');
         
         if (is_array($composers) && Arr::isAssoc($composers)) {
@@ -65,13 +64,14 @@ class ViewServiceProvider extends ServiceProvider
             }
             
             foreach ((new Finder())->in($path)->files() as $composer) {
-                $composer = $namespace . str_replace(
+                $composer = ucfirst(str_replace(
                     ['/', '.php'],
                     ['\\', ''],
-                    $namespace . DIRECTORY_SEPARATOR . Str::after($composer->getPathname(), DIRECTORY_SEPARATOR . $namespace . DIRECTORY_SEPARATOR)
-                );
-    
+                    Str::after($composer->getPathname(), get_stylesheet_directory() . DIRECTORY_SEPARATOR)
+                ));
+
                 if (
+                    class_exists($composer) &&
                     is_subclass_of($composer, Composer::class) &&
                     ! (new ReflectionClass($composer))->isAbstract()
                 ) {

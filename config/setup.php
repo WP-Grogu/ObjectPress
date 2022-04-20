@@ -112,7 +112,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Define here your view configurations.
-    | Please note that composers placed in the app/View/Composer/**
+    | Please note that composers placed in the theme_root/app/View/Composer/**
     | directory are automatically loaded.
     |
     */
