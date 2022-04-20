@@ -2,9 +2,17 @@
 
 namespace OP\Core;
 
-use Illuminate\Container\Container as IlluminateContainer;
-use Symfony\Component\HttpFoundation\Request;
+use Illuminate\View\Factory;
+use OP\Support\Facades\Config;
+use Illuminate\Events\Dispatcher;
+use Illuminate\View\FileViewFinder;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Facade;
+use Illuminate\View\Engines\CompilerEngine;
+use Illuminate\View\Engines\EngineResolver;
+use Illuminate\View\Compilers\BladeCompiler;
+use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Container\Container as IlluminateContainer;
 
 /**
  * @package  ObjectPress
@@ -26,7 +34,7 @@ class Container
     /**
      * The Container instance
      *
-     * @var Illuminate\Container\Container
+     * @var \Illuminate\Container\Container
      */
     private IlluminateContainer $container;
 
@@ -47,27 +55,84 @@ class Container
      */
     private function __construct()
     {
-        $app = new IlluminateContainer;
+        $container = new IlluminateContainer;
 
         // Tell facade about the application instance.
-        // Facade::setFacadeApplication($app);
-
-        // Register application instance with container
-        $app['app'] = $app;
-
-        // Set environment.
-        $app['env'] = defined('WP_ENV') ? WP_ENV : 'production';
+        Facade::setFacadeApplication($container);
 
         // Enable HTTP Method Override.
         Request::enableHttpMethodParameterOverride();
 
+        // Register application instance with container
+        $container['app'] = $container;
+
+        // Set environment.
+        $container['env'] = defined('WP_ENV') ? WP_ENV : 'production';
+
         // Create the request.
-        $app['request'] = Request::createFromGlobals();
+        $container['request'] = Request::createFromGlobals();
 
-        // Link request instance.
-        $app->instance(Request::class, $app['request']);
+        // Link instances.
+        $container->instance(\Symfony\Component\HttpFoundation\Request::class, $container['request']);
+        $container->instance(\Illuminate\Contracts\Foundation\Application::class, $container);
 
-        $this->container = $app;
+        $this->container = $container;
+        
+        $this->bootstrapBlade();
+    }
+
+    /**
+     * Bootstrap the blade engine compiler.
+     *
+     * @return void
+     */
+    private function bootstrapBlade()
+    {
+        $inputs = collect(Config::get('object-press.template.blade.inputs'));
+        $output = collect(Config::get('object-press.template.blade.output'));
+
+        $inputs = $inputs->filter()->unique()->toArray();
+        $output = $output->filter()->unique()->first();
+
+        if (!is_dir($output)) {
+            mkdir($output, 0770, true);
+        }
+
+        // Dependencies
+        $filesystem = new Filesystem;
+        $eventDispatcher = new Dispatcher($this->container);
+
+        // Create View Factory capable of rendering PHP and Blade templates
+        $viewResolver = new EngineResolver;
+        $bladeCompiler = new BladeCompiler($filesystem, $output);
+
+        $viewResolver->register('blade', fn () => new CompilerEngine($bladeCompiler));
+
+        $viewFinder = new FileViewFinder($filesystem, $inputs);
+        $viewFactory = new Factory($viewResolver, $viewFinder, $eventDispatcher);
+        $viewFactory->setContainer($this->container);
+
+        $this->container->instance(\Illuminate\Contracts\View\Factory::class, $viewFactory);
+        $this->container->alias(
+            \Illuminate\Contracts\View\Factory::class,
+            (new class extends \Illuminate\Support\Facades\View {
+                public static function getFacadeAccessor()
+                {
+                    return parent::getFacadeAccessor();
+                }
+            })::getFacadeAccessor()
+        );
+
+        $this->container->instance(\Illuminate\View\Compilers\BladeCompiler::class, $bladeCompiler);
+        $this->container->alias(
+            \Illuminate\View\Compilers\BladeCompiler::class,
+            (new class extends \Illuminate\Support\Facades\Blade {
+                public static function getFacadeAccessor()
+                {
+                    return parent::getFacadeAccessor();
+                }
+            })::getFacadeAccessor()
+        );
     }
 
     /**

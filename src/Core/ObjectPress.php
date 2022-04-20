@@ -46,7 +46,6 @@ final class ObjectPress
 
         $this->asset_path = realpath(__DIR__ . '/../../assets');
 
-        $this->includeHelpers();
         $this->setupConstants();
     }
 
@@ -141,29 +140,6 @@ final class ObjectPress
 
 
     /**
-     * Include helpers functions
-     *
-     * @return void
-     */
-    private function includeHelpers()
-    {
-        $rel_paths = [
-            '/../Support/helpers.php',
-        ];
-
-        foreach ($rel_paths as $rel_path) {
-            $path = realpath(__DIR__ . $rel_path);
-
-            if (!$path) {
-                throw new \Exception("OP : includeHelpers : Missing core helpers files.");
-            }
-
-            require_once $path;
-        }
-    }
-
-
-    /**
      * Given an array of classes, will try to init them uning bootup method
      *
      * @param array $classes Array of classes to initiate
@@ -247,5 +223,15 @@ final class ObjectPress
     {
         $this->app = $container;
         return $this;
+    }
+
+    /**
+     * Get a new view factory.
+     *
+     * @return \Illuminate\View\Factory
+     */
+    public function view()
+    {
+        return $this->app->make(\Illuminate\Contracts\View\Factory::class);
     }
 }
