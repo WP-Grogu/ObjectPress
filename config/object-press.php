@@ -82,20 +82,24 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Templating engines options
+    | View configurations
     |--------------------------------------------------------------------------
     |
-    | Manage here your templating engine options.
-    | ObjectPress support the Laravel Blade engine out of the box.
+    | Manage here the view paths and options for the blade compiler engine.
     |
     */
-    'template' => [
+    'view' => [
 
-        'blade' => [
+        'paths' => [
             'inputs' => [
                 get_stylesheet_directory() . '/resources/views',
             ],
+            
             'output' => wp_upload_dir()['basedir'] . '/cache/blade',
+
+            'composers' => [
+                get_stylesheet_directory() . '/app/View/Composers'
+            ],
         ],
 
     ],

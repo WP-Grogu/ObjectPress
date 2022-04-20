@@ -6,6 +6,8 @@ use OP\Support\Facades\Theme;
 use OP\Providers\HookProvider;
 use OP\Support\Facades\Config;
 use Phpfastcache\CacheManager;
+use Illuminate\Support\Collection;
+use OP\Providers\ViewServiceProvider;
 use OP\Core\Patterns\SingletonPattern;
 use OP\Providers\AppSetupServiceProvider;
 use OP\Providers\LanguageServiceProvider;
@@ -119,27 +121,26 @@ final class ObjectPress
         // TODO: HookIgnition
         (new HookProvider)->boot();
 
-        // Register services.
-        with(new AppSetupServiceProvider($this->app))->register();
-        with(new LanguageServiceProvider($this->app))->register();
-        with(new TranslatorServiceProvider($this->app))->register();
+        // Register service providers.
+        $this->app->register(AppSetupServiceProvider::class);
+        $this->app->register(ViewServiceProvider::class);
+        $this->app->register(LanguageServiceProvider::class);
+        $this->app->register(TranslatorServiceProvider::class);
+
         // with(new EventServiceProvider($this->app))->register();
         // with(new RoutingServiceProvider($this->app))->register();
-
-        // new Router;
 
         // Theme::on('plugins_loaded', function () {
         //     (new LanguageServiceProvider)->register();
         // });
 
-        $providers = collect(Config::get('setup.providers'));
-
-        /**
-         * Register service providers
-         */
-        $providers->filter()->unique()->each(
-            fn ($provider) => with(new $provider($this->app))->register()
-        );
+        # Register user's service providers
+        Collection::make(Config::get('setup.providers'))
+                ->filter()
+                ->unique()
+                ->each(
+                    fn ($provider) => $this->app->register($provider)
+                );
 
         // Setup cache system
         $this->bootCache();

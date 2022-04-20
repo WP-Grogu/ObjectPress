@@ -104,6 +104,23 @@ return [
     'providers' => [
         // App\Providers\ThemeServiceProvider::class,
     ],
+    
+    
+    /*
+    |--------------------------------------------------------------------------
+    | View composers & components
+    |--------------------------------------------------------------------------
+    |
+    | Define here your view configurations.
+    | Please note that composers placed in the app/View/Composer/**
+    | directory are automatically loaded.
+    |
+    */
+    'view' => [
+        'composers' => [
+            // App\View\Composers\MyViewComposer,
+        ],
+    ],
 
 
     /*
