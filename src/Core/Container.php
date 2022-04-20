@@ -149,10 +149,8 @@ class Container
 
     public function registerProvider(string $provider)
     {
-        $instance = new $provider($this->container);
-
-        $this->container->call([new $provider, 'register']);
-        $this->container->call([new $provider, 'boot']);
+        $this->container->call([new $provider($this->container), 'register']);
+        $this->container->call([new $provider($this->container), 'boot']);
     }
 
     /**
