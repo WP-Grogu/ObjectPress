@@ -147,6 +147,14 @@ class Container
         return $this->container;
     }
 
+    public function registerProvider(string $provider)
+    {
+        $instance = new $provider($this->container);
+
+        $this->container->call([new $provider, 'register']);
+        $this->container->call([new $provider, 'boot']);
+    }
+
     /**
      * Handle dynamic, calls to the container instance thru class calling.
      *

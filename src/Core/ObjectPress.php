@@ -122,10 +122,10 @@ final class ObjectPress
         (new HookProvider)->boot();
 
         // Register service providers.
-        $this->app->register(AppSetupServiceProvider::class);
-        $this->app->register(ViewServiceProvider::class);
-        $this->app->register(LanguageServiceProvider::class);
-        $this->app->register(TranslatorServiceProvider::class);
+        $this->app->registerProvider(AppSetupServiceProvider::class);
+        $this->app->registerProvider(ViewServiceProvider::class);
+        $this->app->registerProvider(LanguageServiceProvider::class);
+        $this->app->registerProvider(TranslatorServiceProvider::class);
 
         // with(new EventServiceProvider($this->app))->register();
         // with(new RoutingServiceProvider($this->app))->register();
@@ -139,7 +139,7 @@ final class ObjectPress
                 ->filter()
                 ->unique()
                 ->each(
-                    fn ($provider) => $this->app->register($provider)
+                    fn ($provider) => $this->app->registerProvider($provider)
                 );
 
         // Setup cache system
