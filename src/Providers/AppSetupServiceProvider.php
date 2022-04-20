@@ -27,9 +27,9 @@ class AppSetupServiceProvider extends ServiceProvider
         $this->app->instance('object-press', ObjectPress::getInstance());
 
         // Link Blade instance
-        $this->app->instance(ViewFactory::class, Blade::getInstance());
-        $this->app->alias(ViewFactory::class, 'view');
-        $this->app->alias(ViewFactory::class, 'blade');
+        // $this->app->instance(ViewFactory::class, Blade::getInstance());
+        // $this->app->alias(ViewFactory::class, 'view');
+        // $this->app->alias(ViewFactory::class, 'blade');
 
         // Add Cache
         // TODO: replace cache system

@@ -4,6 +4,7 @@ namespace OP\Framework\Controllers;
 
 use InvalidArgumentException;
 use OP\Support\Facades\Blade;
+use OP\Support\Facades\ObjectPress;
 use OP\Framework\Contracts\Renderable;
 
 abstract class Controller implements Renderable
@@ -36,7 +37,7 @@ abstract class Controller implements Renderable
     {
         $with = $with + $this->getAdditionnalParams();
         
-        Blade::print($view, $with);
+        echo ObjectPress::view()->make($view, $with)->render();
         
         return;
     }

@@ -91,6 +91,19 @@ return [
     'commands' => [
         // App\Wordpress\Commands\UpdateUsers::class,
     ],
+    
+    
+    /*
+    |--------------------------------------------------------------------------
+    | App Service Provider
+    |--------------------------------------------------------------------------
+    |
+    | Define here your application service providers.
+    |
+    */
+    'providers' => [
+        // App\Providers\ThemeServiceProvider::class,
+    ],
 
 
     /*

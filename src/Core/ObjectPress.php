@@ -132,6 +132,15 @@ final class ObjectPress
         //     (new LanguageServiceProvider)->register();
         // });
 
+        $providers = collect(Config::get('setup.providers'));
+
+        /**
+         * Register service providers
+         */
+        $providers->filter()->unique()->each(
+            fn ($provider) => with(new $provider($this->app))->register()
+        );
+
         // Setup cache system
         $this->bootCache();
 
@@ -217,7 +226,7 @@ final class ObjectPress
      * Set ObjectPress container.
      *
      * @param ContainerContract
-     * @return this
+     * @return self
      */
     public function setContainer(Container $container)
     {
