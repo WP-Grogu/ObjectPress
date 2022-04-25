@@ -42,7 +42,7 @@
         "illuminate/container": "^7.0|^8.0",
         "doctrine/inflector": " ^2.0",
         "jenssegers/blade": "^1.4",
-        "amphibee/hookable": " dev-main",
+        "amphibee/hookable": "^1.0",
         "thunderer/shortcode": " ^0.7.3",
         "illuminate/view": "^7.0|^8.0",
         "illuminate/routing": "^7.0|^8.0",
