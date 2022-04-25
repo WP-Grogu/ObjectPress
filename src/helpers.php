@@ -19,6 +19,18 @@ if (!function_exists('controller')) :
     }
 endif;
 
+if (!function_exists('view')) :
+    /**
+     * Render and print the requested $view with the given $with params.
+     *
+     * @return void
+     */
+    function view(string $view, array $with = [])
+    {
+        echo \OP\Support\Facades\ObjectPress::view()->make($view, $with)->render();
+    }
+endif;
+
 
 if (!function_exists('dd')) :
     /**
