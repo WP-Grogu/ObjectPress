@@ -84,3 +84,15 @@ if (!function_exists('old')) :
         return !is_null($key) ? ($_REQUEST[$key] ?? '') : $_REQUEST;
     }
 endif;
+
+if (!function_exists('now')) :
+    /**
+     * Returns a carbon instance of the very current time.
+     *
+     * @return \Illuminate\Support\Carbon
+     */
+    function now()
+    {
+        return \Illuminate\Support\Carbon::now();
+    }
+endif;
