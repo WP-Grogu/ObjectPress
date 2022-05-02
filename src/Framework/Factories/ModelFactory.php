@@ -4,6 +4,8 @@ namespace OP\Framework\Factories;
 
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use OP\Framework\Models\Post;
+use OP\Framework\Models\Term;
 use OP\Support\Facades\Config;
 use Illuminate\Support\Collection;
 use OP\Framework\Helpers\PostHelper;
@@ -27,17 +29,14 @@ class ModelFactory
      * @param string $post_type The subject post type
      *
      * @return string
-     * @version 2.0
+     * @version 2.1
      * @since 2.0
      */
     public static function resolvePostClass(string $post_type = ''): string
     {
-        $psr   = collect(Config::get('object-press.theme.psr-prefix'))->first() ?: 'App';
-        $conf  = Config::get('setup.models') ?: [];
-
-        if (!$post_type) {
-            $post_type = 'post';
-        }
+        $psr       = Config::getFirst('object-press.theme.psr-prefix') ?: 'App';
+        $conf      = Config::get('setup.models') ?: [];
+        $post_type = $post_type ?: 'post';
 
         // Search for model in configuration array.
         if (!empty($conf) && array_key_exists($post_type, $conf)) {
@@ -70,16 +69,46 @@ class ModelFactory
             }
         }
 
-        return '';
+        return Post::class;
     }
+    
+    /**
+     * Resolve the class corresponding to the asked taxonomy.
+     *
+     * @param string $taxonomy
+     *
+     * @return string
+     * @version 2.1
+     * @since 2.1
+     */
+    public static function resolveTaxonomyClass(string $taxonomy = ''): string
+    {
+        $psr      = Config::getFirst('object-press.theme.psr-prefix') ?: 'App';
+        $taxonomy = $taxonomy ?: 'term';
 
+        // Try to guess class model name (eg: 'taxonomy_name' => 'App\Models\TaxonomyName')
+        $post_type_camelized = ucfirst(Str::camel($taxonomy));
+
+        $guess = [
+            sprintf('%s\Models\%s', $psr, $post_type_camelized),
+            sprintf('OP\Framework\Models\%s', $post_type_camelized),
+        ];
+
+        foreach ($guess as $class) {
+            if (class_exists($class)) {
+                return $class;
+            }
+        }
+
+        return Term::class;
+    }
 
     /**
      * ModelFactory for 'post' types.
      * Creates and returns the corresponding Model if applicable.
      * Returns null on failure.
      *
-     * @param WP_post|int|string|array    $post   Post element. Can be ID, WP_Post or array
+     * @param WP_Post|int|string|array    $post   Post element. Can be ID, WP_Post or array
      *
      * @return Model|null on failure
      * @version 2.0
@@ -91,51 +120,77 @@ class ModelFactory
             return null;
         }
 
-        $class = static::resolvePostClass($post->post_type) ?: static::resolvePostClass('post');
+        $class = static::resolvePostClass($post->post_type);
 
-        return $class ? $class::find($post->ID) : null;
+        return $class::find($post->ID);
     }
-    
     
     /**
      * Factory 'taxonomy' model, get the taxonomy name and initiate a corresponding Model if applicable.
      *
-     * @param WP_post|int|string    $post_id   ID of the concerned post
+     * @param WP_Term $term The wordpress term
      *
-     * @return Model|null on failure
-     * @version 2.0
-     * @since 2.0
+     * @return Term|null
+     * @version 2.1
+     * @since 2.1
      */
-    public static function taxonomy($tax)
+    public static function term($term)
     {
-        // TODO
+        $class = static::resolveTaxonomyClass($term->taxonomy);
+
+        return $class::find($term->term_id);
     }
 
-
     /**
-     * Call the model factory on the current post
+     * Call the model factory on the current post.
      *
-     * @return Model|null on failure
-     * @version 1.0.4
+     * @return OP\Framework\Models\Post|null on failure
+     * @version 2.1
      * @since 1.0.4
      */
     public static function currentPost()
     {
         global $post;
 
-        $id = get_the_id();
+        $id = get_the_id() ?: ($post->ID ?? false);
 
-        if (!$id) {
-            $id = $post->ID ?? false;
-        }
+        return $id ? static::post($id) : null;
+    }
+    
+    
+    /**
+     * Call the model factory on the current term.
+     *
+     * @return OP\Framework\Models\Term|null
+     * @version 2.1
+     * @since 1.0.4
+     */
+    public static function currentTerm()
+    {
+        $term = get_queried_object();
 
-        if (!$id) {
+        if (!$term || !is_a($term, 'WP_Term')) {
             return null;
         }
 
-        return static::post($id);
+        return static::term($term);
     }
 
+    /**
+     * Using wordpress helpers, returns the current model queried if appliable.
+     *
+     * @return OP\Framework\Models\Model|null
+     */
+    public static function current()
+    {
+        if (is_single() || is_page()) {
+            return static::currentPost();
+        }
+
+        if (is_tax() || is_tag() || is_category()) {
+            return static::currentTerm();
+        }
+    }
 
     /**
      * Factory an iterable of 'post' model, get the post type and initiate a corresponding Model if applicable.
@@ -167,12 +222,12 @@ class ModelFactory
      * @version 2.0
      * @since 2.0
      */
-    public static function taxonomies(iterable $posts)
+    public static function terms(iterable $posts)
     {
         $results = [];
 
         foreach ($posts as $post) {
-            $results[] = static::taxonomy($post);
+            $results[] = static::term($post);
         }
         
         return new Collection($results);
