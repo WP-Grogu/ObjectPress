@@ -31,7 +31,6 @@ if (!function_exists('view')) :
     }
 endif;
 
-
 if (!function_exists('dd')) :
     /**
      * Dump the passed variables and end the script, using var_dump.
@@ -51,7 +50,6 @@ if (!function_exists('dd')) :
     }
 endif;
 
-
 if (!function_exists('prd')) :
     /**
      * Dump the passed variables and end the script, using print_r.
@@ -70,7 +68,6 @@ if (!function_exists('prd')) :
         die(1);
     }
 endif;
-
 
 if (!function_exists('old')) :
     /**

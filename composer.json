@@ -55,6 +55,6 @@
         "symfony/var-dumper": "^5.2"
     },
     "suggest": {
-        "wp-grogu/acf-manager": "A powerfull Object-Orianted library to help you manage your ACF fields/groups, and also cast returned values in desired classes, such as Eloquent models."
+        "wp-grogu/acf-manager": "A powerfull Object-Oriented library to help you manage your ACF fields/groups, and also cast returned values in desired values or classes, such as Eloquent models."
     }
 }
