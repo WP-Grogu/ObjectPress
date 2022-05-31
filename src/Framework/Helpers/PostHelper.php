@@ -2,8 +2,9 @@
 
 namespace OP\Framework\Helpers;
 
+use Illuminate\Support\Str;
 use OP\Support\Facades\Config;
-use OP\Framework\Factories\ModelFactory;
+use AmphiBee\Eloquent\Connection;
 use OP\Framework\Exceptions\BadConfigurationException;
 
 /**
@@ -279,5 +280,37 @@ class PostHelper
         ];
 
         return get_pages($params);
+    }
+
+    /**
+     * Ensure to generate a unique post slug for a given name (can be a title or a slug).
+     * This function makes sure the slug doesn't exists in the database for this post type.
+     * If a post_id is provided, the slug will be considered valid if the post is the only owner of this slug.
+     *
+     * @param string  $post_name The post title or slug to use.
+     * @param string  $post_type The post type.
+     * @param int     $post_id   The post id to allow a matching slug. Optional.
+     * @return string
+     */
+    public static function uniquePostSlug(string $post_name, string $post_type, int $post_id = null)
+    {
+        $db    = Connection::instance();
+        $slug  = Str::slug($post_name);
+        $count = 0;
+
+        do {
+            $count++;
+
+            $slug = ($count > 1) ? ($slug . '-' . $count) : $slug;
+            $row  = $db->table('posts')
+                        ->select('ID')
+                        ->where('post_type', $post_type)
+                        ->where('post_name', 'like', $slug)
+                        ->get();
+
+            $valid = $row->isEmpty() || ($post_id && $row->count() === 1 && intval($row->first()->ID) === $post_id);
+        } while (!$valid);
+
+        return $slug;
     }
 }
