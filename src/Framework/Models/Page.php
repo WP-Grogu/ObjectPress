@@ -28,13 +28,15 @@ class Page extends PageModel
      */
     public function scopeHasTemplate(Builder $query, $template = null, string $operator = '=')
     {
+        # build full template path from shortname
         if ($template !== null) {
-            $template = PostHelper::getFullTemplatePath($template); # build full template path from shotname
+            $template = is_array($template)
+                            ? array_map(fn ($t) => PostHelper::getFullTemplatePath($t), $template)
+                            : PostHelper::getFullTemplatePath($template);
         }
 
         return parent::scopeHasTemplate($query, $template, $operator);
     }
-    
     
     /**
      * Get the page template.
