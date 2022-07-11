@@ -2,10 +2,12 @@
 
 namespace OP\Framework\Models\Builder;
 
-use AmphiBee\Eloquent\Model\Builder\PostBuilder as BasePostBuilder;
 use AmphiBee\Eloquent\Connection;
 use OP\Support\Facades\ObjectPress;
 use OP\Framework\Contracts\LanguageDriver;
+use OP\Support\Language\Drivers\WPMLDriver;
+use OP\Support\Language\Drivers\PolylangDriver;
+use AmphiBee\Eloquent\Model\Builder\PostBuilder as BasePostBuilder;
 
 /**
  * The post model query builder.
@@ -61,6 +63,12 @@ class PostBuilder extends BasePostBuilder
         }
         
         # Polylang Support
-        // TODO
+        if (is_a($driver, PolylangDriver::class)) {
+            return $this->whereHas(
+                'taxonomies',
+                fn ($tx) => $tx->where('taxonomy', 'language')
+                               ->whereHas('term', fn ($q) => $q->where('slug', $lang))
+            );
+        }
     }
 }

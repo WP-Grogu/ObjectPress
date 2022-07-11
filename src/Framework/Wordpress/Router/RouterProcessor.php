@@ -144,6 +144,7 @@ class RouterProcessor
         # Match a controller
         if ($this->matched_route->has_controller()) {
             controller($this->matched_route->get_controller());
+            return '';
         }
         # Match a template
         elseif ($this->matched_route->has_template()) {

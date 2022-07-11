@@ -58,6 +58,8 @@ class ViewServiceProvider extends ServiceProvider
             }
         }
 
+        $paths = array_unique($paths ?: []);
+
         foreach ($paths as $path) {
             if (!is_dir($path)) {
                 continue;
