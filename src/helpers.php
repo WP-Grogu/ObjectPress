@@ -25,9 +25,13 @@ if (!function_exists('view')) :
      *
      * @return void
      */
-    function view(string $view, array $with = [])
+    function view(string $view = '', array $with = [])
     {
-        echo \OP\Support\Facades\ObjectPress::view()->make($view, $with)->render();
+        if (empty($view)) {
+            return \OP\Support\Facades\ObjectPress::view();
+        }
+
+        return \OP\Support\Facades\ObjectPress::view()->make($view, $with);
     }
 endif;
 
