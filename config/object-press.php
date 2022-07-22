@@ -27,7 +27,7 @@ return [
     |
     */
     'cache' => [
-        'active' => true,
+        'active' => false,
         'driver' => 'Files',
         'path'   => wp_upload_dir()['basedir'] . '/../cache',
     ],

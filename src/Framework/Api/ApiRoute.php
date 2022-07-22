@@ -244,7 +244,8 @@ abstract class ApiRoute implements ApiRouteContract
     {
         $list = (new static())->getMergedArgs();
 
-        $rules = $list[$key]['rules'] ?? null;
+        $rules  = $list[$key]['rules'] ?? null;
+        $labels = $list[$key]['label'] ?? $key;
 
         if (!$rules) {
             return true;
@@ -252,14 +253,21 @@ abstract class ApiRoute implements ApiRouteContract
 
         $input    = [$key => $param];
         $rules    = [$key => $rules];
+        $labels   = [$key => $labels];
 
         $validator  = new ValidatorFactory();
 
+        # Create a validator
         $validation = $validator->make($input, $rules);
+
+        # Set the attributes nice names
+        $validation->setAttributeNames(
+            $labels
+        );
 
         if ($validation->fails()) {
             return new \WP_Error(
-                400,
+                422,
                 implode(", ", $validation->messages()->all())
             );
         }
@@ -275,9 +283,7 @@ abstract class ApiRoute implements ApiRouteContract
      */
     protected function __validateBodyParam($field, $value, $args)
     {
-        if (isset($args['validate_callback'])) {
-            $call = $args['validate_callback'];
-
+        if ($call = $args['validate_callback'] ?? null) {
             return $call($value, $this->request, $field);
         }
 
