@@ -125,6 +125,41 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | App Events schedules declaration
+    |--------------------------------------------------------------------------
+    |
+    | You can define wp schedules interval and events easily.
+    | Events support function or class as event callback.
+    |
+    */
+    'schedule' => [
+        'events' => [
+            // [
+            //     'class'    => App\Wordpress\Commands\MyCommand::class,
+            //     'interval' => 'twicedaily',
+            // ],
+            // [
+            //     'function' => [App\Services\AlertUsers::class, 'alertDowntime'],
+            //     'interval' => 'every2hours',
+            // ],
+            // [
+            //     'function' => 'doABarrelRoll',
+            //     'interval' => 'every2hours',
+            //     'as'       => 'barrel_roll_action', # optional alt action name
+            // ],
+        ],
+        'intervals' => [
+            // [
+            //     'name'     => 'everyFiveMinutes',
+            //     'label'    => 'Every five minutes',
+            //     'interval' => 5 * 60,
+            // ],
+        ],
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
     | App Models declaration
     |--------------------------------------------------------------------------
     |

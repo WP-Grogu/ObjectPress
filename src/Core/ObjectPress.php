@@ -13,6 +13,7 @@ use OP\Providers\AppSetupServiceProvider;
 use OP\Providers\LanguageServiceProvider;
 use Illuminate\Events\EventServiceProvider;
 use OP\Providers\TranslatorServiceProvider;
+use OP\Providers\ScheduleServiceProvider;
 use Phpfastcache\Config\ConfigurationOption;
 use Illuminate\Routing\RoutingServiceProvider;
 use OP\Framework\Exceptions\FileNotFoundException;
@@ -126,6 +127,7 @@ final class ObjectPress
         $this->app->registerProvider(ViewServiceProvider::class);
         $this->app->registerProvider(LanguageServiceProvider::class);
         $this->app->registerProvider(TranslatorServiceProvider::class);
+        $this->app->registerProvider(ScheduleServiceProvider::class);
 
         // with(new EventServiceProvider($this->app))->register();
         // with(new RoutingServiceProvider($this->app))->register();
