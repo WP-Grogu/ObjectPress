@@ -16,6 +16,7 @@ trait Schedulable
      */
     public function runSchedule()
     {
+        $this->silent = true;
         return $this->execute([]);
     }
 }
