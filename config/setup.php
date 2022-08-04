@@ -111,9 +111,9 @@ return [
     | View composers & components
     |--------------------------------------------------------------------------
     |
-    | Define here your view configurations.
-    | Please note that composers placed in the theme_root/app/View/Composer/**
-    | directory are automatically loaded.
+    | Define here your blade/view configurations.
+    | The files in {theme}/app/View/Composer/**
+    | directories are automatically loaded.
     |
     */
     'view' => [
@@ -141,6 +141,7 @@ return [
             // [
             //     'function' => [App\Services\AlertUsers::class, 'alertDowntime'],
             //     'interval' => 'every2hours',
+            //     'when'     => fn() => defined('WP_ENV') && WP_ENV === 'production'
             // ],
             // [
             //     'function' => 'doABarrelRoll',

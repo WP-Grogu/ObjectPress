@@ -33,7 +33,7 @@ class ScheduleServiceProvider extends ServiceProvider
      */
     protected function registerIntervals()
     {
-        $intervals = Config::get('setup.schedule.intervals', []);
+        $intervals = Config::get('setup.schedule.intervals') ?: [];
 
         $intervals = collect($intervals)->mapWithKeys(fn ($settings) => [
             $settings['name'] => [
@@ -54,9 +54,15 @@ class ScheduleServiceProvider extends ServiceProvider
      */
     protected function registerEvents()
     {
-        $events = Config::get('setup.schedule.events', []);
+        $events = Config::get('setup.schedule.events') ?: [];
 
         foreach ($events as $event) {
+            if ($when = $event['when'] ?? false) {
+                if (!(is_callable($when) ? $when() : $when)) {
+                    continue;
+                }
+            }
+
             $callee   = $this->extractCallee($event);
             $interval = $event['interval'] ?? null;
 
