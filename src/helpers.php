@@ -21,17 +21,16 @@ endif;
 
 if (!function_exists('view')) :
     /**
-     * Render and print the requested $view with the given $with params.
+     * Render the requested $view with the given $with params.
+     * If no view is specified, a view factory will be returned.
      *
      * @return \Illuminate\View\Factory|\Illuminate\View\View
      */
     function view(string $view = '', array $with = [])
     {
-        if (empty($view)) {
-            return \OP\Support\Facades\ObjectPress::view();
-        }
-
-        return \OP\Support\Facades\ObjectPress::view()->make($view, $with);
+        return empty($view)
+                ? \OP\Support\Facades\ObjectPress::view()
+                : \OP\Support\Facades\ObjectPress::view()->make($view, $with);
     }
 endif;
 
