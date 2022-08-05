@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Scope;
 
 /**
  * This scope is used to filter queries to get only items in the current language.
- * 
+ *
  * @package  ObjectPress
  * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public

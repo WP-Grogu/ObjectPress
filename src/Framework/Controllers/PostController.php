@@ -2,13 +2,13 @@
 
 namespace OP\Framework\Controllers;
 
-use OP\Framework\Models\Post;
+use OP\Framework\Factories\ModelFactory;
 use AmphiBee\Eloquent\Model\Contract\WpEloquentPost;
 
 abstract class PostController extends Controller
 {
     /**
-     * The post model. Can be page, post, any post type.
+     * The post model. Can be any post type.
      *
      * @var WpEloquentPost|null
      */
@@ -20,7 +20,7 @@ abstract class PostController extends Controller
      */
     public function __construct()
     {
-        $this->post = Post::current();
+        $this->post = ModelFactory::currentPost();
 
         parent::__construct();
     }

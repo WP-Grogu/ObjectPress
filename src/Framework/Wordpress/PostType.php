@@ -161,7 +161,7 @@ abstract class PostType
             'label'                 => __(sprintf($i18n_labels['label'], $singular), $domain),
             'description'           => __(sprintf($i18n_labels['description'], $pronouns[$genre], $singular), $domain),
             'labels'                => $labels,
-            'supports'              => ['title', 'thumbnail'],
+            'supports'              => ['title', 'thumbnail', 'editor'],
             'taxonomies'            => [],
             'hierarchical'          => false,
             'public'                => true,

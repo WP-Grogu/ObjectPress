@@ -3,13 +3,14 @@
 namespace OP\Framework\Models;
 
 use OP\Support\Facades\Config;
+use AmphiBee\Eloquent\Connection;
 use OP\Framework\Models\Builder\TaxonomyBuilder;
-use AmphiBee\Eloquent\Model\Scopes\CurrentLangScope;
+use OP\Framework\Models\Scopes\CurrentLangScope;
 use AmphiBee\Eloquent\Model\Taxonomy as TaxonomyModel;
 
 /**
  * The taxonomy model.
- * 
+ *
  * @package  ObjectPress
  * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public
@@ -36,5 +37,18 @@ class Taxonomy extends TaxonomyModel
     public function newEloquentBuilder($query)
     {
         return new TaxonomyBuilder($query);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function posts()
+    {
+        return $this->belongsToMany(
+            Post::class,
+            (new Connection)->pdo->prefix() . 'term_relationships', # put prefix here to prevent issue
+            'term_taxonomy_id',
+            'object_id'
+        );
     }
 }

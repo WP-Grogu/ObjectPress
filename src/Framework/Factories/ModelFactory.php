@@ -92,6 +92,7 @@ class ModelFactory
         $guess = [
             sprintf('%s\Models\%s', $psr, $post_type_camelized),
             sprintf('OP\Framework\Models\%s', $post_type_camelized),
+            sprintf('%s\Models\Term', $psr, $post_type_camelized),
         ];
 
         foreach ($guess as $class) {
