@@ -10,6 +10,13 @@ use OP\Framework\Contracts\Renderable;
 abstract class Controller implements Renderable
 {
     /**
+     * The view file to load.
+     *
+     * @var string
+     */
+    public string $view = '';
+
+    /**
      * Loads and render the controller.
      *
      * @return void

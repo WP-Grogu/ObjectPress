@@ -253,7 +253,7 @@ class PolylangDriver extends AbstractDriver
      */
     public function getTermLang(int $id, string $field = 'slug')
     {
-        return (string) pll_get_post_language($id, $field);
+        return (string) pll_get_term_language($id, $field);
     }
 
 
