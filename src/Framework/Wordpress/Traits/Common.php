@@ -187,7 +187,6 @@ trait Common
     private function validateProperties()
     {
         $mandatory = [
-            'name',
             'singular',
             'plural',
         ];
