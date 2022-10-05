@@ -28,7 +28,7 @@ abstract class Taxonomy
      * @var string
      * @since 1.0.0
      */
-    protected static string $name = '';
+    public static string $name = '';
 
     /**
      * Singular and plural names of Taxonomy
