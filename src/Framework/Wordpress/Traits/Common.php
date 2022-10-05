@@ -15,6 +15,14 @@ use OP\Support\Facades\Config;
 trait Common
 {
     /**
+     * Cpt/taxonomy name
+     *
+     * @var string
+     * @since 1.0.0
+     */
+    public static string $name = '';
+
+    /**
      * CPT/Taxonomy argument to overide over boilerplate
      *
      * @var array
@@ -99,7 +107,7 @@ trait Common
      */
     public function getName()
     {
-        return $this->name;
+        return static::$name;
     }
 
 
