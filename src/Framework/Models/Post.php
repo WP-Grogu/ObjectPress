@@ -27,7 +27,7 @@ class Post extends PostModel
         $class = static::class;
 
         // Check if it should be instantiated with a custom post type class
-        if (isset($attributes['post_type']) && $attributes['post_type']) {
+        if (end(explode('\\', $class)) === 'Post' && isset($attributes['post_type']) && $attributes['post_type']) {
             # Manual Attribution
             if (isset(static::$postTypes[$attributes['post_type']])) {
                 $class = static::$postTypes[$attributes['post_type']];
