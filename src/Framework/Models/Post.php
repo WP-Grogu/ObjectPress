@@ -25,9 +25,10 @@ class Post extends PostModel
     protected function getPostInstance(array $attributes)
     {
         $class = static::class;
+        $parts = explode('\\', $class);
 
         // Check if it should be instantiated with a custom post type class
-        if (end(explode('\\', $class)) === 'Post' && isset($attributes['post_type']) && $attributes['post_type']) {
+        if (end($parts) === 'Post' && isset($attributes['post_type']) && $attributes['post_type']) {
             # Manual Attribution
             if (isset(static::$postTypes[$attributes['post_type']])) {
                 $class = static::$postTypes[$attributes['post_type']];
