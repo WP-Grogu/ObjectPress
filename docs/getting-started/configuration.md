@@ -2,30 +2,32 @@
 
 ## Configuration folder
 
-ObjectPress reads `.php` configuration files, to setup the app (initiate post types, taxonomies...) and configure your development env. By default, ObjectPress will look for a `config/` directory, at your theme root folder. You can duplicate the ObjectPress config files from [the official repository](https://gitlab.com/tgeorgel/object-press/-/tree/dev/config). Each option is documented, so feel free to look through the files and get familiar with the options available to you.
+ObjectPress reads plain PHP array configuration files to setup your project (initiate post types, taxonomies, roles...) and configure your development environment.
 
+By default, ObjectPress will look for a `config/` directory at your theme root folder, which can be changed by passing a path to the boot method. 
 
-If you wish to use custom config folder location, you can append your own path(s). Adding paths this way will always priorize the latest added path.
+You can copy the ObjectPress configuration files from [the official repository](https://github.com/WP-Grogu/ObjectPress/tree/main/config) and place them inside your local directory. Each option is self-documented, so feel free to look through the files and get familiar with the options available to you.
 
+You can also dynamically add configuration paths using the `Config::addPath()` method.
 
 ```php
 use OP\Support\Facades\Config;
 
 Config::addPath([
-    '/path/to/config/folder',
+    '/path/to/directory',
 ]);
 ```
 
-## Files
+## Configuration files
 
 | File  | Usage
 |:---:|---|
-| `config/setup.php` | Your app/theme configuration. This is where you enable your CPTs, taxonomies, API routes.. |
-| `config/object-press.php` | ObjectPress configuration. This is the place you configure how the frameworks handles things for you |
+| [setup.php](https://github.com/WP-Grogu/ObjectPress/blob/main/config/setup.php) | Your app/theme configuration. Quicky enable Post types, taxonomies, Commands, Roles, API routes.. |
+| [object-press.php](https://github.com/WP-Grogu/ObjectPress/blob/main/config/object-press.php) | ObjectPress configuration. Configure how the framework should work in your project. |
 
 ## Constants
 
-You can also define constants for a couple of things : 
+If you wan to force some parameters, the framework also make use of some constants.
 
 | Constant  | Description  | Default value  |
 |:---:|---|:---:|
