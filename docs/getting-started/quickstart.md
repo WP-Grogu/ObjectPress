@@ -57,11 +57,11 @@ app/
       Commands/
       Roles/
    Models/
-      User.php                // Your user model
-      Post.php                // Your post model (any post_type)
-      Page.php                // Your `page` post_type model
-      Event.php               // Your `event` post_type model
-      Term.php                // Your term model (any taxonomy)
+      User.php                # Your user model
+      Post.php                # Your post model (any post_type)
+      Page.php                # Your page model (`page` post_type)
+      Event.php               # Your event model (`event` post_type)
+      Term.php                # Your term model (any taxonomy)
    Controllers/
       Web/
       Api/
@@ -69,6 +69,8 @@ app/
    Providers/
    ...
 ```
+
+Feel free to add your directories as you develop. [CLI commands](digging-deeper/cli-commands.md) are a good way to generate new classes and create directories if missing.
 
 You can find a starter theme folder using this `app/` folder structure [here](https://gitlab.com/tgeorgel/object-press-base-theme-directory).  
 
