@@ -26,22 +26,22 @@ namespace App\Wordpress\PostTypes;
 
 use OP\Framework\Wordpress\PostType;
 
-class Store extends PostType
+class Event extends PostType
 {
     /**
      * Custom post type name
      *
      * @var string kebab-case
      */
-    public static string $name = 'store';
+    public static string $name = 'event';
 
     /**
      * Singular and plural names of CPT
      * 
      * @var string
      */
-    public $singular = 'Store';
-    public $plural   = 'Stores';
+    public $singular = 'Event';
+    public $plural   = 'Events';
 
     /**
      * Menu icon to display in back-office (dash-icon)
@@ -62,22 +62,22 @@ namespace App\Wordpress\PostTypes;
 
 use OP\Framework\Wordpress\PostType;
 
-class Store extends PostType
+class Event extends PostType
 {
     /**
      * Custom post type name
      *
      * @var string kebab-case
      */
-    public static string $name = 'store';
+    public static string $name = 'event';
 
     /**
      * Singular and plural names of CPT
      *
      * @var string
      */
-    public $singular = 'Store';
-    public $plural   = 'Stores';
+    public $singular = 'Event';
+    public $plural   = 'Events';
 
     /**
      * Menu icon to display in back-office (dash-icon)

@@ -57,9 +57,9 @@ class Event extends Post
 
 namespace App\Models;
 
-use OP\Framework\Models\PostModel;
+use OP\Framework\Models\Post;
 
-class Event extends PostModel
+class Event extends Post
 {
     /**
      * Wordpress post type identifier, associated to the current model
