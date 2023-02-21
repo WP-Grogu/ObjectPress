@@ -210,15 +210,17 @@ ObjectPress manage the Taxonomy initialisation out of the box for you. You simpl
 
 > The taxonomies are initialized after post types and in the order they appears in the configuration array.
 
-If you prefer, you can also initiate your custom post types manually :  
+If you prefer, you can also initiate your taxonomies manually :  
 
 ```php
 <?php
 
 use OP\Support\Facades\Theme;
-use App\Wordpress\Taxonomies\EventType;
 
-Theme::on('init', fn () => (new EventType)->boot()); # with Theme facade
+Theme::on(
+    'init',
+    fn () => (new App\Wordpress\Taxonomies\EventType)->boot()
+);
 
 add_action('init', fn () => (new EventType)->boot()); # with add_action
 ```

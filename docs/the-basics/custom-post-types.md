@@ -200,10 +200,11 @@ If you prefer, you can also initiate your custom post types manually :
 <?php
 
 use OP\Support\Facades\Theme;
-use App\Wordpress\PostTypes\Event;
 
-Theme::on('init', fn () => (new Event)->boot()); # with Theme facade
-add_action('init', fn () => (new Event)->boot()); # with add_action
+Theme::on(
+    'init', 
+    fn () => (new App\Wordpress\PostTypes\Event)->boot()
+);
 ```
 
 

@@ -11,13 +11,16 @@
   - [Taxonomies](the-basics/taxonomies.md)
   - [Models](the-basics/models.md)
   - [Hooks](the-basics/hooks.md)
-  - [API](the-basics/api.md)
-  - [User Roles](the-basics/roles.md)
-  - [Languages Support (i18n)](the-basics/i18n.md)
+  - [Commands](the-basics/commands.md)
+  - [Events & Schedule](the-basics/schedules.md)
+  - [Languages & Translation](the-basics/i18n.md)
   - [Theme Configuration](the-basics/theme-class.md)
+  - [User roles](the-basics/roles.md)
 
 - Digging Deeper
+  - [CLI Commands](digging-deeper/cli-commands.md)
   - [Facades](digging-deeper/facades.md)
+  - [Building APIs](digging-deeper/apis.md)
   - [Database](digging-deeper/database.md)
 
 - ThirdParty Support

@@ -1,9 +1,9 @@
-# API
+# APIs
 
 
 ## Introduction
 
-API routes on ObjectPress are represented by classes. You **MUST** set one route per class.  
+API routes in ObjectPress are represented by classes. You **must** set one route per class.  
 ObjectPress automatically manage validation and request setup for you.
 
 ## Define an API route
@@ -23,25 +23,23 @@ namespace App\Api;
 use OP\Framework\Api\ApiRoute;
 
 /**
- * API Route : GET /wp-json/example/v1/get
+ * API Route : GET /wp-json/articles/v1/fetch
  */
-class GetExample extends ApiRoute
+class FetchArticles extends ApiRoute
 {
     /**
      * Api route namespace
      *
      * @var string
      */
-    public static $namespace = 'example';
-
+    public static $namespace = 'articles';
 
     /**
      * Api route
      *
      * @var string
      */
-    public static $route = '/get';
-
+    public static $route = '/fetch';
 
     /**
      * HTTP method
@@ -50,7 +48,6 @@ class GetExample extends ApiRoute
      */
     public static $methods = 'GET';
 
-
     /**
      * Resolve the API route.
      * 
@@ -58,7 +55,9 @@ class GetExample extends ApiRoute
      */
     public static function resolve(object $args, object $body_args) 
     {
-        return [];
+        return [
+            //
+        ];
     }
 }
 ```
@@ -85,14 +84,12 @@ class ContactForm extends ApiRoute
      */
     public static $version = 'v1';
 
-
     /**
      * Api route namespace
      *
      * @var string
      */
     public static $namespace = 'contact';
-
 
     /**
      * Api route
@@ -101,7 +98,6 @@ class ContactForm extends ApiRoute
      */
     public static $route = '/form';
 
-
     /**
      * HTTP method
      *
@@ -109,18 +105,16 @@ class ContactForm extends ApiRoute
      */
     public static $methods = 'GET';
 
-
     /**
      * Route parameters / variables
      *
      * @var array
      */
     public static $args = [
-      'id' => [
-        'rules' => ['required', 'numeric'],
-      ],
+        'id' => [
+            'rules' => ['required', 'numeric'],
+        ],
     ];
-
 
     /**
      * Route Body parameters / variables
@@ -146,12 +140,12 @@ class ContactForm extends ApiRoute
      */
     public static function resolve(object $args, object $body_args) 
     {
-        echo $args->id;
-        echo $body_args->name;
-        echo $body_args->email;
-        echo $body_args->phone;
-
-        return [];
+        return [
+            'id'    => $args->id;
+            'name'  => $body_args->name;
+            'email' => $body_args->email;
+            'phone' => $body_args->phone;
+        ];
     }
 }
 ```
@@ -173,7 +167,7 @@ ObjectPress manage the API routes initialisation out of the box for you. You sim
     |
     */
     'apis' => [
-        'example/get' => 'App\Api\GetExample',
+        App\Api\FetchArticles::class,
     ],
 ```
 
@@ -192,16 +186,19 @@ If you wish to use a custom validation logic, you can specify your validation me
 
 ```php
 public static $body_args = [
+    'generic_arg' => [
+        'validate_callback' => 'method',   # Define a custom validation callback mathed.
+    ],
     'custom' => [
-        'validate_callback' => [           // Define a custom validation method, inside the API class.
+        'validate_callback' => [           # Define a custom validation callback method, inside a class.
             static::class, 
             'class_method'
-        ]  
+        ],
     ],
     'email' => [
-        'rules' => ['required', 'email']   // Check that the parameter exists and is an email.
+        'rules' => ['required', 'email']   # Use Illuminate Validator rules.
     ],
-    'without_validation' => [],            // No validation rule will be applied to this parameter.
+    'not_validated' => [],                 # Don't apply any validation rule to this parameter.
 ];
 ```
 

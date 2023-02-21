@@ -4,14 +4,16 @@
 
 The recommanded way is to use [composer](https://getcomposer.org) to manage your PHP project dependancies, including ObjectPress.  
 
-> If you're using the [roots.io](https://roots.io) stack, you may chose to include ObjectPress directly in the bedrock vendors so you may use ObjectPress in mu-plugin directories as well.
+You can install ObjectPress into your theme directory.
+
+> If you're using the [roots.io](https://roots.io) stack, you may chose to include ObjectPress directly in the [bedrock](https://roots.io/bedrock/) vendors so you may use ObjectPress in mu-plugin directories as well. Otherwise, including ObjectPress in [sage](https://roots.io/sage/) is the best way to go.
 
 ```sh
 # Get latest stable version
 composer require tgeorgel/objectpress
 
 # Get a specific version
-composer require "tgeorgel/objectpress:^2.1.0"
+composer require "tgeorgel/objectpress:^2.2.0"
 ```
 
 > You can check out available versions on [Packagist](https://packagist.org/packages/tgeorgel/objectpress), or directly on the [Github repository](https://github.com/WP-Grogu/ObjectPress/tags).
@@ -21,7 +23,7 @@ composer require "tgeorgel/objectpress:^2.1.0"
 
 ## The app directory
 
-You can now create an `app` folder in your theme directory. This is the place where belongs all your classes, you'll setup from here your Post types, your Taxonomies, your Models, and so on.
+You can now create an `app` folder in your theme directory. This is the place where belong all your classes : you will setup from here your Post Types, Taxonomies, Roles, Models, CLI Commands and so on.
 
 ### Autoloading
 
@@ -29,22 +31,22 @@ If you're not using one yet, you can use composer to fastly setup a psr-4 autolo
 
 ```json
 {
+    "require": {...},
     "autoload": {
         "psr-4": {
             "App\\": "app/"
         }
-    },
-    "require": {...}
+    }
 }
 ```
 
-!> ObjectPress assume your theme is using the `App` namespace. However, you are free to change this inside the `config/object-press.php` [configuration file](getting-started/configuration.md). 
+!> ObjectPress assume your theme is using the `App` namespace to hold project-specific code. However, you are free to customize the namspace in the `object-press.php` [configuration file](getting-started/configuration.md). 
 
 ### App folder structure
 
 From now, you should have **ObjectPress**, an `app/` folder, and an autoload logic. What does reside in this `app/` directory ?
 
-Well, whatever you want. A typical project would include a similar structure :  
+Well, whatever you need for your project. A typical project would include a similar structure :  
 
 ```json
 app/
@@ -60,8 +62,10 @@ app/
       Page.php                // Your `page` post_type model
       Event.php               // Your `event` post_type model
       Term.php                // Your term model (any taxonomy)
+   Controllers/
+      Web/
+      Api/
    Helpers/
-   Api/
    Providers/
    ...
 ```
