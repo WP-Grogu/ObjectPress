@@ -1,6 +1,6 @@
 # WP-Grogu/ObjectPress
 
-A PHP Library to enhance Wordpress in a Object-Oriented way. Manage PostTypes, Taxonomies, Roles, Eloquent Models, WP-CLI Commands and event more, using PSR-4 classes and modern development tools.
+A PHP Library to enhance Wordpress in a Object-Oriented way. Manage PostTypes, Taxonomies, Roles, Eloquent Models, WP-CLI Commands and even more, using PSR-4 classes and modern development tools.
 
 ## Documentation
 
@@ -53,7 +53,7 @@ class EventType extends Taxonomy
 
 ### Query your database efficiently
 
-Your [post types](https://object-press.wp-grogu.dev/#/the-basics/custom-post-types) and [taxonomies](https://object-press.wp-grogu.dev/#/the-basics/taxonomies) are now Eloquent models. You can query your database using the same syntax as Laravel.
+Your [post types](https://object-press.wp-grogu.dev/#/the-basics/custom-post-types) and [taxonomies](https://object-press.wp-grogu.dev/#/the-basics/taxonomies) are now Eloquent models. You can query your database using the same syntax you would use on Laravel.
 
 ```php
 <?php
@@ -88,16 +88,16 @@ class Event extends Post
 # Get all events
 $events = Event::all();
 
-# Get all events with a specific taxonomy
+# Get all events attached to a specific taxonomy term (by slug)
 $events = Event::whereHas('taxonomies', function ($query) {
     $query->where('taxonomy', 'locations')
           ->where('term.slug', 'paris');
 })->get();
 
-# Get all events with a specific taxonomy and a specific meta value
+# Get all events  attached to a specific taxonomy term (by id) and a specific meta value
 $events = Event::whereHas('taxonomies', function ($query) {
     $query->where('taxonomy', 'locations')
-          ->where('term.slug', 'paris');
+          ->where('term_id', 123);
 })->whereHas('meta', function ($query) {
     $query->where('meta_key', 'price')
           ->where('meta_value', '<', 100);

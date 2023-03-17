@@ -15,9 +15,9 @@ If you're familiar with Laravel, you'll love this library !
 
 ObjectPress also supports out of the box translation features, weither you're using [Polylang](https://polylang.wordpress.com/documentation/) or [WPML](https://wpml.org/) plugin to manage them. It also fully support Advanced Custom Fields.
 
-**We highly recommend** using the awesome [root.io](https://roots.io) stack (Bedrock + Sage 10), that helps you manage your Wordpress sites using composer and a modern development stack. However, ObjectPress is an agnostic library and can be used on any Wordpress installation, you only need composer to get started.
+**We highly recommend** using the awesome [root.io](https://roots.io) stack (Bedrock + Sage 10), that helps you in the development process of Wordpress sites using composer and a modern stack. However, ObjectPress is an agnostic library and can be used on any Wordpress installation, you only need composer to get started.
  
-[Get started](quickstart.md) within a minute and start developing the Object Driven way !  
+[Get started](quickstart.md) within a minute and focus on your app, the Object Driven way !  
 
 ## Plugin Support and Compatibility  
 
