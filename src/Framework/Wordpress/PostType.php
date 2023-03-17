@@ -16,20 +16,17 @@ abstract class PostType
 {
     use Common;
 
-    /********************************/
-    /*                              */
-    /*        Default params        */
-    /*                              */
-    /********************************/
-
+    /****************************/
+    /*        Attributes        */
+    /****************************/
 
     /**
      * Custom post type name/key
+     *
      * @var string
      * @since 1.0.0
      */
-    protected $name = '';
-
+    public static string $name = '';
 
     /**
      * Singular and plural names of CPT
@@ -50,11 +47,8 @@ abstract class PostType
     public $menu_icon = 'dashicons-book';
 
 
-
     /********************************/
-    /*                              */
     /*       Private Methods        */
-    /*                              */
     /********************************/
 
 
@@ -70,7 +64,7 @@ abstract class PostType
      */
     protected function register()
     {
-        if (post_type_exists($this->name)) {
+        if (post_type_exists(static::$name)) {
             return;
         }
 
@@ -80,7 +74,7 @@ abstract class PostType
         $base_args   = $this->generateArgs($labels);
         $args        = array_replace($base_args, $this->args_override);
 
-        register_post_type($this->name, $args);
+        register_post_type(static::$name, $args);
     }
 
 
@@ -134,7 +128,6 @@ abstract class PostType
         ];
     }
 
-
     /**
      * Generate the args based on i18n default lang
      *
@@ -161,7 +154,7 @@ abstract class PostType
             'label'                 => __(sprintf($i18n_labels['label'], $singular), $domain),
             'description'           => __(sprintf($i18n_labels['description'], $pronouns[$genre], $singular), $domain),
             'labels'                => $labels,
-            'supports'              => ['title', 'thumbnail'],
+            'supports'              => ['title', 'thumbnail', 'editor'],
             'taxonomies'            => [],
             'hierarchical'          => false,
             'public'                => true,
@@ -177,7 +170,7 @@ abstract class PostType
             'publicly_queryable'    => true,
             'capability_type'       => 'post',
             'show_in_rest'          => false,
-            'rest_base'             => $this->name,
+            'rest_base'             => static::$name,
         ];
 
         // If graphql is enabled, we need to setup some more params
@@ -192,14 +185,9 @@ abstract class PostType
         return $args;
     }
     
-
     /********************************/
-    /*                              */
     /*       Public Methods         */
-    /*                              */
     /********************************/
-
-
 
     /**
      * Custom post type init (registration)
@@ -213,23 +201,10 @@ abstract class PostType
             $this->i18n_domain = defined('OP_DEFAULT_I18N_DOMAIN_CPTS') ? OP_DEFAULT_I18N_DOMAIN_CPTS : 'op-theme-cpts';
         }
 
-        if (method_exists($this, 'conditionnalInitialization') && !call_user_func([$this, 'conditionnalInitialization'])) {
+        if (method_exists($this, 'bootWhen') && (call_user_func([$this, 'bootWhen'])) === false) {
             return;
         }
 
         $this->register();
-    }
-
-
-    /**
-     * Custom post type init (registration)
-     *
-     * @deprecated
-     * @return void
-     * @since 1.0.3
-     */
-    public function init()
-    {
-        $this->boot();
     }
 }

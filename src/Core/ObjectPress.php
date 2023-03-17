@@ -6,11 +6,14 @@ use OP\Support\Facades\Theme;
 use OP\Providers\HookProvider;
 use OP\Support\Facades\Config;
 use Phpfastcache\CacheManager;
+use Illuminate\Support\Collection;
+use OP\Providers\ViewServiceProvider;
 use OP\Core\Patterns\SingletonPattern;
 use OP\Providers\AppSetupServiceProvider;
 use OP\Providers\LanguageServiceProvider;
 use Illuminate\Events\EventServiceProvider;
 use OP\Providers\TranslatorServiceProvider;
+use OP\Providers\ScheduleServiceProvider;
 use Phpfastcache\Config\ConfigurationOption;
 use Illuminate\Routing\RoutingServiceProvider;
 use OP\Framework\Exceptions\FileNotFoundException;
@@ -46,7 +49,6 @@ final class ObjectPress
 
         $this->asset_path = realpath(__DIR__ . '/../../assets');
 
-        $this->includeHelpers();
         $this->setupConstants();
     }
 
@@ -120,46 +122,32 @@ final class ObjectPress
         // TODO: HookIgnition
         (new HookProvider)->boot();
 
-        // Register services.
-        with(new AppSetupServiceProvider($this->app))->register();
-        with(new LanguageServiceProvider($this->app))->register();
-        with(new TranslatorServiceProvider($this->app))->register();
+        // Register service providers.
+        $this->app->registerProvider(AppSetupServiceProvider::class);
+        $this->app->registerProvider(ViewServiceProvider::class);
+        $this->app->registerProvider(LanguageServiceProvider::class);
+        $this->app->registerProvider(TranslatorServiceProvider::class);
+        $this->app->registerProvider(ScheduleServiceProvider::class);
+
         // with(new EventServiceProvider($this->app))->register();
         // with(new RoutingServiceProvider($this->app))->register();
-
-        // new Router;
 
         // Theme::on('plugins_loaded', function () {
         //     (new LanguageServiceProvider)->register();
         // });
 
+        # Register user's service providers
+        Collection::make(Config::get('setup.providers'))
+                ->filter()
+                ->unique()
+                ->each(
+                    fn ($provider) => $this->app->registerProvider($provider)
+                );
+
         // Setup cache system
         $this->bootCache();
 
         $this->booted = true;
-    }
-
-
-    /**
-     * Include helpers functions
-     *
-     * @return void
-     */
-    private function includeHelpers()
-    {
-        $rel_paths = [
-            '/../Support/helpers.php',
-        ];
-
-        foreach ($rel_paths as $rel_path) {
-            $path = realpath(__DIR__ . $rel_path);
-
-            if (!$path) {
-                throw new \Exception("OP : includeHelpers : Missing core helpers files.");
-            }
-
-            require_once $path;
-        }
     }
 
 
@@ -241,11 +229,21 @@ final class ObjectPress
      * Set ObjectPress container.
      *
      * @param ContainerContract
-     * @return this
+     * @return self
      */
     public function setContainer(Container $container)
     {
         $this->app = $container;
         return $this;
+    }
+
+    /**
+     * Get a new view factory.
+     *
+     * @return \Illuminate\View\Factory
+     */
+    public function view()
+    {
+        return $this->app->make(\Illuminate\Contracts\View\Factory::class);
     }
 }

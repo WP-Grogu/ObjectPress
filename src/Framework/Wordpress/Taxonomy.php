@@ -18,9 +18,7 @@ abstract class Taxonomy
     use Common;
 
     /********************************/
-    /*                              */
     /*        Default params        */
-    /*                              */
     /********************************/
 
 
@@ -30,8 +28,7 @@ abstract class Taxonomy
      * @var string
      * @since 1.0.0
      */
-    protected $name = 'custom-taxonomy';
-
+    public static string $name = '';
 
     /**
      * Singular and plural names of Taxonomy
@@ -115,7 +112,7 @@ abstract class Taxonomy
      */
     protected function register()
     {
-        if (taxonomy_exists($this->name)) {
+        if (taxonomy_exists(static::$name)) {
             return;
         }
 
@@ -127,7 +124,7 @@ abstract class Taxonomy
 
         $post_types = array_map('strtolower', $this->post_types);
 
-        register_taxonomy($this->name, $post_types, $args);
+        register_taxonomy(static::$name, $post_types, $args);
     }
 
     /**
@@ -218,7 +215,7 @@ abstract class Taxonomy
         $params = $this->single_term_params + $this->_default_single_term_params;
 
         $taxonomy_box = new TaxonomySingleTerm(
-            $this->name,
+            static::$name,
             $this->post_types,
             $this->single_term_type
         );
@@ -235,14 +232,9 @@ abstract class Taxonomy
         }
     }
 
-
-
     /********************************/
-    /*                              */
     /*       Public Methods         */
-    /*                              */
     /********************************/
-
 
 
     /**
@@ -280,7 +272,6 @@ abstract class Taxonomy
         $this->boot();
     }
 
-
     /**
      * Get taxonomy name
      *
@@ -288,9 +279,8 @@ abstract class Taxonomy
      */
     public function getName()
     {
-        return $this->name;
+        return static::$name;
     }
-
 
     /**
      * Return taxonomy terms.
@@ -303,7 +293,7 @@ abstract class Taxonomy
     public function getTerms($identifier = false, array $args = [])
     {
         $args = $args + [
-            'taxonomy'   => $this->name,
+            'taxonomy'   => static::$name,
             'hide_empty' => false,
         ];
 

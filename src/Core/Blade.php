@@ -37,8 +37,8 @@ final class Blade extends BladeCore
      */
     private function __construct()
     {
-        $inputs = collect(Config::get('object-press.template.blade.inputs'));
-        $output = collect(Config::get('object-press.template.blade.output'));
+        $inputs = collect(Config::get('object-press.view.paths.inputs'));
+        $output = collect(Config::get('object-press.view.paths.output'));
 
         $inputs = $inputs->filter()->unique()->toArray();
         $output = $output->filter()->unique()->first();

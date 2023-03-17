@@ -27,7 +27,7 @@ final class Config
      */
     private function __construct()
     {
-        $_theme = get_template_directory() . '/config';
+        $_theme = get_stylesheet_directory() . '/config';
         $_base  = __DIR__ . '/../../config/';
 
         $this->addPath(
