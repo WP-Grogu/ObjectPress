@@ -3,9 +3,9 @@
 /*
 Plugin Name: ObjectPress
 Plugin URI: https://hydrat.agency
-Description: A micro-frameworks providing illuminate packages (such as models, Eloquent ORM, events, validation..) into WordPress for improved development.
+Description: A micro-framework providing illuminate packages (Eloquent ORM, events, validation..) into WordPress for a modern development stack.
 Author: Hydrat Agency
-Version: dev-2.0
+Version: dev-2.1
 Author URI: https://hydrat.agency
 */
 

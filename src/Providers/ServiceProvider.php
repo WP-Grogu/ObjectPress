@@ -7,10 +7,10 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
 {
-    public function __construct()
-    {
-        parent::__construct(ObjectPress::app());
-    }
+    // public function __construct()
+    // {
+    //     parent::__construct(ObjectPress::app());
+    // }
 
     /**
      * Register any application services.

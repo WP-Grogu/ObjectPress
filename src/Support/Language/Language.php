@@ -30,7 +30,6 @@ class Language
      */
     protected LanguageDriver $driver;
     
-
     /**
      * Gets the instance via lazy initialization (created on first usage)
      */
@@ -45,7 +44,6 @@ class Language
         return static::$_instance;
     }
 
-
     /**
      * Class constructor.
      *
@@ -55,7 +53,6 @@ class Language
     {
         $this->driver = $driver;
     }
-
 
     /**
      * Handle dynamic, calls to the object.
@@ -87,18 +84,10 @@ class Language
         }
     }
 
-
     /**
      * prevent the instance from being cloned (which would create a second instance of it)
      */
     private function __clone()
-    {
-    }
-
-    /**
-     * prevent from being unserialized (which would create a second instance of it)
-     */
-    private function __wakeup()
     {
     }
 }

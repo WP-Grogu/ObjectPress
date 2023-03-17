@@ -91,6 +91,72 @@ return [
     'commands' => [
         // App\Wordpress\Commands\UpdateUsers::class,
     ],
+    
+    
+    /*
+    |--------------------------------------------------------------------------
+    | App Service Provider
+    |--------------------------------------------------------------------------
+    |
+    | Define here your application service providers.
+    |
+    */
+    'providers' => [
+        // App\Providers\ThemeServiceProvider::class,
+    ],
+    
+    
+    /*
+    |--------------------------------------------------------------------------
+    | View composers & components
+    |--------------------------------------------------------------------------
+    |
+    | Define here your blade/view configurations.
+    | The files in {theme}/app/View/Composer/**
+    | directories are automatically loaded.
+    |
+    */
+    'view' => [
+        'composers' => [
+            // App\View\Composers\MyViewComposer,
+        ],
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | App Events schedules declaration
+    |--------------------------------------------------------------------------
+    |
+    | You can define wp schedules interval and events easily.
+    | Events support function or class as event callback.
+    |
+    */
+    'schedule' => [
+        'events' => [
+            // [
+            //     'class'    => App\Wordpress\Commands\MyCommand::class,
+            //     'interval' => 'twicedaily',
+            // ],
+            // [
+            //     'function' => [App\Services\AlertUsers::class, 'alertDowntime'],
+            //     'interval' => 'every2hours',
+            //     'when'     => fn() => defined('WP_ENV') && WP_ENV === 'production'
+            // ],
+            // [
+            //     'function' => 'doABarrelRoll',
+            //     'interval' => 'every2hours',
+            //     'as'       => 'barrel_roll_action', # optional alt action name
+            // ],
+        ],
+        'intervals' => [
+            // [
+            //     'name'     => 'everyFiveMinutes',
+            //     'label'    => 'Every five minutes',
+            //     'interval' => 5 * 60,
+            // ],
+        ],
+    ],
 
 
     /*

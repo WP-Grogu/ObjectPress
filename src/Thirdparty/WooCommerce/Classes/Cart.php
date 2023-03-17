@@ -47,14 +47,6 @@ class Cart
     }
 
     /**
-     * prevent from being unserialized (which would create a second instance of it)
-     */
-    private function __wakeup()
-    {
-    }
-
-
-    /**
      * Contructor used to build the Model in order to use WooCommerce.
      *
      * @return void
