@@ -56,8 +56,8 @@ class PostBuilder extends BasePostBuilder
     
                 $query->select($db->raw(1))
                       ->from($table)
-                      ->whereRaw("{$table}.element_id = {$prefix}term_taxonomy.term_id")
-                      ->whereRaw("{$table}.element_type LIKE 'tax_%'")
+                      ->whereRaw("{$table}.element_id = {$prefix}posts.ID")
+                      ->whereRaw("{$table}.element_type LIKE 'post_%'")
                       ->whereRaw("{$table}.language_code = '{$lang}'");
             });
         }
