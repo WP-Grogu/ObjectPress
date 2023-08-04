@@ -44,7 +44,7 @@
         "jenssegers/blade": "^1.4",
         "amphibee/wordpress-eloquent-models": "v1.2.x-dev",
         "amphibee/hookable": "^1.0",
-        "symfony/finder": " ^5.1",
+        "symfony/finder": " ^5.1 || ^6.0",
         "nesbot/carbon": "^2.45",
         "doctrine/inflector": " ^2.0",
         "thunderer/shortcode": " ^0.7.3",
