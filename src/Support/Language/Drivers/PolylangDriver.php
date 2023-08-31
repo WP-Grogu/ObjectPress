@@ -74,7 +74,7 @@ class PolylangDriver extends AbstractDriver
     {
         global $polylang;
 
-        return $polylang->model->get_languages_list();
+        return $polylang ? $polylang->model->get_languages_list() : [];
     }
 
 
@@ -102,7 +102,9 @@ class PolylangDriver extends AbstractDriver
      */
     public function getPrimaryLang(string $as = 'slug'): ?string
     {
-        return (string) pll_default_language($as);
+        return function_exists('pll_default_language')
+            ? (string) pll_default_language($as)
+            : null;
     }
 
 
@@ -125,7 +127,9 @@ class PolylangDriver extends AbstractDriver
      */
     public function getPostLang(int $id, string $field = 'slug')
     {
-        return (string) pll_get_post_language($id, $field);
+        return function_exists('pll_default_language')
+            ? (string) pll_get_post_language($id, $field)
+            : null;
     }
 
 
@@ -140,7 +144,9 @@ class PolylangDriver extends AbstractDriver
      */
     public function setPostLang(int $id, string $lang): void
     {
-        pll_set_post_language($id, $this->localeToSlug($lang));
+        if (function_exists('pll_set_post_language')) {
+            pll_set_post_language($id, $this->localeToSlug($lang));
+        }
     }
 
 
