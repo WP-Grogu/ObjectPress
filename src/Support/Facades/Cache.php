@@ -11,6 +11,6 @@ class Cache extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'OP\Core\Cache';
+        return \OP\Core\Cache::class;
     }
 }

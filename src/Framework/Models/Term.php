@@ -2,6 +2,7 @@
 
 namespace OP\Framework\Models;
 
+use OP\Framework\Factories\ModelFactory;
 use AmphiBee\Eloquent\Model\Term as TermModel;
 
 /**
@@ -14,6 +15,37 @@ use AmphiBee\Eloquent\Model\Term as TermModel;
  */
 class Term extends TermModel
 {
+    /**
+     * @param array $attributes
+     * @param null $connection
+     * @return mixed
+     */
+    public function newFromBuilder($attributes = [], $connection = null)
+    {
+        $model = $this->getTermInstance((array)$attributes);
+
+        $model->exists = true;
+
+        $model->setRawAttributes((array)$attributes, true);
+
+        $model->setConnection(
+            $connection ?: $this->getConnectionName()
+        );
+
+        return $model;
+    }
+
+    /**
+     * @param array $attributes
+     * @return object
+     */
+    protected function getTermInstance(array $attributes)
+    {
+        $class = ModelFactory::resolveTermClass($attributes['taxonomy'] ?? '') ?: static::class;
+
+        return new $class();
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */

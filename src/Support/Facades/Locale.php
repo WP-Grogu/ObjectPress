@@ -11,6 +11,6 @@ class Locale extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'OP\Core\Locale';
+        return \OP\Core\Locale::class;
     }
 }

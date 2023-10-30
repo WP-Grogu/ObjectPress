@@ -11,6 +11,6 @@ class Config extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'OP\Core\Config';
+        return \OP\Core\Config::class;
     }
 }

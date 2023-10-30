@@ -11,6 +11,6 @@ class ObjectPress extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'OP\Core\ObjectPress';
+        return \OP\Core\ObjectPress::class;
     }
 }
