@@ -4,6 +4,7 @@ namespace OP\Framework\Models;
 
 use OP\Support\Facades\Config;
 use AmphiBee\Eloquent\Connection;
+use OP\Framework\Factories\ModelFactory;
 use OP\Framework\Models\Builder\TaxonomyBuilder;
 use OP\Framework\Models\Scopes\CurrentLangScope;
 use AmphiBee\Eloquent\Model\Taxonomy as TaxonomyModel;
@@ -31,6 +32,37 @@ class Taxonomy extends TaxonomyModel
     }
 
     /**
+     * @param array $attributes
+     * @param null $connection
+     * @return mixed
+     */
+    public function newFromBuilder($attributes = [], $connection = null)
+    {
+        $model = $this->getTaxonomyInstance();
+
+        $model->exists = true;
+
+        $model->setRawAttributes((array)$attributes, true);
+
+        $model->setConnection(
+            $connection ?: $this->getConnectionName()
+        );
+
+        return $model;
+    }
+
+    /**
+     * @param array $attributes
+     * @return object
+     */
+    protected function getTaxonomyInstance()
+    {
+        $class = ModelFactory::resolveTaxonomyClass() ?: static::class;
+
+        return new $class();
+    }
+
+    /**
      * @param \Illuminate\Database\Query\Builder $query
      * @return TaxonomyBuilder
      */
@@ -50,5 +82,39 @@ class Taxonomy extends TaxonomyModel
             'term_taxonomy_id',
             'object_id'
         );
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function term()
+    {
+        return $this->belongsTo(Term::class, 'term_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parent()
+    {
+        return $this->belongsTo(Taxonomy::class, 'parent');
+    }
+
+    /**
+     * Because the column is called "parent" by WP, the relationship cannot be always loaded using this name.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parentModel()
+    {
+        return $this->parent();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function children()
+    {
+        return $this->hasMany(Taxonomy::class, 'parent');
     }
 }

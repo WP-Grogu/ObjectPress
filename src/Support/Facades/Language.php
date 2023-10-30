@@ -11,6 +11,6 @@ class Language extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'OP\Support\Language\Language';
+        return \OP\Support\Language\Language::class;
     }
 }
