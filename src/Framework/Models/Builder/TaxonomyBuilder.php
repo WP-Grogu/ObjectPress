@@ -9,7 +9,7 @@ use OP\Framework\Contracts\LanguageDriver;
 
 /**
  * The taxonomy model query builder.
- * 
+ *
  * @package  ObjectPress
  * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public
@@ -41,7 +41,7 @@ class TaxonomyBuilder extends BaseTaxonomyBuilder
         if ($lang == 'current') {
             $lang = $driver->getCurrentLang();
         }
-        
+
         # Get the default/primary lang slug
         if ($lang == 'default') {
             $lang = $driver->getPrimaryLang();
@@ -51,7 +51,7 @@ class TaxonomyBuilder extends BaseTaxonomyBuilder
         if (is_a($driver, WPMLDriver::class)) {
             return $this->whereExists(function ($query) use ($db, $prefix, $lang) {
                 $table = $prefix . 'icl_translations';
-    
+
                 $query->select($db->raw(1))
                       ->from($table)
                       ->whereRaw("{$table}.element_id = {$prefix}term_taxonomy.term_id")
@@ -59,8 +59,24 @@ class TaxonomyBuilder extends BaseTaxonomyBuilder
                       ->whereRaw("{$table}.language_code = '{$lang}'");
             });
         }
-        
+
         # Polylang Support
         // TODO
+    }
+
+    /**
+     * Natural sort by term name.
+     */
+    public function orderByTermName()
+    {
+        $db = Connection::instance();
+        $prefix = $db->getPdo()->prefix();
+
+        $termsTable = $prefix . 'terms';
+        $termTaxonomyTable = $prefix . 'term_taxonomy';
+
+        return $this->join($termsTable, "$termsTable.term_id", "=", "$termTaxonomyTable.term_id")
+            ->orderByRaw("LENGTH($termsTable.name)")
+            ->orderBy("$termsTable.name");
     }
 }
