@@ -10,6 +10,7 @@
         }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "files": [
             "src/helpers.php"
@@ -41,7 +42,7 @@
         "illuminate/pagination": "^9.52",
         "as247/wp-eloquent": "dev-master",
         "phpfastcache/phpfastcache": "^9.0",
-        "amphibee/wordpress-eloquent-models": "v1.2.x-dev",
+        "amphibee/wordpress-eloquent-models": "^1.2",
         "amphibee/hookable": "^1.0",
         "symfony/error-handler": "^6.0",
         "symfony/var-dumper": "^5.0|^6.0",
