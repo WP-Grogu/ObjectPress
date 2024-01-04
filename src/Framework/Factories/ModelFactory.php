@@ -72,7 +72,7 @@ class ModelFactory
 
         return Post::class;
     }
-    
+
     /**
      * Resolve the class corresponding to the asked taxonomy.
      *
@@ -152,7 +152,7 @@ class ModelFactory
 
         return $class::find($post->ID);
     }
-    
+
     /**
      * Factory 'taxonomy' model, get the taxonomy name and initiate a corresponding Model if applicable.
      *
@@ -184,8 +184,8 @@ class ModelFactory
 
         return $id ? static::post($id) : null;
     }
-    
-    
+
+
     /**
      * Call the model factory on the current term.
      *
@@ -211,6 +211,10 @@ class ModelFactory
      */
     public static function current()
     {
+        if (is_home()) {
+            return static::post(get_option('page_for_posts'));
+        }
+
         if (is_single() || is_page()) {
             return static::currentPost();
         }
@@ -236,11 +240,11 @@ class ModelFactory
         foreach ($posts as $post) {
             $results[] = static::post($post);
         }
-        
+
         return new Collection($results);
     }
-    
-    
+
+
     /**
      * Factory an iterable of 'taxonomy' type model, get the post type and initiate a corresponding Model if applicable.
      *
@@ -257,7 +261,7 @@ class ModelFactory
         foreach ($posts as $post) {
             $results[] = static::term($post);
         }
-        
+
         return new Collection($results);
     }
 }
