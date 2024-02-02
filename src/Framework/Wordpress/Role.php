@@ -18,24 +18,23 @@ abstract class Role
 {
     /**
      * The role options.
-     *
-     * @var array
      */
     protected array $options = [];
 
+    /**
+     * The role capabilities.
+     */
+    protected array $caps = [];
 
     /**
-     * The role options.
-     *
-     * @var array
+     * The role default options, merged with options.
      */
-    private array $defaults = [
+    protected array $defaults = [
         'name'       => '',
         'label'      => '',
         'extends'    => false,
         'backoffice' => false,
     ];
-
 
     /**
      * The computed role options.
@@ -43,7 +42,6 @@ abstract class Role
      * @var object
      */
     private $conf;
-
 
     /**
      * The admin menu items the current role SHOULD NOT see.
@@ -53,6 +51,12 @@ abstract class Role
      */
     protected array $hidden_menues = [];
 
+    /**
+     * Should translate the label.
+     *
+     * @since 2.5.0
+     */
+    protected bool $translate_labels = false;
 
     /**
      * i18n translation domain.
@@ -61,7 +65,6 @@ abstract class Role
      * @since 1.0.4
      */
     protected string $i18n_domain = '';
-
 
     /**
      * i18n cpt default lang (format: 'en', 'fr'..).
@@ -72,7 +75,6 @@ abstract class Role
      * @since 1.0.4
      */
     protected string $i18n_base_lang = '';
-
 
     /**
      * Role constructor. Ensure mandatory options are set.
@@ -104,7 +106,7 @@ abstract class Role
 
         if ($this->conf->extends && is_string($this->conf->extends)) {
             $extends = get_role($this->conf->extends);
-            
+
             if (!$extends) {
                 throw new RoleNotFoundException(
                     sprintf("ObjectPress : The extended role `%s` was not found.", $this->conf->extends)
@@ -128,10 +130,11 @@ abstract class Role
     protected function register()
     {
         $caps = $this->generateCaps();
+        $label = $this->translate_labels ? __($this->conf->label, $this->i18n_domain) : $this->conf->label;
         $role = get_role($this->conf->name);
 
         if (!$role) {
-            add_role($this->conf->name, __($this->conf->label, $this->i18n_domain), $caps);
+            add_role($this->conf->name, $label, $caps);
         } else {
             if ($role->capabilities !== $caps) {
                 foreach ($role->capabilities as $name => $value) {
@@ -145,7 +148,6 @@ abstract class Role
 
         $this->removeAdminMenuItems();
     }
-
 
     /**
      * Remove some menu items from admin menu for this specific role.
@@ -181,7 +183,6 @@ abstract class Role
     /*                              */
     /********************************/
 
-
     /**
      * Custom post type init (registration)
      *
@@ -197,17 +198,54 @@ abstract class Role
         $this->register();
     }
 
-
-    public function addCaps()
+    public function removeCaps(string | array $caps)
     {
-        // TODO
+        if (!($role = get_role($this->conf->name))) {
+            throw new RoleNotFoundException(
+                sprintf("ObjectPress : The role `%s` was not found.", $this->conf->name)
+            );
+        }
+
+        foreach ((array) $caps as $cap) {
+            $role->remove_cap($cap);
+        }
+    }
+
+    public function addCaps(array $caps)
+    {
+        if (!($role = get_role($this->conf->name))) {
+            throw new RoleNotFoundException(
+                sprintf("ObjectPress : The role `%s` was not found.", $this->conf->name)
+            );
+        }
+
+        foreach ($caps as $name => $value) {
+            $role->add_cap($name, $value);
+        }
+    }
+
+    public function replaceCaps(array $caps)
+    {
+        if (!($role = get_role($this->conf->name))) {
+            throw new RoleNotFoundException(
+                sprintf("ObjectPress : The role `%s` was not found.", $this->conf->name)
+            );
+        }
+
+        foreach ($role->capabilities as $name => $value) {
+            $role->remove_cap($name);
+        }
+
+        foreach ($caps as $name => $value) {
+            $role->add_cap($name, $value);
+        }
     }
 
     public function getName()
     {
         return $this->conf->name;
     }
-    
+
     public function getLabel()
     {
         return $this->conf->label;
