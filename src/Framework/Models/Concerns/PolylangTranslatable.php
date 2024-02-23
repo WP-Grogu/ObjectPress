@@ -22,13 +22,48 @@ trait PolylangTranslatable
      */
     public function getLanguageAttribute()
     {
+        if ($this instanceof \AmphiBee\Eloquent\Model\Post) {
+            return $this->getPostLanguageInfo();
+        }
+
+        if ($this instanceof \AmphiBee\Eloquent\Model\Term) {
+            return $this->getTermLanguageInfo();
+        }
+    }
+
+    /**
+     * Get the post language.
+     *
+     * @return string|null
+     */
+    protected function getPostLanguageInfo()
+    {
         $taxo = $this->taxonomies
                     ->where('taxonomy', 'language')
                     ->first();
 
         return $taxo ? $taxo->term->slug : null;
     }
-    
+
+    /**
+     * Get the term language.
+     *
+     * @return string|null
+     */
+    protected function getTermLanguageInfo()
+    {
+        $app = ObjectPress::app();
+
+        # No supported lang plugin detected
+        if (!$app->bound(LanguageDriver::class)) {
+            return;
+        }
+
+        $driver = $app->make(LanguageDriver::class);
+
+        return $driver->getTermLang($this->id);
+    }
+
     /**
      * Set the post language.
      *
@@ -45,10 +80,18 @@ trait PolylangTranslatable
         }
 
         $driver = $app->make(LanguageDriver::class);
-        $driver->setPostLang($this->id, $value);
+
+        if ($this instanceof \AmphiBee\Eloquent\Model\Post) {
+            $driver->setPostLang($this->id, $value);
+        }
+
+        if ($this instanceof \AmphiBee\Eloquent\Model\Term) {
+            $driver->setTermLang($this->id, $value);
+        }
+
         $this->refresh();
     }
-    
+
     /**
      * Get the post translation in the asked language.
      *
@@ -58,6 +101,7 @@ trait PolylangTranslatable
     public function translation(string $lang)
     {
         $app = ObjectPress::app();
+        $id = null;
 
         # No supported lang plugin detected
         if (!$app->bound(LanguageDriver::class)) {
@@ -70,13 +114,22 @@ trait PolylangTranslatable
         if ($lang == 'current') {
             $lang = $driver->getCurrentLang();
         }
-        
+
         # Get the default/primary lang slug
         if ($lang == 'default') {
             $lang = $driver->getPrimaryLang();
         }
 
-        $id = $driver->getPostIn($this->id, $lang);
-        return $id ? static::find($id) : null;
+        if ($this instanceof \AmphiBee\Eloquent\Model\Post) {
+            $id = $driver->getPostIn($this->id, $lang);
+        }
+
+        if ($this instanceof \AmphiBee\Eloquent\Model\Term) {
+            $id = $driver->getTermIn($this->id, $lang);
+        }
+
+        return $id
+            ? static::find($id)
+            : null;
     }
 }
