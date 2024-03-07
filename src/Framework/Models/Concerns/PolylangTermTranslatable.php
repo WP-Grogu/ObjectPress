@@ -2,21 +2,32 @@
 
 namespace OP\Framework\Models\Concerns;
 
+use OP\Framework\Models\Taxonomy;
 use OP\Support\Facades\ObjectPress;
 use Illuminate\Database\Eloquent\Builder;
 use OP\Framework\Contracts\LanguageDriver;
 use OP\Support\Language\Drivers\PolylangDriver;
 
 /**
- * Polylang translation plugin support for post.
+ * Polylang translation plugin support for terms.
  *
  * @package  ObjectPress
  * @author   tgeorgel <thomas@hydrat.agency>
  * @access   public
- * @since    2.1
+ * @since    2.5
  */
-trait PolylangTranslatable
+trait PolylangTermTranslatable
 {
+    public function termTaxonomies()
+    {
+        return $this->belongsToMany(
+            Taxonomy::class,
+            $this->getConnection()->prefixTable('term_relationships'),
+            'object_id',
+            'term_taxonomy_id'
+        );
+    }
+
     /**
      * Filter query by language.
      *
@@ -24,7 +35,7 @@ trait PolylangTranslatable
      *
      * @return PostBuilder
      */
-    public function scopeLanguage(Builder $query, string $language = 'current')
+    public function scopeLanguage(Builder $query, string $lang = 'current')
     {
         $app = ObjectPress::app();
 
@@ -40,20 +51,20 @@ trait PolylangTranslatable
         }
 
         # Get the current lang slug
-        if ($language === 'current') {
-            $language = $driver->getCurrentLang();
+        if ($lang == 'current') {
+            $lang = $driver->getCurrentLang();
         }
 
         # Get the default/primary lang slug
-        if ($language === 'default') {
-            $language = $driver->getPrimaryLang();
+        if ($lang == 'default') {
+            $lang = $driver->getPrimaryLang();
         }
 
         return $query->whereHas(
-            'taxonomies',
+            'termTaxonomies',
             fn ($tx) => $tx
-                ->where('taxonomy', 'language')
-                ->whereHas('term', fn ($q) => $q->whereIn('slug', [$language, 'pll_'.$language]))
+                ->where('taxonomy', 'term_language')
+                ->whereHas('term', fn ($q) => $q->whereIn('slug', [$lang, 'pll_'.$lang]))
         );
     }
 
@@ -72,11 +83,9 @@ trait PolylangTranslatable
      */
     public function getLanguageAttribute()
     {
-        $taxo = $this->taxonomies
-                    ->where('taxonomy', 'language')
-                    ->first();
+        $driver = ObjectPress::app()->make(LanguageDriver::class);
 
-        return $taxo ? $taxo->term->slug : null;
+        return optional($driver)->getTermLang($this->id);
     }
 
     /**
@@ -89,7 +98,7 @@ trait PolylangTranslatable
     {
         $driver = ObjectPress::app()->make(LanguageDriver::class);
 
-        optional($driver)->setPostLang($this->id, $value);
+        optional($driver)->setTermLang($this->id, $value);
 
         $this->refresh();
     }
@@ -113,16 +122,16 @@ trait PolylangTranslatable
         $driver = $app->make(LanguageDriver::class);
 
         # Get the current lang slug
-        if ($lang == 'current') {
+        if ($lang === 'current') {
             $lang = $driver->getCurrentLang();
         }
 
         # Get the default/primary lang slug
-        if ($lang == 'default') {
+        if ($lang === 'default') {
             $lang = $driver->getPrimaryLang();
         }
 
-        $id = $driver->getPostIn($this->id, $lang);
+        $id = $driver->getTermIn($this->id, $lang);
 
         return $id
             ? static::find($id)
