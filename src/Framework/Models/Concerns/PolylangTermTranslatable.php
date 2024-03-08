@@ -29,11 +29,27 @@ trait PolylangTermTranslatable
     }
 
     /**
-     * Filter query by language.
+     * Filter query to take terms with a defined language code.
+     */
+    public function scopeHasLanguage(Builder $query)
+    {
+        $app = ObjectPress::app();
+
+        # No supported lang plugin detected
+        if (!$app->bound(LanguageDriver::class)) {
+            return $query;
+        }
+
+        return $query->whereHas(
+            'termTaxonomies',
+            fn ($tx) => $tx->where('taxonomy', 'term_language')
+        );
+    }
+
+    /**
+     * Filter query to take terms with a specified language code.
      *
-     * @param string $lang The requested lang. Can be 'current', 'default', or lang code (eg: 'en', 'fr', 'it'..)
-     *
-     * @return PostBuilder
+     * @param string $lang The desired language. 'current', 'default' or language alpha2 code.
      */
     public function scopeLanguage(Builder $query, string $lang = 'current')
     {
