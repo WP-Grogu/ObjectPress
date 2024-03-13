@@ -303,7 +303,7 @@ class PolylangDriver extends AbstractDriver
      * @return int
      * @since 2.0
      */
-    public function getTermIn(string $lang, string $t_id): int
+    public function getTermIn(string $t_id, string $lang): int
     {
         return (int) pll_get_term($t_id, $this->localeToSlug($lang));
     }
