@@ -19,7 +19,6 @@ interface LanguageDriver
      */
     public function getCurrentLang(string $as = 'slug');
 
-
     /**
      * Return the current language
      *
@@ -30,7 +29,6 @@ interface LanguageDriver
      */
     public function setCurrentLang(string $lang);
 
-
     /**
      * Get available languages on this app.
      *
@@ -38,7 +36,6 @@ interface LanguageDriver
      * @since 2.0
      */
     public function getLanguages(): array;
-
 
     /**
      * Get available languages on this app.
@@ -49,7 +46,6 @@ interface LanguageDriver
      */
     public function getAvailableLanguages(): array;
 
-
     /**
      * Return the primary language
      *
@@ -59,7 +55,6 @@ interface LanguageDriver
      * @since 2.0
      */
     public function primaryLang(string $as = 'slug'): ?string;
-
 
     /**
      * Return the primary language
@@ -82,7 +77,6 @@ interface LanguageDriver
      */
     public function getPostLang(int $id, string $field = 'slug');
 
-
     /**
      * Set a post language
      *
@@ -94,7 +88,6 @@ interface LanguageDriver
      */
     public function setPostLang(int $id, string $lang): void;
 
-
     /**
      * Synchronize 2 posts as translation of each other
      *
@@ -104,7 +97,6 @@ interface LanguageDriver
      * @since 2.0
      */
     public function syncPosts(array $assoc): void;
-
 
     /**
      * Get post in desired $lang
@@ -117,7 +109,6 @@ interface LanguageDriver
      */
     public function getPostIn($post, string $lang);
 
-
     /**
      * Get Taxonomy Term in desired $lang
      *
@@ -127,8 +118,7 @@ interface LanguageDriver
      * @return int
      * @since 2.0
      */
-    public function getTermIn(string $lang, string $t_id): int;
-
+    public function getTermIn(string $t_id, string $lang): int;
 
     /**
      * Get a i18n translated string in desired language.
@@ -141,7 +131,6 @@ interface LanguageDriver
      * @since 2.0
      */
     public function getStringIn(string $string, string $domain, string $lang);
-
 
     /**
      * Get the post permalink in desired language.

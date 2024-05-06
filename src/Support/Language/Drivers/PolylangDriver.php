@@ -32,7 +32,6 @@ class PolylangDriver extends AbstractDriver
         return pll_current_language($as);
     }
 
-
     /**
      * Return the current language
      *
@@ -51,7 +50,6 @@ class PolylangDriver extends AbstractDriver
         }
     }
 
-
     /**
      * Get available languages on this app.
      *
@@ -62,7 +60,6 @@ class PolylangDriver extends AbstractDriver
     {
         return $this->getAvailableLanguages();
     }
-
 
     /**
      * Get available languages on this app.
@@ -76,7 +73,6 @@ class PolylangDriver extends AbstractDriver
 
         return $polylang->model->get_languages_list();
     }
-
 
     /**
      * Return the primary language
@@ -105,14 +101,11 @@ class PolylangDriver extends AbstractDriver
         return (string) pll_default_language($as);
     }
 
-
-
     /**************************************/
     /*                                    */
     /*               Posts                */
     /*                                    */
     /**************************************/
-
 
 
     /**
@@ -128,7 +121,6 @@ class PolylangDriver extends AbstractDriver
         return (string) pll_get_post_language($id, $field);
     }
 
-
     /**
      * Set a post language
      *
@@ -142,7 +134,6 @@ class PolylangDriver extends AbstractDriver
     {
         pll_set_post_language($id, $this->localeToSlug($lang));
     }
-
 
     /**
      * Get post in desired $lang
@@ -164,7 +155,6 @@ class PolylangDriver extends AbstractDriver
         return pll_get_post($post->ID, $this->localeToSlug($lang));
     }
 
-
     /**
      * Synchronize multiple posts as translation of each other
      *
@@ -177,7 +167,6 @@ class PolylangDriver extends AbstractDriver
     {
         pll_save_post_translations($assoc);
     }
-
 
     /**
      * Get all ids from posts in the asked language
@@ -214,7 +203,6 @@ class PolylangDriver extends AbstractDriver
         return $ids;
     }
 
-
     /**
      * Get all post translation ids.
      *
@@ -234,13 +222,11 @@ class PolylangDriver extends AbstractDriver
         return array_filter($ids);
     }
 
-
     /**************************************/
     /*                                    */
     /*               Terms                */
     /*                                    */
     /**************************************/
-
 
 
     /**
@@ -256,7 +242,6 @@ class PolylangDriver extends AbstractDriver
         return (string) pll_get_term_language($id, $field);
     }
 
-
     /**
      * Set a term language
      *
@@ -270,7 +255,6 @@ class PolylangDriver extends AbstractDriver
     {
         pll_set_term_language($id, $this->localeToSlug($lang));
     }
-
 
     /**
      * Get a term translations in array_a
@@ -293,7 +277,6 @@ class PolylangDriver extends AbstractDriver
         return $translations;
     }
 
-
     /**
      * Get Taxonomy Term in desired $lang
      *
@@ -308,7 +291,6 @@ class PolylangDriver extends AbstractDriver
         return (int) pll_get_term($t_id, $this->localeToSlug($lang));
     }
 
-
     /**
      * Synchronize multiple terms as translation of each other
      *
@@ -322,14 +304,11 @@ class PolylangDriver extends AbstractDriver
         pll_save_term_translations($assoc);
     }
 
-
-
     /**************************************/
     /*                                    */
     /*              Strings               */
     /*                                    */
     /**************************************/
-
 
 
     /**
@@ -346,7 +325,6 @@ class PolylangDriver extends AbstractDriver
     {
         return pll_translate_string($string, $this->localeToSlug($lang));
     }
-
 
     /**
      * Set a registred string translation in given language.
@@ -397,7 +375,6 @@ class PolylangDriver extends AbstractDriver
         return (bool) update_post_meta($mo_id, '_pll_strings_translations', $strings);
     }
 
-
     /**
      * Get the post permalink in desired language.
      *
@@ -412,7 +389,6 @@ class PolylangDriver extends AbstractDriver
         // @todo
         return null;
     }
-
 
     /**
      * Register a string for translation.

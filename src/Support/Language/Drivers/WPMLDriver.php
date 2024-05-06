@@ -174,7 +174,7 @@ class WPMLDriver extends AbstractDriver
      * @return int
      * @since 2.0
      */
-    public function getTermIn(string $lang, string $t_id): int
+    public function getTermIn(string $t_id, string $lang): int
     {
         // @todo
         return 0;
