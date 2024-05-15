@@ -42,7 +42,7 @@
         "illuminate/pagination": "^9.52 || ^10.0",
         "as247/wp-eloquent": "^2.1",
         "phpfastcache/phpfastcache": "^9.0",
-        "amphibee/wordpress-eloquent-models": "^1.2",
+        "amphibee/wordpress-eloquent-models": "^1.2|^2.0",
         "amphibee/hookable": "^1.0",
         "symfony/error-handler": "^6.0",
         "symfony/var-dumper": "^5.0|^6.0",
