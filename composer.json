@@ -46,7 +46,7 @@
         "amphibee/hookable": "^1.0",
         "symfony/error-handler": "^6.0",
         "symfony/var-dumper": "^5.0|^6.0",
-        "nesbot/carbon": "^2.45",
+        "nesbot/carbon": "^3.8.6",
         "doctrine/inflector": "^2.0",
         "thunderer/shortcode": "^0.7.3",
         "laravel/helpers": " ^1.0",
