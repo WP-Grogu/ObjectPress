@@ -33,7 +33,6 @@
         "illuminate/translation": ">=9.52",
         "illuminate/filesystem": ">=9.52",
         "illuminate/validation": ">=9.52",
-        "illuminate/http": ">=9.52",
         "illuminate/database": ">=9.52",
         "illuminate/container": ">=9.52",
         "illuminate/view": ">=9.52",
@@ -49,9 +48,7 @@
         "nesbot/carbon": "^3.8.0",
         "doctrine/inflector": "^2.0",
         "thunderer/shortcode": "^0.7.3",
-        "laravel/helpers": " ^1.0",
-        "guzzlehttp/guzzle": "^7.3",
-        "league/flysystem": "^3.0"
+        "laravel/helpers": " ^1.0"
     },
     "suggest": {
         "wp-grogu/acf-manager": "A powerful Object-Oriented library helping you create ACF field groups & gutemberg blocks while adding type-cast in returned values from database."
