@@ -136,7 +136,11 @@ final class Locale
             return OP_DEFAULT_APP_LOCALE;
         }
 
-        $lang = LanguageHelper::getPrimaryLang();
+        try {
+            $lang = LanguageHelper::getPrimaryLang();
+        } catch (\Exception $e) {
+            $lang = null;
+        }
 
         if ($lang) {
             return $lang;

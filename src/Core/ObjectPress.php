@@ -115,7 +115,8 @@ final class ObjectPress
             Config::addPath($config_dir);
         }
 
-        if ($this->booted) {
+        # Don't boot if we are in a context of installation/update or if we already booted
+        if ($this->booted || (defined('WP_INSTALLING') && WP_INSTALLING)) {
             return;
         }
 
