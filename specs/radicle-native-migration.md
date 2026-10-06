@@ -46,13 +46,13 @@ Radicle projects use Acorn's native mechanisms and do not depend on `tgeorgel/ob
 - Service provider: an Acorn `ServiceProvider`.
 - Remove its bundled `vendor/tgeorgel/objectpress` and rely on the host app.
 
-## Known blocker
+## Laravel 13 compatibility
 
-`amphibee/wordpress-eloquent-models` (v2.2.3, latest), which `OP\Framework\Models` builds on, is
-incompatible with Laravel 13: `AmphiBee\Eloquent\Connection::select()` lacks the new
-`array $fetchUsing = []` parameter, so any ObjectPress model query is a fatal error on Acorn 6.
-This affects the theme models and the acf-manager Eloquent casts today, and is one more reason to
-move to plain Eloquent models on Acorn's connection.
+`amphibee/wordpress-eloquent-models` (which `OP\Framework\Models` builds on) was incompatible with
+Laravel 13 up to v2.2.3: `Connection::select()` / `cursor()` lacked the new `array $fetchUsing = []`
+parameter, making any ObjectPress model query a fatal error on Acorn 6. Fixed in v2.2.4, which
+ObjectPress now requires. The fact that a Laravel major can break the models through a third-party
+connection class is one more reason to move to plain Eloquent models on Acorn's connection.
 
 ## Plan
 
