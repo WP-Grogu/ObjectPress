@@ -57,8 +57,11 @@ class Container
     {
         $container = new IlluminateContainer;
 
-        // Tell facade about the application instance.
-        Facade::setFacadeApplication($container);
+        // Tell facade about the application instance, unless a host framework
+        // (eg. Acorn) already owns the Laravel facades.
+        if (! Facade::getFacadeApplication()) {
+            Facade::setFacadeApplication($container);
+        }
 
         // Enable HTTP Method Override.
         Request::enableHttpMethodParameterOverride();
